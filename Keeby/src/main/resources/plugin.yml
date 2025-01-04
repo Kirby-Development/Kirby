@@ -1,0 +1,6 @@
+name: Keeby
+version: '1.0'
+main: dev.kirby.keeby.Keeby
+api-version: '1.20'
+load: STARTUP
+authors: [SweetyDreams_]
