@@ -1,13 +1,15 @@
 package dev.kirby.keeby;
 
-import dev.kirby.api.IKirby;
-import dev.kirby.api.test.Test;
-import org.bukkit.plugin.java.JavaPlugin;
+import dev.kirby.api.plugin.KirbyPlugin;
 
-public final class Keeby extends JavaPlugin implements IKirby {
+public final class Keeby extends KirbyPlugin {
+
+    public Keeby() {
+        super("Keeby");
+    }
 
     @Override
     public void onEnable() {
-        System.out.println(get(Test.class).text());
+
     }
 }

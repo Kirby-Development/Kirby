@@ -1,4 +1,4 @@
-package dev.kirby.api;
+package dev.kirby.api.plugin;
 
 import dev.kirby.api.service.ServiceHelper;
 import org.bukkit.plugin.Plugin;

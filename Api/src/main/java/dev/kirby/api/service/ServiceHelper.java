@@ -1,16 +1,16 @@
 package dev.kirby.api.service;
 
 
-public interface ServiceHelper {
-    ServiceManager MANAGER = new ServiceManager();
+import dev.kirby.api.KirbyApi;
 
+public interface ServiceHelper {
 
     default <T> T get(Class<T> key) {
-        return MANAGER.get(key);
+        return KirbyApi.getManager().get(key);
     }
 
     default <T> void install(Class<T> key, T service) {
-        MANAGER.put(key, service);
+        KirbyApi.getManager().put(key, service);
     }
 
 }

@@ -16,9 +16,7 @@ public interface ServiceRegistry {
     @NotNull
     default <T> T get(@NotNull final ServiceKey<T> key) {
         final T service = getOrNull(key);
-        if (service == null) {
-            throw new NullPointerException("Service not found: " + key);
-        }
+        if (service == null) throw new NullPointerException("Service not found: " + key);
         return service;
     }
 

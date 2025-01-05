@@ -1,10 +1,7 @@
-name: Keeby
+name: KirbyApi
 version: '1.0'
-main: dev.kirby.keeby.Keeby
+main: dev.kirby.api.KirbyApi
 api-version: '1.20'
 load: STARTUP
 authors: [SweetyDreams_]
 
-depended:
-  - KirbyApi
-  - Kirby

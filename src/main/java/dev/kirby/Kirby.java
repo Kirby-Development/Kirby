@@ -1,13 +1,15 @@
 package dev.kirby;
 
-import dev.kirby.api.IKirby;
-import dev.kirby.api.test.Test;
-import org.bukkit.plugin.java.JavaPlugin;
+import dev.kirby.api.plugin.KirbyPlugin;
 
-public final class Kirby extends JavaPlugin implements IKirby {
+public final class Kirby extends KirbyPlugin {
+
+    public Kirby() {
+        super("Kirby");
+    }
 
     @Override
     public void onEnable() {
-        install(Test.class, new Test("prova"));
+
     }
 }
