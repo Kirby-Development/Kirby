@@ -5,8 +5,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.StringJoiner;
 
 import static org.apache.logging.log4j.Level.INFO;
 
@@ -22,12 +21,22 @@ public class KirbyLogger {
     }
 
     public void log(Level level, Object... message) {
-        LOGGER.log(level, Arrays.stream(message).map(o -> switch (o) {
-            case Exception e -> e.getMessage();
-            case Throwable e -> e.getMessage();
-            case null -> "";
-            default -> o.toString();
-        }).collect(Collectors.joining(" ")));
+        StringJoiner joiner = new StringJoiner(" ");
+        for (Object o : message) {
+            //todo java 21
+            String s;
+            if (o instanceof Exception e) {
+                s = e.getMessage();
+            } else if (o instanceof Throwable e) {
+                s =  e.getMessage();
+            } else if (o == null) {
+                s =  "";
+            } else {
+                s =  o.toString();
+            }
+            joiner.add(s);
+        }
+        LOGGER.log(level, joiner.toString());
     }
 
     public void info(Object... donna) {

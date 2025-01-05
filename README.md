@@ -104,7 +104,7 @@ if (plugin != null) {
 
 ## Requisiti
 
-- **Java**: 17 o superiore
+- **Java**: 21 o superiore
 - **Maven**: Per gestire le dipendenze e la build
 - **Dipendenze Plugin**: Paper API, Lombok
 
@@ -121,7 +121,7 @@ Assicurati che nel tuo file `pom.xml` siano elencate le seguenti dipendenze:
     <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
-        <version>1.18.28</version>
+        <version>1.18.30</version>
         <scope>provided</scope>
     </dependency>
 </dependencies>

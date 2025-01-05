@@ -6,5 +6,6 @@ load: STARTUP
 authors: [SweetyDreams_]
 
 depended:
+  - packetevents
   - KirbyApi
   - Kirby
