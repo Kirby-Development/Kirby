@@ -1,15 +1,26 @@
 package dev.kirby;
 
+import dev.kirby.api.plugin.KirbyInstance;
 import dev.kirby.api.plugin.KirbyPlugin;
 
-public final class Kirby extends KirbyPlugin {
+public class Kirby extends KirbyPlugin {
 
-    public Kirby() {
-        super("Kirby");
+    public Kirby(KirbyInstance<?> plugin) {
+        super(plugin);
     }
 
     @Override
-    public void onEnable() {
+    public void init() {
+
+    }
+
+    @Override
+    public void enable() {
+
+    }
+
+    @Override
+    public void shutdown() {
 
     }
 }

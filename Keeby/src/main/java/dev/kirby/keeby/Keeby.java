@@ -1,15 +1,26 @@
 package dev.kirby.keeby;
 
+import dev.kirby.api.plugin.KirbyInstance;
 import dev.kirby.api.plugin.KirbyPlugin;
 
-public final class Keeby extends KirbyPlugin {
+public class Keeby extends KirbyPlugin {
 
-    public Keeby() {
-        super("Keeby");
+    public Keeby(KirbyInstance<?> plugin) {
+        super(plugin);
     }
 
     @Override
-    public void onEnable() {
+    public void init() {
+
+    }
+
+    @Override
+    public void enable() {
+
+    }
+
+    @Override
+    public void shutdown() {
 
     }
 }

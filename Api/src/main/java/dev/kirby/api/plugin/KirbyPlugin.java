@@ -1,16 +1,34 @@
 package dev.kirby.api.plugin;
 
 import dev.kirby.api.KirbyApi;
+import dev.kirby.api.file.ConfigYaml;
+import dev.kirby.api.util.KirbyLogger;
 import lombok.Getter;
-import org.bukkit.plugin.java.JavaPlugin;
+import lombok.Setter;
 
 @Getter
-public abstract class KirbyPlugin extends JavaPlugin implements IKirby {
-
+@Setter
+public abstract class KirbyPlugin {
+    protected final KirbyInstance<?> instance;
     private final String name;
-    public KirbyPlugin(String name) {
-        this.name = name;
-        KirbyApi.getRegister().install(this);
+    private final KirbyLogger logger;
+
+    private final ConfigYaml config;
+
+    public KirbyPlugin(KirbyInstance<?> kirby) {
+        this.instance = kirby;
+        this.name = this.instance.getName();
+        this.config = new ConfigYaml(this.instance);
+        this.logger = new KirbyLogger(this.name);
+        KirbyApi.getRegistry().install(this);
     }
 
+    protected void init() {
+    }
+
+    protected void enable() {
+    }
+
+    protected void shutdown() {
+    }
 }

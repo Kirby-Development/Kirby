@@ -1,6 +1,6 @@
 name: Kirby
 version: '1.0'
-main: dev.kirby.Kirby
+main: dev.kirby.Instance
 api-version: '1.20'
 load: STARTUP
 authors: [ SweetyDreams_ ]
