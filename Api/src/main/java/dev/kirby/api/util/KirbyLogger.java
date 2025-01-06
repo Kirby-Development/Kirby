@@ -23,18 +23,12 @@ public class KirbyLogger {
     public void log(Level level, Object... message) {
         StringJoiner joiner = new StringJoiner(" ");
         for (Object o : message) {
-            //todo java 21
-            String s;
-            if (o instanceof Exception e) {
-                s = e.getMessage();
-            } else if (o instanceof Throwable e) {
-                s =  e.getMessage();
-            } else if (o == null) {
-                s =  "";
-            } else {
-                s =  o.toString();
-            }
-            joiner.add(s);
+            joiner.add(switch (o) {
+                case Exception e -> e.getMessage();
+                case Throwable e -> e.getMessage();
+                case null -> "";
+                default -> o.toString();
+            });
         }
         LOGGER.log(level, joiner.toString());
     }
