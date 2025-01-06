@@ -2,6 +2,7 @@ package dev.kirby.server;
 
 import dev.kirby.hwid.HwidCalculator;
 import dev.kirby.hwid.HwidChecker;
+import dev.kirby.license.LicenseChecker;
 import dev.kirby.netty.event.EventRegistry;
 import dev.kirby.netty.event.PacketSubscriber;
 import dev.kirby.netty.handler.PacketChannelInboundHandler;
@@ -9,10 +10,7 @@ import dev.kirby.netty.handler.PacketDecoder;
 import dev.kirby.netty.handler.PacketEncoder;
 import dev.kirby.netty.io.Responder;
 import dev.kirby.netty.registry.IPacketRegistry;
-import dev.kirby.packet.ConnectPacket;
-import dev.kirby.packet.DataPacket;
-import dev.kirby.packet.Status;
-import dev.kirby.packet.TextPacket;
+import dev.kirby.packet.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -54,12 +52,10 @@ public class NettyServer extends ChannelInitializer<Channel> {
                 responder.respond(new Status.Packet(status));
             }
 
-
             @PacketSubscriber
-            public void onPacketReceive(TextPacket packet, ChannelHandlerContext ctx, Responder responder) {
+            public void onPacketReceive(LicensePacket packet, ChannelHandlerContext ctx, Responder responder) {
                 System.out.println("Received " + packet.getPacketName() + " from " + ctx.channel().remoteAddress().toString());
-                //todo LicenseChecker
-                Status status = HwidChecker.get().check(packet.getText());
+                Status status = LicenseChecker.get().check(packet.getLicense(), packet.getUuid());
                 System.out.println(status.name());
                 responder.respond(new Status.Packet(status));
             }

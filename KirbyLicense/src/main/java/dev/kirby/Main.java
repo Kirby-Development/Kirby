@@ -3,10 +3,7 @@ package dev.kirby;
 import dev.kirby.netty.exception.PacketRegistrationException;
 import dev.kirby.netty.registry.IPacketRegistry;
 import dev.kirby.netty.registry.SimplePacketRegistry;
-import dev.kirby.packet.ConnectPacket;
-import dev.kirby.packet.DataPacket;
-import dev.kirby.packet.Status;
-import dev.kirby.packet.TextPacket;
+import dev.kirby.packet.*;
 import dev.kirby.server.NettyServer;
 
 public class Main {
@@ -16,6 +13,7 @@ public class Main {
         packetRegistry.registerPacket(1, DataPacket.class);
         packetRegistry.registerPacket(2, Status.Packet.class);
         packetRegistry.registerPacket(3, TextPacket.class);
+        packetRegistry.registerPacket(4, LicensePacket.class);
 
         new NettyServer(packetRegistry, future -> System.out.println("Server running"));
 
