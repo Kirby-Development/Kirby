@@ -1,4 +1,4 @@
-package dev.kirby.hwid;
+package dev.kirby.checker.hwid;
 
 public enum Salt {
     LUCKY,

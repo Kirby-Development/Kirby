@@ -1,26 +1,27 @@
 package dev.kirby.server;
 
-import dev.kirby.hwid.HwidCalculator;
-import dev.kirby.hwid.HwidChecker;
-import dev.kirby.license.LicenseChecker;
 import dev.kirby.netty.event.EventRegistry;
-import dev.kirby.netty.event.PacketSubscriber;
 import dev.kirby.netty.handler.PacketChannelInboundHandler;
 import dev.kirby.netty.handler.PacketDecoder;
 import dev.kirby.netty.handler.PacketEncoder;
-import dev.kirby.netty.io.Responder;
 import dev.kirby.netty.registry.IPacketRegistry;
-import dev.kirby.packet.*;
+import dev.kirby.packet.ConnectPacket;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import lombok.Getter;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
+
+@Getter
 public class NettyServer extends ChannelInitializer<Channel> {
 
     private final ServerBootstrap bootstrap;
@@ -32,7 +33,8 @@ public class NettyServer extends ChannelInitializer<Channel> {
 
     private Channel connectedChannel;
 
-    public NettyServer(IPacketRegistry packetRegistry, Consumer<Future<? super Void>> doneCallback) {
+
+    public NettyServer(IPacketRegistry packetRegistry, Consumer<Future<? super Void>> doneCallback, Consumer<EventRegistry> eventRegistryCallback) {
         this.packetRegistry = packetRegistry;
         this.bootstrap = new ServerBootstrap()
                 .option(ChannelOption.AUTO_READ, true)
@@ -41,28 +43,11 @@ public class NettyServer extends ChannelInitializer<Channel> {
                 .childHandler(this)
                 .channel(NioServerSocketChannel.class);
 
-        eventRegistry.registerEvents(new Object() {
+        eventRegistryCallback.accept(eventRegistry);
 
-            @PacketSubscriber
-            public void onPacketReceive(DataPacket packet, ChannelHandlerContext ctx, Responder responder) {
-                System.out.println("Received " + packet.getPacketName() + " from " + ctx.channel().remoteAddress().toString());
-                String hwid = HwidCalculator.get().calculate(packet.getData());
-                Status status = HwidChecker.get().check(hwid);
-                System.out.println(status.name());
-                responder.respond(new Status.Packet(status));
-            }
-
-            @PacketSubscriber
-            public void onPacketReceive(LicensePacket packet, ChannelHandlerContext ctx, Responder responder) {
-                System.out.println("Received " + packet.getPacketName() + " from " + ctx.channel().remoteAddress().toString());
-                Status status = LicenseChecker.get().check(packet.getLicense(), packet.getUuid());
-                System.out.println(status.name());
-                responder.respond(new Status.Packet(status));
-            }
-        });
 
         try {
-            this.bootstrap.bind(new InetSocketAddress("127.0.0.1", 1234))
+            this.bootstrap.bind(new InetSocketAddress("127.0.0.1", 9900))
                     .awaitUninterruptibly().sync().addListener(doneCallback::accept);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -74,7 +59,8 @@ public class NettyServer extends ChannelInitializer<Channel> {
         channel.pipeline().addLast(new PacketDecoder(packetRegistry), new PacketEncoder(packetRegistry),new PacketChannelInboundHandler(eventRegistry));
 
         (this.connectedChannel = channel).writeAndFlush(new ConnectPacket());
-        System.out.println("sent connect packet to " + channel.remoteAddress().toString());
+        String ip = channel.remoteAddress().toString();
+        System.out.println("sent connect packet to " + ip);
     }
 
     public void shutdown() {

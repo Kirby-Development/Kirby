@@ -9,6 +9,8 @@ import lombok.Setter;
 public enum Status {
     VALID,
     INVALID,
+    INVALID_IP,
+    EXPIRED,
     NOT_FOUND;
 
     public boolean valid() {

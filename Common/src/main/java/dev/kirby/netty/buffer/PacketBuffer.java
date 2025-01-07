@@ -95,6 +95,26 @@ public class PacketBuffer extends ByteBuf {
         return new String(data, StandardCharsets.UTF_8);
     }
 
+    public <T extends Encoder> void writeObject(T object) {
+        if (object == null) {
+            writeBoolean(false);
+        } else {
+            writeBoolean(true);
+            object.write(this);
+        }
+    }
+
+
+    public <T extends Decoder> T readObject(Supplier<T> factory) {
+        boolean isNotNull = readBoolean();
+        if (!isNotNull) {
+            return null;
+        }
+        T object = factory.get();
+        object.read(this);
+        return object;
+    }
+
     /**
      * Write a list of objects into the buffer, which can be encoded.
      *

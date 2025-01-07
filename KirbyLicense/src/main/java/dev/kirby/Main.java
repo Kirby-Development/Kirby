@@ -1,26 +1,22 @@
 package dev.kirby;
 
-import dev.kirby.netty.exception.PacketRegistrationException;
-import dev.kirby.netty.registry.IPacketRegistry;
-import dev.kirby.netty.registry.SimplePacketRegistry;
-import dev.kirby.packet.*;
+import dev.kirby.database.DatabaseManager;
+import dev.kirby.packet.registry.PacketRegister;
 import dev.kirby.server.NettyServer;
+import dev.kirby.server.ServerEvents;
 
 public class Main {
-    public static void main(String[] args) throws PacketRegistrationException {
-        IPacketRegistry packetRegistry = new SimplePacketRegistry();
-        packetRegistry.registerPacket(0, ConnectPacket.class);
-        packetRegistry.registerPacket(1, DataPacket.class);
-        packetRegistry.registerPacket(2, Status.Packet.class);
-        packetRegistry.registerPacket(3, TextPacket.class);
-        packetRegistry.registerPacket(4, LicensePacket.class);
 
-        new NettyServer(packetRegistry, future -> System.out.println("Server running"));
+    public static void main(String[] args) throws Exception {
+        //todo plugin simplesqlitebrowser
+        final DatabaseManager databaseManager = new DatabaseManager("./test.db");
+        startServer(databaseManager);
+    }
 
-
-
-
-
+    private static void startServer(DatabaseManager databaseManager) {
+        final NettyServer server = new NettyServer(PacketRegister.get().getPacketRegistry(),
+                future -> System.out.println("Server running..."),
+                registry -> registry.registerEvents(new ServerEvents(databaseManager)));
     }
 
 }

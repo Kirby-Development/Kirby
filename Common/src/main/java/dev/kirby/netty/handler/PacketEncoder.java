@@ -19,9 +19,7 @@ public class PacketEncoder extends MessageToByteEncoder<Packet> {
     protected void encode(ChannelHandlerContext channelHandlerContext, Packet packet, ByteBuf byteBuf) throws Exception {
         // Get packet id and write into final packet
         int packetId = packetRegistry.getPacketId(packet.getClass());
-        if (packetId < 0) {
-            throw new EncoderException("Returned PacketId by registry is < 0");
-        }
+        if (packetId < 0) throw new EncoderException("Returned PacketId by registry is < 0");
         byteBuf.writeInt(packetId);
         byteBuf.writeLong(packet.getSessionId());
 

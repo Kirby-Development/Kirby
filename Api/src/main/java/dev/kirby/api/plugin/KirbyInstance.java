@@ -40,6 +40,7 @@ public abstract class KirbyInstance<T extends KirbyPlugin> extends JavaPlugin im
         PacketEvents.getAPI().terminate();
         HandlerList.unregisterAll(this);
         Bukkit.getScheduler().cancelTasks(this);
+        plugin().getClient().shutdown();
         plugin().shutdown();
     }
 

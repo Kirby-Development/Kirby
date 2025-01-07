@@ -1,14 +1,21 @@
 package dev.kirby.api.plugin;
 
+import dev.kirby.Utils;
 import dev.kirby.api.KirbyApi;
 import dev.kirby.api.file.ConfigYaml;
+import dev.kirby.api.netty.ClientEvents;
+import dev.kirby.api.netty.NettyClient;
 import dev.kirby.api.util.KirbyLogger;
+import dev.kirby.packet.registry.PacketRegister;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public abstract class KirbyPlugin {
+
+    private final NettyClient client = new NettyClient(PacketRegister.get().getPacketRegistry(), future -> System.out.println("Client running"), new ClientEvents(Utils.getData()));
+
     protected final KirbyInstance<?> instance;
     private final String name;
     private final KirbyLogger logger;

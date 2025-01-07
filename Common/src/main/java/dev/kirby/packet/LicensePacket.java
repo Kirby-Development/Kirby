@@ -2,22 +2,19 @@ package dev.kirby.packet;
 
 import dev.kirby.netty.Packet;
 import dev.kirby.netty.buffer.PacketBuffer;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class LicensePacket extends Packet {
     private String license;
     private UUID uuid;
-
-    public LicensePacket() {}
-
-    public LicensePacket(String license, UUID uuid) {
-        this.license = license;
-        this.uuid = uuid;
-    }
 
     @Override
     public void read(PacketBuffer buffer) {
