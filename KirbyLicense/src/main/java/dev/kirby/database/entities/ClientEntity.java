@@ -9,21 +9,13 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@DatabaseTable(tableName = "Client")
+@DatabaseTable(tableName = "client")
 public class ClientEntity extends DatabaseEntity<String> {
 
-    @DatabaseField(id = true)
-    private String hwid;
-
-    @DatabaseField(foreign = true, canBeNull = false, foreignAutoRefresh = true)
-    private LicenseEntity license;
+    @DatabaseField(id = true, unique = true)
+    private String id;
 
     @DatabaseField
     private String lastIp;
-
-    @Override
-    public String getId() {
-        return hwid;
-    }
 
 }

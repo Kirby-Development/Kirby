@@ -1,5 +1,6 @@
 package dev.kirby.packet;
 
+import dev.kirby.netty.Packet;
 import dev.kirby.netty.buffer.PacketBuffer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,10 +9,14 @@ import lombok.Setter;
 
 public enum Status {
     VALID,
-    INVALID,
-    INVALID_IP,
+    MAX_IP,
     EXPIRED,
-    NOT_FOUND;
+    INVALID_IP, //todo user can register allowed ips
+    INVALID_KEY,
+    KEY_NOT_FOUND,
+    INVALID_SERVICE,
+    CLIENT_NOT_FOUND,
+    ;
 
     public boolean valid() {
         return this == VALID;
@@ -21,7 +26,7 @@ public enum Status {
     @AllArgsConstructor
     @Getter
     @Setter
-    public static class Packet extends dev.kirby.netty.Packet {
+    public static class ResponsePacket extends Packet {
 
         private Status status;
 
