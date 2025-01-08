@@ -14,10 +14,19 @@ import lombok.Setter;
 @Setter
 public abstract class KirbyPlugin {
 
-    private final NettyClient client = new NettyClient(PacketRegister.get().getPacketRegistry(), future -> System.out.println("Client running"), new ClientEvents(Utils.getData()));
+    private final NettyClient client = new NettyClient(PacketRegister.get().getPacketRegistry(), future -> System.out.println("Client running"), new ClientEvents(Utils.getData(), data()));
+
+    public String[] data() {
+        return new String[]{
+                name,
+                version
+        };
+    }
 
     protected final KirbyInstance<?> instance;
     private final String name;
+    private final String version;
+
     private final KirbyLogger logger;
 
     private final ConfigYaml config;
@@ -25,6 +34,7 @@ public abstract class KirbyPlugin {
     public KirbyPlugin(KirbyInstance<?> kirby) {
         this.instance = kirby;
         this.name = this.instance.getName();
+        this.version = this.instance.getPluginMeta().getVersion();
         this.config = new ConfigYaml(this.instance);
         this.logger = new KirbyLogger(this.name);
         KirbyApi.getRegistry().install(this);

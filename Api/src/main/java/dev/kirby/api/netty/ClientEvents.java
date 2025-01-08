@@ -1,21 +1,22 @@
 package dev.kirby.api.netty;
 
-import dev.kirby.Utils;
 import dev.kirby.netty.event.PacketSubscriber;
 import dev.kirby.netty.io.Responder;
-import dev.kirby.packet.*;
+import dev.kirby.packet.ConnectPacket;
+import dev.kirby.packet.LoginPacket;
+import dev.kirby.packet.Status;
+import dev.kirby.packet.TextPacket;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
-import java.util.UUID;
-
 @Getter
 public class ClientEvents {
 
-    private final String[] data;
-    public ClientEvents(String[] data) {
+    private final String[] data, pluginData;
+    public ClientEvents(String[] data, String[] pluginData) {
         this.data = data;
+        this.pluginData = pluginData;
     }
 
     private Responder lastResponder;
@@ -27,8 +28,7 @@ public class ClientEvents {
         lastCtx = ctx;
         lastResponder = responder;
         System.out.println("Received " + packet.getPacketName());
-        responder.respond(new DataPacket(data));
-        responder.respond(new LicensePacket("test", UUID.nameUUIDFromBytes(Utils.getBytes(data))));
+        responder.respond(new LoginPacket(data,pluginData,"test"));
     }
 
     @PacketSubscriber
@@ -39,7 +39,7 @@ public class ClientEvents {
     }
 
     @PacketSubscriber
-    public void onPacketReceive(Status.Packet packet, ChannelHandlerContext ctx, Responder responder) {
+    public void onPacketReceive(Status.ResponsePacket packet, ChannelHandlerContext ctx, Responder responder) {
         lastCtx = ctx;
         lastResponder = responder;
         Status status = packet.getStatus();

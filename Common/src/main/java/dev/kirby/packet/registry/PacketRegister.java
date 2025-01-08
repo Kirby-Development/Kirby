@@ -15,10 +15,9 @@ public class PacketRegister {
     @SneakyThrows
     private PacketRegister()  {
         packetRegistry.registerPacket(0, ConnectPacket.class);
-        packetRegistry.registerPacket(1, DataPacket.class);
-        packetRegistry.registerPacket(2, Status.Packet.class);
+        packetRegistry.registerPacket(1, LoginPacket.class);
+        packetRegistry.registerPacket(2, Status.ResponsePacket.class);
         packetRegistry.registerPacket(3, TextPacket.class);
-        packetRegistry.registerPacket(4, LicensePacket.class);
     }
 
 

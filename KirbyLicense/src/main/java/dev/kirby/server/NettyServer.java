@@ -34,7 +34,7 @@ public class NettyServer extends ChannelInitializer<Channel> {
     private Channel connectedChannel;
 
 
-    public NettyServer(IPacketRegistry packetRegistry, Consumer<Future<? super Void>> doneCallback, Consumer<EventRegistry> eventRegistryCallback) {
+    public NettyServer(IPacketRegistry packetRegistry, Consumer<Future<? super Void>> doneCallback, ServerEvents serverEvents) {
         this.packetRegistry = packetRegistry;
         this.bootstrap = new ServerBootstrap()
                 .option(ChannelOption.AUTO_READ, true)
@@ -43,7 +43,7 @@ public class NettyServer extends ChannelInitializer<Channel> {
                 .childHandler(this)
                 .channel(NioServerSocketChannel.class);
 
-        eventRegistryCallback.accept(eventRegistry);
+        eventRegistry.registerEvents(serverEvents);
 
 
         try {

@@ -1,14 +1,13 @@
 package dev.kirby.database.entities;
 
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import lombok.*;
 import org.jetbrains.annotations.Nullable;
 
-import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Objects;
 import java.util.UUID;
 
 @Data
@@ -20,18 +19,25 @@ import java.util.UUID;
 public class LicenseEntity extends DatabaseEntity<UUID> {
 
     @DatabaseField(id = true)
-    private UUID uuid;
+    private UUID id;
 
     @DatabaseField(canBeNull = false)
     private String key;
 
+    @DatabaseField(canBeNull = false, foreign = true)
+    private ResourceEntity service;
+
+    @DatabaseField(canBeNull = false, foreign = true)
+    private ClientEntity client;
+
     @DatabaseField(canBeNull = false)
     private long expireAt;
 
-    @Override
-    public UUID getId() {
-        return uuid;
-    }
+    @DatabaseField
+    private int maxIpInUse;
+
+    @ForeignCollectionField(eager = true)
+    private ForeignCollection<UsedIp> usedIps;
 
     public boolean hasExpiry() {
         return this.expireAt != 0L;
@@ -41,31 +47,13 @@ public class LicenseEntity extends DatabaseEntity<UUID> {
         return hasExpiry() ? Instant.ofEpochSecond(this.expireAt) : null;
     }
 
-    public boolean timeValid() {
-        return !hasExpiry();
-    }
-
     public boolean hasExpired() {
         Instant expiry = getExpiry();
         return expiry != null && expiry.isBefore(Instant.now());
     }
 
 
-    public @Nullable Duration getExpiryDuration() {
-        Instant expiry = getExpiry();
-        if (expiry == null) return null;
-        Instant now = Instant.now().truncatedTo(ChronoUnit.SECONDS);
-        return Duration.between(now, expiry);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof LicenseEntity license)) return false;
-        return getExpireAt() == license.getExpireAt() && Objects.equals(getUuid(), license.getUuid()) && Objects.equals(getKey(), license.getKey());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getUuid(), getKey(), getExpireAt());
+    public boolean aboveMax() {
+        return usedIps.size() >= maxIpInUse;
     }
 }
