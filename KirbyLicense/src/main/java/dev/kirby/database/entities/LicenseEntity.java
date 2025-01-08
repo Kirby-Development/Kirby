@@ -4,6 +4,7 @@ import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+import dev.kirby.config.Config;
 import lombok.*;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,14 +16,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@DatabaseTable(tableName = "License")
+@DatabaseTable(tableName = "license")
 public class LicenseEntity extends DatabaseEntity<UUID> {
 
     @DatabaseField(id = true)
     private UUID id;
-
-    @DatabaseField(canBeNull = false)
-    private String key;
 
     @DatabaseField(canBeNull = false, foreign = true)
     private ResourceEntity service;
@@ -55,5 +53,15 @@ public class LicenseEntity extends DatabaseEntity<UUID> {
 
     public boolean aboveMax() {
         return usedIps.size() >= maxIpInUse;
+    }
+
+    public LicenseEntity(UUID id, ResourceEntity service, ClientEntity client, Config config) {
+        this.id = id;
+        this.service = service;
+        this.client = client;
+
+        this.expireAt = config.getExpiryTime() == 0L ? 0L : Instant.now().getEpochSecond() + config.getExpiryTime();
+        this.maxIpInUse = config.getMaxIps();
+
     }
 }

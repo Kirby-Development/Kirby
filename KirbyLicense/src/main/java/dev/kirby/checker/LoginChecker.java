@@ -1,8 +1,9 @@
 package dev.kirby.checker;
 
+import dev.kirby.ServerLauncher;
 import dev.kirby.Utils;
 import dev.kirby.checker.hwid.HwidCalculator;
-import dev.kirby.database.DatabaseManager;
+import dev.kirby.checker.hwid.SecureUUIDGenerator;
 import dev.kirby.database.entities.ClientEntity;
 import dev.kirby.database.entities.LicenseEntity;
 import dev.kirby.database.entities.ResourceEntity;
@@ -15,37 +16,43 @@ import java.util.UUID;
 
 public class LoginChecker extends Checker<LoginPacket> {
 
-    private LoginChecker(DatabaseManager databaseManager) {
-        super(databaseManager);
+
+    private final SecureUUIDGenerator uuidGenerator;
+    private final ServerLauncher serverLauncher;
+    private LoginChecker(ServerLauncher serverLauncher) {
+        super(serverLauncher.getDatabaseManager());
+        this.serverLauncher = serverLauncher;
+        uuidGenerator = serverLauncher.getSecureUUIDGenerator();
     }
 
     private static LoginChecker INSTANCE;
-
-    public static LoginChecker get(DatabaseManager databaseManager) {
-        if (INSTANCE == null) INSTANCE = new LoginChecker(databaseManager);
+    public static LoginChecker get(ServerLauncher serverLauncher) {
+        if (INSTANCE == null) INSTANCE = new LoginChecker(serverLauncher);
         return INSTANCE;
     }
 
     @SneakyThrows
     public Status check(LoginPacket packet, String ip) {
         String[] clientData = packet.getClientData();
-        String hwid = HwidCalculator.get().calculate(clientData);
+        String hwid = HwidCalculator.get(serverLauncher).calculate(clientData);
         ClientEntity client = manager.getClientService().findById(hwid);
-        if (client == null) return Status.CLIENT_NOT_FOUND;
+        if (client == null) return Status.INVALID_USER;
         client.setLastIp(ip);
 
         String[] serviceData = packet.getServiceData();
-        UUID serviceId = UUID.nameUUIDFromBytes(Utils.getBytes(serviceData));
+
+        UUID serviceId = uuidGenerator.generateSecureUUID(serviceData);
         ResourceEntity resourceEntity = manager.getResourceService().findById(serviceId);
         if (resourceEntity == null) return Status.INVALID_SERVICE;
 
         LicenseService licenseService = manager.getLicenseService();
-        UUID uuid = UUID.nameUUIDFromBytes(Utils.getBytes(clientData));
-        LicenseEntity license = licenseService.findById(uuid);
 
         String licenseKey = packet.getLicenseKey();
-        if (license == null && (license = licenseService.getByLicense(licenseKey)) == null) return Status.KEY_NOT_FOUND;
-        if (!license.getKey().equals(licenseKey)) return Status.INVALID_KEY;
+        String[] concat = Utils.concat(clientData, Utils.concat(serviceData, licenseKey));
+        UUID uuid = uuidGenerator.generateSecureUUID(concat);
+        LicenseEntity license = licenseService.findById(uuid);
+        if (license == null) return Status.INVALID_KEY;
+
         if (license.hasExpired()) return Status.EXPIRED;
 
         if (!licenseService.isValidIp(license, ip)) {

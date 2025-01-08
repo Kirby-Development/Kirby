@@ -8,6 +8,7 @@ import com.j256.ormlite.table.TableUtils;
 import dev.kirby.database.entities.ClientEntity;
 import dev.kirby.database.entities.LicenseEntity;
 import dev.kirby.database.entities.ResourceEntity;
+import dev.kirby.database.entities.UsedIp;
 import dev.kirby.database.services.ClientService;
 import dev.kirby.database.services.LicenseService;
 import dev.kirby.database.services.ResourceService;
@@ -31,6 +32,7 @@ public class DatabaseManager {
         clientService = new ClientService(createDao(ClientEntity.class));
         licenseService = new LicenseService(createDao(LicenseEntity.class));
         resourceService = new ResourceService(createDao(ResourceEntity.class));
+        TableUtils.createTableIfNotExists(connectionSource, UsedIp.class);
     }
 
     public DatabaseManager(String path) throws SQLException {

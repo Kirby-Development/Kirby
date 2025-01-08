@@ -1,8 +1,8 @@
 package dev.kirby.server;
 
+import dev.kirby.ServerLauncher;
 import dev.kirby.Utils;
 import dev.kirby.checker.LoginChecker;
-import dev.kirby.database.DatabaseManager;
 import dev.kirby.netty.event.PacketSubscriber;
 import dev.kirby.netty.io.Responder;
 import dev.kirby.packet.LoginPacket;
@@ -12,17 +12,17 @@ import io.netty.channel.ChannelHandlerContext;
 
 public class ServerEvents {
 
-    private final DatabaseManager databaseManager;
+    private final ServerLauncher serverLauncher;
 
-    public ServerEvents(DatabaseManager databaseManager) {
-        this.databaseManager = databaseManager;
+    public ServerEvents(ServerLauncher serverLauncher) {
+        this.serverLauncher = serverLauncher;
     }
 
     @PacketSubscriber
     public void onPacketReceive(LoginPacket packet, ChannelHandlerContext ctx, Responder responder) {
         String ip = Utils.getIp(ctx);
         System.out.println("Received " + packet.getPacketName() + " from " + ip);
-        Status status = LoginChecker.get(databaseManager).check(packet, ip.split(":")[0]);
+        Status status = LoginChecker.get(serverLauncher).check(packet, ip.split(":")[0]);
         System.out.println(status.name());
         responder.respond(new Status.ResponsePacket(status));
     }

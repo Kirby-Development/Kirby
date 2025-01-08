@@ -11,11 +11,11 @@ public enum Status {
     VALID,
     MAX_IP,
     EXPIRED,
+    INVALID,
     INVALID_IP, //todo user can register allowed ips
     INVALID_KEY,
-    KEY_NOT_FOUND,
+    INVALID_USER,
     INVALID_SERVICE,
-    CLIENT_NOT_FOUND,
     ;
 
     public boolean valid() {

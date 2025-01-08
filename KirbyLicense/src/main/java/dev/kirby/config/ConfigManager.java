@@ -1,6 +1,8 @@
 package dev.kirby.config;
 
 import com.google.gson.Gson;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.File;
 import java.io.FileReader;
@@ -13,6 +15,8 @@ public class ConfigManager<T> {
 
     private final File file = new File("config.json");
 
+    @Setter
+    @Getter
     private T config;
 
     public ConfigManager(final T defaultConfig) {
@@ -39,13 +43,4 @@ public class ConfigManager<T> {
         }
     }
 
-    // Metodo per ottenere la configurazione corrente
-    public T getConfig() {
-        return config;
-    }
-
-    // Metodo per aggiornare la configurazione
-    public void setConfig(T config) {
-        this.config = config;
-    }
 }

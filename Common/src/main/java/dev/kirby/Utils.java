@@ -18,12 +18,19 @@ public class Utils {
                 String.valueOf(Runtime.getRuntime().availableProcessors()),
                 System.getenv("PROCESSOR_IDENTIFIER"),
                 System.getenv("PROCESSOR_ARCHITECTURE"),
-                System.getenv("PROCESSOR_ARCHITEW6432"),
+                //System.getenv("PROCESSOR_ARCHITEW6432"),
                 System.getenv("NUMBER_OF_PROCESSORS"),
                 System.getenv("PROCESSOR_LEVEL"),
                 System.getenv("PROCESSOR_REVISION"),
                 getMAC()
         };
+    }
+
+    public String[] concat(String[] a, String... b) {
+        String[] c = new String[a.length + b.length];
+        System.arraycopy(a, 0, c, 0, a.length);
+        System.arraycopy(b, 0, c, a.length, b.length);
+        return c;
     }
 
     private String getMAC() {
@@ -41,12 +48,11 @@ public class Utils {
         return "UNKNOWN";
     }
 
-    public byte[] getBytes(String[] data) throws IOException {
+    public byte[] getBytes(String... data) throws IOException {
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
         ObjectOutputStream objectStream = new ObjectOutputStream(byteStream);
         for (Object obj : data) objectStream.writeObject(obj);
         objectStream.flush();
-
         return byteStream.toByteArray();
     }
 

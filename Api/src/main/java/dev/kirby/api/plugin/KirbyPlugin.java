@@ -1,9 +1,7 @@
 package dev.kirby.api.plugin;
 
-import dev.kirby.Utils;
 import dev.kirby.api.KirbyApi;
 import dev.kirby.api.file.ConfigYaml;
-import dev.kirby.api.netty.ClientEvents;
 import dev.kirby.api.netty.NettyClient;
 import dev.kirby.api.util.KirbyLogger;
 import dev.kirby.packet.registry.PacketRegister;
@@ -14,21 +12,11 @@ import lombok.Setter;
 @Setter
 public abstract class KirbyPlugin {
 
-    private final NettyClient client = new NettyClient(PacketRegister.get().getPacketRegistry(), future -> System.out.println("Client running"), new ClientEvents(Utils.getData(), data()));
-
-    public String[] data() {
-        return new String[]{
-                name,
-                version
-        };
-    }
-
+    private final NettyClient client;
     protected final KirbyInstance<?> instance;
     private final String name;
     private final String version;
-
     private final KirbyLogger logger;
-
     private final ConfigYaml config;
 
     public KirbyPlugin(KirbyInstance<?> kirby) {
@@ -38,6 +26,10 @@ public abstract class KirbyPlugin {
         this.config = new ConfigYaml(this.instance);
         this.logger = new KirbyLogger(this.name);
         KirbyApi.getRegistry().install(this);
+        client = new NettyClient(PacketRegister.get().getPacketRegistry(), f -> logger.info("Client running"), this, () -> {
+            instance.getPluginLoader().disablePlugin(instance);
+            logger.info("Client disabled");
+        });
     }
 
     protected void init() {
@@ -47,5 +39,12 @@ public abstract class KirbyPlugin {
     }
 
     protected void shutdown() {
+    }
+
+    public String[] data() {
+        return new String[]{
+                name,
+                version
+        };
     }
 }

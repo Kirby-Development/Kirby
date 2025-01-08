@@ -1,3 +1,4 @@
+/*
 package dev.kirby.packet;
 
 import dev.kirby.netty.Packet;
@@ -15,3 +16,4 @@ public class ConnectPacket extends Packet {
     public void write(PacketBuffer packetBuffer) {}
 
 }
+ */

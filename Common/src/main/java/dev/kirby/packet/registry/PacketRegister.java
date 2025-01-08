@@ -14,10 +14,10 @@ public class PacketRegister {
 
     @SneakyThrows
     private PacketRegister()  {
-        packetRegistry.registerPacket(0, ConnectPacket.class);
-        packetRegistry.registerPacket(1, LoginPacket.class);
-        packetRegistry.registerPacket(2, Status.ResponsePacket.class);
-        packetRegistry.registerPacket(3, TextPacket.class);
+        int id = 0;
+        packetRegistry.registerPacket(id++, LoginPacket.class);
+        packetRegistry.registerPacket(id++, Status.ResponsePacket.class);
+        packetRegistry.registerPacket(id++, TextPacket.class);
     }
 
 

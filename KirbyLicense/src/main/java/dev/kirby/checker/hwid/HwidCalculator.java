@@ -1,16 +1,21 @@
 package dev.kirby.checker.hwid;
 
-import java.util.Arrays;
-import java.util.Objects;
+import dev.kirby.ServerLauncher;
+import lombok.SneakyThrows;
+
 import java.util.zip.CRC32;
 
 public class HwidCalculator {
 
-    private HwidCalculator() {}
+    private final SecureUUIDGenerator uuidGenerator;
+    private HwidCalculator(ServerLauncher launcher) {
+        uuidGenerator = launcher.getSecureUUIDGenerator();
+    }
 
-    private static final HwidCalculator INSTANCE = new HwidCalculator();
+    private static HwidCalculator INSTANCE;
 
-    public static HwidCalculator get() {
+    public static HwidCalculator get(ServerLauncher serverLauncher) {
+        if (INSTANCE == null) INSTANCE = new HwidCalculator(serverLauncher);
         return INSTANCE;
     }
 
@@ -20,11 +25,16 @@ public class HwidCalculator {
         return hash(hashes);
     }
 
+    @SneakyThrows
     private String hash(String... data) {
         final CRC32 crc = new CRC32();
-        Arrays.stream(data).filter(Objects::nonNull).map(String::getBytes).forEach(crc::update);
-        String hexString = Long.toHexString(crc.getValue());
-        return hexString.substring(0, hexString.length() / 2) + "LUCKY" + hexString.substring(hexString.length() / 2);
+        for (String s : data) {
+            if (s != null) {
+                byte[] bytes = uuidGenerator.generateSecureBytes(s);
+                crc.update(bytes);
+            }
+        }
+        return Long.toHexString(crc.getValue());
     }
 
 }

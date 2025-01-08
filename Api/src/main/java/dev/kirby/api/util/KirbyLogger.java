@@ -7,8 +7,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.StringJoiner;
 
-import static org.apache.logging.log4j.Level.INFO;
-
 @Getter
 public class KirbyLogger {
 
@@ -20,7 +18,7 @@ public class KirbyLogger {
         LOGGER = LogManager.getLogger(name);
     }
 
-    public void log(Level level, Object... message) {
+    public String log(Level level, Object... message) {
         StringJoiner joiner = new StringJoiner(" ");
         for (Object o : message) {
             joiner.add(switch (o) {
@@ -30,11 +28,13 @@ public class KirbyLogger {
                 default -> o.toString();
             });
         }
-        LOGGER.log(level, joiner.toString());
+        String string = joiner.toString();
+        LOGGER.log(level, string);
+        return string;
     }
 
     public void info(Object... donna) {
-        log(INFO, donna);
+        log(Level.INFO, donna);
     }
 
     public void warn(Object... donna) {

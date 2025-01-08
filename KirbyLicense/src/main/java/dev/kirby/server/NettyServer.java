@@ -5,7 +5,6 @@ import dev.kirby.netty.handler.PacketChannelInboundHandler;
 import dev.kirby.netty.handler.PacketDecoder;
 import dev.kirby.netty.handler.PacketEncoder;
 import dev.kirby.netty.registry.IPacketRegistry;
-import dev.kirby.packet.ConnectPacket;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -58,9 +57,7 @@ public class NettyServer extends ChannelInitializer<Channel> {
     protected void initChannel(Channel channel) {
         channel.pipeline().addLast(new PacketDecoder(packetRegistry), new PacketEncoder(packetRegistry),new PacketChannelInboundHandler(eventRegistry));
 
-        (this.connectedChannel = channel).writeAndFlush(new ConnectPacket());
-        String ip = channel.remoteAddress().toString();
-        System.out.println("sent connect packet to " + ip);
+        this.connectedChannel = channel;
     }
 
     public void shutdown() {
