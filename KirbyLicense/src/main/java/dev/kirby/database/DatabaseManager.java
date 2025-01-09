@@ -10,6 +10,7 @@ import dev.kirby.database.entities.LicenseEntity;
 import dev.kirby.database.entities.ResourceEntity;
 import dev.kirby.database.entities.UsedIp;
 import dev.kirby.database.services.ClientService;
+import dev.kirby.database.services.IpService;
 import dev.kirby.database.services.LicenseService;
 import dev.kirby.database.services.ResourceService;
 import lombok.Getter;
@@ -23,6 +24,7 @@ public class DatabaseManager {
     private final ClientService clientService;
     private final LicenseService licenseService;
     private final ResourceService resourceService;
+    private final IpService ipService;
 
     private final ConnectionSource connectionSource;
 
@@ -32,7 +34,7 @@ public class DatabaseManager {
         clientService = new ClientService(createDao(ClientEntity.class));
         licenseService = new LicenseService(createDao(LicenseEntity.class));
         resourceService = new ResourceService(createDao(ResourceEntity.class));
-        TableUtils.createTableIfNotExists(connectionSource, UsedIp.class);
+        ipService = new IpService(createDao(UsedIp.class));
     }
 
     public DatabaseManager(String path) throws SQLException {

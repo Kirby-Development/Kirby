@@ -2,15 +2,13 @@ package dev.kirby.database.entities;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @DatabaseTable(tableName = "ips")
 public class UsedIp extends DatabaseEntity<Integer> {
     @DatabaseField(generatedId = true)
@@ -19,7 +17,7 @@ public class UsedIp extends DatabaseEntity<Integer> {
     @DatabaseField(canBeNull = false)
     private String ip;
 
-    @DatabaseField(canBeNull = false, foreign = true)
+    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
     private LicenseEntity license;
 
     public UsedIp(String ip, LicenseEntity license) {

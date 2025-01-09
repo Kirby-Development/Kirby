@@ -2,21 +2,17 @@ package dev.kirby.database.entities;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.util.UUID;
-
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @DatabaseTable(tableName = "service")
-public class ResourceEntity extends DatabaseEntity<UUID> {
+public class ResourceEntity extends DatabaseEntity<String> {
     @DatabaseField(id = true)
-    private UUID id;
+    private String id;
 
     @DatabaseField(canBeNull = false)
     private String name;

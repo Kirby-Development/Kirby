@@ -3,11 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>dev.kirby</groupId>
-        <artifactId>Kirby</artifactId>
-        <version>1.0</version>
-    </parent>
+
+    <groupId>dev.kirby</groupId>
+    <version>1.0</version>
+
 
     <artifactId>KirbyLicense</artifactId>
 
@@ -17,7 +16,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-
     <build>
         <defaultGoal>clean package</defaultGoal>
         <plugins>
@@ -26,8 +24,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -53,6 +51,13 @@
                 <configuration>
                     <outputDirectory>C:/Users/lupic/Desktop/Kirby/out</outputDirectory>
                     <finalName>${project.artifactId}-${project.version}</finalName>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>dev.kirby.ServerLauncher</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>
@@ -93,6 +98,13 @@
             <groupId>dev.kirby</groupId>
             <artifactId>Common</artifactId>
             <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.30</version>
             <scope>compile</scope>
         </dependency>
 

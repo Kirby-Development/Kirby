@@ -2,6 +2,7 @@ package dev.kirby.api.netty;
 
 import dev.kirby.Utils;
 import dev.kirby.api.plugin.KirbyPlugin;
+import dev.kirby.api.util.KirbyLogger;
 import dev.kirby.netty.event.EventRegistry;
 import dev.kirby.netty.handler.PacketChannelInboundHandler;
 import dev.kirby.netty.handler.PacketDecoder;
@@ -13,11 +14,11 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.Getter;
+import lombok.Setter;
+import org.jetbrains.annotations.Nullable;
 
 import java.net.InetSocketAddress;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.function.Consumer;
+import java.util.concurrent.TimeUnit;
 
 @Getter
 public class NettyClient extends ChannelInitializer<Channel> {
@@ -25,76 +26,85 @@ public class NettyClient extends ChannelInitializer<Channel> {
     private final Bootstrap bootstrap;
     private final IPacketRegistry packetRegistry;
     private final EventRegistry eventRegistry = new EventRegistry();
-
     private final EventLoopGroup workerGroup = new NioEventLoopGroup();
+    private final KirbyLogger logger;
+
     private final ClientEvents clientEvents;
+    private final Runnable shutdownHook;
 
-    private final Runnable shutdownRunnable;
+    private Channel channel;
 
-    public NettyClient(IPacketRegistry packetRegistry, Consumer<Future<? super Void>> doneCallback, KirbyPlugin kirby, Runnable shutdownHook) {
-        this.packetRegistry = packetRegistry;
-        eventRegistry.registerEvents(this.clientEvents = new ClientEvents(this, kirby));
-        shutdownRunnable = shutdownHook;
-        this.bootstrap = new Bootstrap()
-                .option(ChannelOption.AUTO_READ, true)
-                .group(workerGroup)
-                .handler(this)
-                .channel(NioSocketChannel.class);
+    @Setter
+    private String[] data;
+    @Setter
+    private String license;
 
-        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
-
-        try {
-            this.bootstrap.connect(new InetSocketAddress("127.0.0.1", 9900))
-                    .awaitUninterruptibly().sync().addListener(doneCallback::accept);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public NettyClient(IPacketRegistry packetRegistry, KirbyPlugin kirby, Runnable shutdownHook) {
+        this(packetRegistry, shutdownHook, "KirbyLicense-" + kirby.getName());
+        this.data = kirby.data();
+        this.license = kirby.getConfig().getLicense();
     }
 
-    public NettyClient(IPacketRegistry packetRegistry, Consumer<Future<? super Void>> doneCallback, String[] data, String license, Runnable shutdownHook) {
+    public NettyClient(IPacketRegistry packetRegistry, Runnable shutdownHook, String loggerName) {
         this.packetRegistry = packetRegistry;
-        eventRegistry.registerEvents(this.clientEvents = new ClientEvents(this, data, license));
-        shutdownRunnable = shutdownHook;
+        this.shutdownHook = shutdownHook;
+        this.logger = new KirbyLogger(loggerName);
+        this.eventRegistry.registerEvents(this.clientEvents = new ClientEvents(this));
         this.bootstrap = new Bootstrap()
                 .option(ChannelOption.AUTO_READ, true)
                 .group(workerGroup)
                 .handler(this)
                 .channel(NioSocketChannel.class);
 
-        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
+    }
 
+    public void connect() {
         try {
-            this.bootstrap.connect(new InetSocketAddress("127.0.0.1", 9900))
-                    .awaitUninterruptibly().sync().addListener(doneCallback::accept);
+            ChannelFuture future = this.bootstrap.connect(new InetSocketAddress("127.0.0.1", 9900)).sync();
+            future.addListener((ChannelFutureListener) future1 -> {
+                if (future1.isSuccess()) {
+                    logger.info("Connected!");
+                    return;
+                }
+                logger.warn("Connect failed!");
+                shutdown();
+            });
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.error("Connect failed!", e);
+            shutdown();
         }
+
     }
 
     @Override
     protected void initChannel(Channel channel) throws Exception {
-        channel.pipeline().addLast(new PacketDecoder(packetRegistry), new PacketEncoder(packetRegistry),
-
-                new PacketChannelInboundHandler(eventRegistry){
+        (this.channel = channel).pipeline().addLast(new PacketDecoder(packetRegistry), new PacketEncoder(packetRegistry),
+                new PacketChannelInboundHandler(eventRegistry) {
                     @Override
                     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-                        ctx.channel().writeAndFlush(new LoginPacket(Utils.getData(), clientEvents.getData(), clientEvents.getLicense()));
+                        ctx.channel().writeAndFlush(new LoginPacket(Utils.getData(), data, license));
                         super.channelActive(ctx);
                     }
                 }
-
         );
     }
 
-    public void shutdown() {
-        try {
-            workerGroup.shutdownGracefully().get();
-            shutdownRunnable.run();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
+
+    public void setInfo(String[] data, @Nullable String license) {
+        setData(data);
+        setLicense(license);
     }
 
+    public void shutdown() {
+        shutdownHook.run();
+        try {
+            workerGroup.shutdownGracefully().sync();
+        } catch (InterruptedException e) {
+            logger.error("Failed to shutdown", e);
+        } finally {
+            workerGroup.shutdownGracefully(0, 0, TimeUnit.SECONDS).syncUninterruptibly();
+        }
+    }
 
 
 }

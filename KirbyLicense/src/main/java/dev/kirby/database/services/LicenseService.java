@@ -1,16 +1,19 @@
 package dev.kirby.database.services;
 
 import com.j256.ormlite.dao.Dao;
+import dev.kirby.checker.LoginChecker;
+import dev.kirby.checker.hwid.SecureGenerator;
 import dev.kirby.database.entities.LicenseEntity;
 import dev.kirby.database.entities.UsedIp;
+import dev.kirby.packet.LoginPacket;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-public class LicenseService extends DatabaseService<LicenseEntity, UUID> {
+public class LicenseService extends DatabaseService<LicenseEntity, String> {
 
-    public LicenseService(Dao<LicenseEntity, UUID> dao) {
+    public LicenseService(Dao<LicenseEntity, String> dao) {
         super(dao);
     }
 
@@ -38,4 +41,16 @@ public class LicenseService extends DatabaseService<LicenseEntity, UUID> {
         update(license);
     }
 
+    public LicenseEntity findByData(SecureGenerator generator, LoginPacket packet) throws SQLException {
+        String licenseId = generator.generateSecureID(packet.getClientData(), packet.getServiceData(), new String[]{packet.getLicenseKey()});
+
+        LicenseEntity license = findById(licenseId);
+
+        if (LoginChecker.DEBUG) {
+            System.out.println("DEBUG: " + licenseId);
+            getDao().queryForAll().forEach(System.out::println);
+        }
+
+        return license;
+    }
 }

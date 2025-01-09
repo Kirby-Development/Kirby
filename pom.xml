@@ -7,13 +7,9 @@
     <groupId>dev.kirby</groupId>
     <artifactId>Kirby</artifactId>
     <version>1.0</version>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <name>Kirby</name>
-    <modules>
-        <module>KirbyLicense</module>
-        <module>Common</module>
-    </modules>
 
     <properties>
         <java.version>21</java.version>

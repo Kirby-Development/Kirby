@@ -18,7 +18,11 @@ public class KirbyLogger {
         LOGGER = LogManager.getLogger(name);
     }
 
-    public String log(Level level, Object... message) {
+    public void log(Level level, Object... input) {
+        LOGGER.log(level, getMessage(input));
+    }
+
+    public String getMessage(Object[] message) {
         StringJoiner joiner = new StringJoiner(" ");
         for (Object o : message) {
             joiner.add(switch (o) {
@@ -28,25 +32,23 @@ public class KirbyLogger {
                 default -> o.toString();
             });
         }
-        String string = joiner.toString();
-        LOGGER.log(level, string);
-        return string;
+        return joiner.toString();
     }
 
-    public void info(Object... donna) {
-        log(Level.INFO, donna);
+    public void info(Object... input) {
+        log(Level.INFO, input);
     }
 
-    public void warn(Object... donna) {
-        log(Level.WARN, donna);
+    public void warn(Object... input) {
+        log(Level.WARN, input);
     }
 
-    public void error(Object... donna) {
-        log(Level.ERROR, donna);
+    public void error(Object... input) {
+        log(Level.ERROR, input);
     }
 
-    public void debug(Object... donna) {
-        log(Level.DEBUG, donna);
+    public void debug(Object... input) {
+        log(Level.DEBUG, input);
     }
 
 }

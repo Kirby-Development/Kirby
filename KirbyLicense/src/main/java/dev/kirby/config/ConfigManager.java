@@ -34,12 +34,12 @@ public class ConfigManager<T> {
     public void loadConfig(Class<T> configClass) {
         if (!file.exists()) {
             saveConfig();
-        } else {
-            try (FileReader reader = new FileReader(file)) {
-                this.config = GSON.fromJson(reader, configClass);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            return;
+        }
+        try (FileReader reader = new FileReader(file)) {
+            this.config = GSON.fromJson(reader, configClass);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

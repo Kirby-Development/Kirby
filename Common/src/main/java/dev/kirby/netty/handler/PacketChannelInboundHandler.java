@@ -20,5 +20,11 @@ public class PacketChannelInboundHandler extends SimpleChannelInboundHandler<Pac
         eventRegistry.invoke(packet, channelHandlerContext);
     }
 
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        //super.exceptionCaught(ctx, cause);
+        System.out.println("exceptionCaught: " + cause.getMessage());
+    }
+
 
 }

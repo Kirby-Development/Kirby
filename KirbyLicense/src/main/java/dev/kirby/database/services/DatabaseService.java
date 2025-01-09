@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
+import java.sql.SQLException;
+
 @Getter
 @AllArgsConstructor
 public abstract class DatabaseService<Entity extends DatabaseEntity<ID>, ID> {
@@ -23,8 +25,8 @@ public abstract class DatabaseService<Entity extends DatabaseEntity<ID>, ID> {
         return dao.idExists(id);
     }
 
-    @SneakyThrows
-    public Entity findById(final ID id) {
+
+    public Entity findById(final ID id) throws SQLException {
         return dao.queryForId(id);
     }
 

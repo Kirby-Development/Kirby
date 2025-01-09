@@ -6,26 +6,24 @@ import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import dev.kirby.config.Config;
 import lombok.*;
-import org.jetbrains.annotations.Nullable;
 
 import java.time.Instant;
-import java.util.UUID;
 
-@Data
-@Builder
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @DatabaseTable(tableName = "license")
-public class LicenseEntity extends DatabaseEntity<UUID> {
+public class LicenseEntity extends DatabaseEntity<String> {
 
     @DatabaseField(id = true)
-    private UUID id;
+    private String id;
 
-    @DatabaseField(canBeNull = false, foreign = true)
+    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
     private ResourceEntity service;
 
-    @DatabaseField(canBeNull = false, foreign = true)
+    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
     private ClientEntity client;
 
     @DatabaseField(canBeNull = false)
@@ -41,7 +39,7 @@ public class LicenseEntity extends DatabaseEntity<UUID> {
         return this.expireAt != 0L;
     }
 
-    public @Nullable Instant getExpiry() {
+    public Instant getExpiry() {
         return hasExpiry() ? Instant.ofEpochSecond(this.expireAt) : null;
     }
 
@@ -55,7 +53,7 @@ public class LicenseEntity extends DatabaseEntity<UUID> {
         return usedIps.size() >= maxIpInUse;
     }
 
-    public LicenseEntity(UUID id, ResourceEntity service, ClientEntity client, Config config) {
+    public LicenseEntity(String id, ResourceEntity service, ClientEntity client, Config config) {
         this.id = id;
         this.service = service;
         this.client = client;

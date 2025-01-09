@@ -21,8 +21,8 @@ public class PacketRegister {
     }
 
 
-    public static PacketRegister get() {
+    public static IPacketRegistry get() {
         if (INSTANCE == null) INSTANCE = new PacketRegister();
-        return INSTANCE;
+        return INSTANCE.getPacketRegistry();
     }
 }

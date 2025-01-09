@@ -7,4 +7,8 @@ public abstract class DatabaseEntity<ID> {
 
     public abstract ID getId();
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof DatabaseEntity<?> entity && entity.getId().equals(getId());
+    }
 }
