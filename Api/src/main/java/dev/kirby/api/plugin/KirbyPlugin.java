@@ -26,7 +26,7 @@ public abstract class KirbyPlugin {
         this.config = new ConfigYaml(this.instance);
         this.logger = new KirbyLogger(this.name);
         KirbyApi.getRegistry().install(this);
-        client = new NettyClient(PacketRegister.get(), this, instance::onDisable);
+        client = new NettyClient(PacketRegister.get(), this, instance::shutdown);
     }
 
     protected void init() {
