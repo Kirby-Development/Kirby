@@ -48,8 +48,10 @@ public class ChatProcessor extends ScreenShareProcessor implements ServiceHelper
 
         WrapperPlayClientChatMessage wrap1 = new WrapperPlayClientChatMessage(newMessage, data.get(), wrap.getLastSeenMessages());
         for (ScreenSharePlayer player : manager.getProfiles().values()) {
-            if (player.getSsId().isEmpty()) continue;
-            if (!player.getSsId().get().equals(id)) continue;
+            if (!player.isStaff()) {    
+                if (player.getSsId().isEmpty()) continue;
+                if (!player.getSsId().get().equals(id)) continue;
+            }
             PacketEvents.getAPI().getPlayerManager().receivePacketSilently(player.getUser(), wrap1);
         }
     }

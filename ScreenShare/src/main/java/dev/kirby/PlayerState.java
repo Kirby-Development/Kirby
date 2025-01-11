@@ -5,4 +5,8 @@ public enum PlayerState {
     STAFF,
     DEBUG,
     NONE;
+
+    public boolean isStaff() {
+        return this == STAFF || this == DEBUG;
+    }
 }

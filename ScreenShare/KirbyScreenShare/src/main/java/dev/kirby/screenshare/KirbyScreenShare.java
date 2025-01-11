@@ -11,15 +11,19 @@ import lombok.Getter;
 public class KirbyScreenShare extends KirbyPlugin implements PacketEvent, ServiceHelper  {
 
     private final ScreenShareManager manager;
+    private final ScreenShareClient client = new ScreenShareClient(Registry.get(), );
+
     public KirbyScreenShare(Instance instance) {
         super(instance);
         manager = new ScreenShareManager(this.instance);
         install(ScreenShareManager.class, manager);
+        client.eventRegistry.registerEvents(new ScreenShareEvents(this))
     }
 
     @Override
     public void enable() {
         new PlayerListener().register();
+        client.connect("127.0.0.1": 6990);
     }
 
     @Override

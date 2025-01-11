@@ -25,14 +25,18 @@ public class ScreenSharePlayer implements KirbyUser, PacketHandler, ServiceHelpe
 
     private final Player player;
     private final User user;
-    private PlayerState playerState = PlayerState.NONE;
 
+    private PlayerState playerState = PlayerState.NONE;
     private final Optional<UUID> ssId = Optional.empty();
 
     public ScreenSharePlayer(Player player, User user, KirbyInstance<? extends KirbyPlugin> instance) {
         this.player = player;
         this.user = user;
         chatProcessor = new ChatProcessor(this, instance.plugin());
+    }
+
+    public boolean isStaff() {
+        return playerState.isStaff() || player.hasPermission("kirby.screenshare.staff");
     }
 
     private final List<ScreenShareProcessor> processors = new ArrayList<>();
