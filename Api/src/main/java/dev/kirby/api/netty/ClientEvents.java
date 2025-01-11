@@ -1,6 +1,6 @@
 package dev.kirby.api.netty;
 
-import dev.kirby.api.util.KirbyLogger;
+import dev.kirby.KirbyLogger;
 import dev.kirby.netty.event.PacketSubscriber;
 import dev.kirby.packet.Status;
 import dev.kirby.packet.TextPacket;

@@ -1,0 +1,9 @@
+license: "LUCKY" #todo change
+
+format: "%tag% %name% %message%"
+
+tags:
+  staff: "staff"
+  suspect: "suspect"
+  debug: "debug"
+  none: "none"

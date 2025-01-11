@@ -53,7 +53,7 @@ public class ServerLauncher implements Runnable {
         ClientEntity client;
         databaseManager.getClientService().create(client = new ClientEntity(HwidCalculator.get(this).calculate(Utils.getData()), "127.0.0.1"));
 
-        for (String name : List.of("KirbyApi", "Kirby", "Keeby")) {
+        for (String name : List.of("KirbyApi", "Kirby", "KirbyScreenShare")) {
             String[] data = new String[]{name, "1.0"};
             ResourceEntity resource = getResource(data);
             String licenseId = generator.generateSecureID(Utils.getData(), data, new String[]{"LUCKY"});

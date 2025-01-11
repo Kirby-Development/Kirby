@@ -1,10 +1,7 @@
 package dev.kirby.api.plugin;
 
-import com.github.retrooper.packetevents.PacketEvents;
-import dev.kirby.api.KirbyApi;
-import dev.kirby.api.service.ServiceHelper;
-import dev.kirby.api.util.KirbyLogger;
-import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
+import dev.kirby.api.packet.PacketEvent;
+import dev.kirby.KirbyLogger;
 import org.apache.logging.log4j.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
@@ -12,7 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class KirbyInstance<T extends KirbyPlugin> extends JavaPlugin implements ServiceHelper {
+public abstract class KirbyInstance<T extends KirbyPlugin> extends JavaPlugin  {
 
     private final KirbyLogger test = new KirbyLogger("Test"){
 
@@ -36,17 +33,12 @@ public abstract class KirbyInstance<T extends KirbyPlugin> extends JavaPlugin im
 
     public AtomicBoolean shutdown = new AtomicBoolean(false);
 
-    public KirbyInstance() {
-        KirbyApi.getRegistry().install(this);
-    }
-
     @Override
     public void onLoad() {
         test.info("Load:", shutdown.get());
         if (shutdown.get()) return;
         test.info("Loading plugin...", shutdown.get());
-        PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
-        PacketEvents.getAPI().load();
+        if (plugin() instanceof PacketEvent packetEvent) packetEvent.load();
         plugin().init();
     }
 
@@ -57,7 +49,7 @@ public abstract class KirbyInstance<T extends KirbyPlugin> extends JavaPlugin im
         test.info("Enabling plugin...", shutdown.get());
         plugin().getClient().connect();
         plugin().enable();
-        PacketEvents.getAPI().init();
+        if (plugin() instanceof PacketEvent packetEvent) packetEvent.initialize();
     }
 
     @Override
@@ -65,11 +57,9 @@ public abstract class KirbyInstance<T extends KirbyPlugin> extends JavaPlugin im
         test.info("Disable:", shutdown.get());
         if (shutdown.get()) return;
         test.info("Disabling plugin...", shutdown.get());
-        PacketEvents.getAPI().terminate();
+        if (plugin() instanceof PacketEvent packetEvent) packetEvent.terminate();
         HandlerList.unregisterAll(this);
         Bukkit.getScheduler().cancelTasks(this);
-        KirbyApi.getRegistry().unregister(this);
-        KirbyApi.getRegistry().unregister(plugin());
         plugin().shutdown();
     }
 

@@ -95,6 +95,14 @@ public class PacketBuffer extends ByteBuf {
         return new String(data, StandardCharsets.UTF_8);
     }
 
+    public <T extends Enum<T>> T readEnum(Class<T> clazz) {
+         return Enum.valueOf(clazz, readUTF8());
+    }
+
+    public <T extends Enum<T>> void writeEnum(T enumm){
+        writeUTF8(enumm.name());
+    }
+
     public <T extends Encoder> void writeObject(T object) {
         if (object == null) {
             writeBoolean(false);

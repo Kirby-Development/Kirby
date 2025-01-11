@@ -1,0 +1,10 @@
+name: KirbyScreenShare
+version: '1.0'
+main: dev.kirby.screenshare.Instance
+api-version: '1.20'
+load: STARTUP
+authors: [SweetyDreams_]
+
+depend:
+  - packetevents
+  - KirbyApi

@@ -2,10 +2,11 @@ package dev.kirby.api.file;
 
 
 import dev.kirby.api.plugin.KirbyInstance;
+import dev.kirby.api.plugin.KirbyPlugin;
 
 public class ConfigYaml extends KirbyFile {
 
-    public ConfigYaml(KirbyInstance<?> resource) {
+    public ConfigYaml(KirbyInstance<? extends KirbyPlugin> resource) {
         super(resource, "config");
     }
 

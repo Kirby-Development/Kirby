@@ -1,6 +1,7 @@
 package dev.kirby.api.command;
 
 import dev.kirby.api.plugin.KirbyInstance;
+import dev.kirby.api.plugin.KirbyPlugin;
 import dev.kirby.api.util.ColorUtils;
 import dev.kirby.api.util.Utils;
 import lombok.Getter;
@@ -21,14 +22,14 @@ import java.util.List;
 public abstract class KirbyCommand {
 
     private final String name, permission, description;
-    protected final KirbyInstance<?> plugin;
+    protected final KirbyInstance<? extends KirbyPlugin> plugin;
     private final boolean player;
     @Setter
     private String noPermissionMessage;
 
     private final List<String> aliases;
 
-    public KirbyCommand(KirbyInstance<?> plugin) {
+    public KirbyCommand(KirbyInstance<? extends KirbyPlugin> plugin) {
         this.plugin = plugin;
         if (!getClass().isAnnotationPresent(Info.class))
             throw new RuntimeException("Info annotation not found on " + this.getClass().getSimpleName());

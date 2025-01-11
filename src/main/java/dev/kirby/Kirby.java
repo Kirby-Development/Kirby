@@ -5,7 +5,7 @@ import dev.kirby.api.plugin.KirbyPlugin;
 
 public class Kirby extends KirbyPlugin {
 
-    public Kirby(KirbyInstance<?> plugin) {
+    public Kirby(KirbyInstance<? extends KirbyPlugin> plugin) {
         super(plugin);
     }
 

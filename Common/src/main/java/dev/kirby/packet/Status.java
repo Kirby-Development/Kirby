@@ -32,12 +32,12 @@ public enum Status {
 
         @Override
         public void read(PacketBuffer buffer) {
-            status = Status.valueOf(buffer.readUTF8());
+            status = buffer.readEnum(Status.class);
         }
 
         @Override
         public void write(PacketBuffer buffer) {
-            buffer.writeUTF8(status.name());
+            buffer.writeEnum(status);
         }
     }
 }

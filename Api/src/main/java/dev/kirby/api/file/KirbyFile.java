@@ -1,6 +1,7 @@
 package dev.kirby.api.file;
 
 import dev.kirby.api.plugin.KirbyInstance;
+import dev.kirby.api.plugin.KirbyPlugin;
 import lombok.SneakyThrows;
 import net.kyori.adventure.text.Component;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class KirbyFile implements FileGetters {
 
-    private final KirbyInstance<?> resource;
+    private final KirbyInstance<? extends KirbyPlugin> resource;
     protected final String fileName;
     protected final String dirName;
     private KirbyConfiguration config;
@@ -20,7 +21,7 @@ public class KirbyFile implements FileGetters {
     protected final File dir;
     protected final boolean hasDir;
 
-    protected KirbyFile(KirbyInstance<?> resource, String fileName, String dirName) {
+    protected KirbyFile(KirbyInstance<? extends KirbyPlugin> resource, String fileName, String dirName) {
         this.resource = resource;
         this.fileName = fileName;
         this.dirName = dirName + "/";
@@ -29,7 +30,7 @@ public class KirbyFile implements FileGetters {
         hasDir = true;
     }
 
-    public KirbyFile(KirbyInstance<?> resource, String fileName) {
+    public KirbyFile(KirbyInstance<? extends KirbyPlugin> resource, String fileName) {
         this.resource = resource;
         this.fileName = fileName;
         dirName = "";
