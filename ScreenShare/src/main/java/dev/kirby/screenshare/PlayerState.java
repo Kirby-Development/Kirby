@@ -1,4 +1,4 @@
-package dev.kirby;
+package dev.kirby.screenshare;
 
 public enum PlayerState {
     SUSPECT,

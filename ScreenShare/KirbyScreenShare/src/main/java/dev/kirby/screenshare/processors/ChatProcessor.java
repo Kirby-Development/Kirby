@@ -4,16 +4,15 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketReceiveEvent;
 import com.github.retrooper.packetevents.util.crypto.MessageSignData;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientChatMessage;
+import dev.kirby.screenshare.PlayerState;
 import dev.kirby.api.packet.listener.Packet;
 import dev.kirby.api.plugin.KirbyPlugin;
 import dev.kirby.api.util.ServiceHelper;
 import dev.kirby.screenshare.player.ScreenShareManager;
 import dev.kirby.screenshare.player.ScreenSharePlayer;
-import dev.kirby.screenshare.player.PlayerState;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static com.github.retrooper.packetevents.protocol.packettype.PacketType.Play.Client.CHAT_MESSAGE;
 
@@ -38,8 +37,8 @@ public class ChatProcessor extends ScreenShareProcessor implements ServiceHelper
         final Optional<MessageSignData> data = wrap.getMessageSignData();
         if (data.isEmpty()) return;
         if (player.getPlayerState().equals(PlayerState.NONE)) return;
-        if (player.getSsId().isEmpty()) return;
-        UUID id = player.getSsId().get();
+        if (player.getSsId() == 0) return;
+        int id = player.getSsId();
         final Player p = player.getPlayer();
         final String message = wrap.getMessage();
         String tag = getPlugin().getConfig().getString("tags." + player.getPlayerState().name().toLowerCase());
@@ -48,9 +47,9 @@ public class ChatProcessor extends ScreenShareProcessor implements ServiceHelper
 
         WrapperPlayClientChatMessage wrap1 = new WrapperPlayClientChatMessage(newMessage, data.get(), wrap.getLastSeenMessages());
         for (ScreenSharePlayer player : manager.getProfiles().values()) {
-            if (!player.isStaff()) {    
-                if (player.getSsId().isEmpty()) continue;
-                if (!player.getSsId().get().equals(id)) continue;
+            if (!player.isStaff()) {
+                if (player.getSsId() == 0) continue;
+                if (!player.getSsId().equals(id)) continue;
             }
             PacketEvents.getAPI().getPlayerManager().receivePacketSilently(player.getUser(), wrap1);
         }

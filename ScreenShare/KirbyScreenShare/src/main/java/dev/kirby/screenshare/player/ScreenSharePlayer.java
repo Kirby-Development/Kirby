@@ -1,7 +1,7 @@
 package dev.kirby.screenshare.player;
 
 import com.github.retrooper.packetevents.protocol.player.User;
-import dev.kirby.PlayerState;
+import dev.kirby.screenshare.PlayerState;
 import dev.kirby.api.packet.listener.Packet;
 import dev.kirby.api.packet.listener.PacketHandler;
 import dev.kirby.api.player.KirbyUser;
@@ -16,20 +16,21 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Getter
 @Setter
 public class ScreenSharePlayer implements KirbyUser, PacketHandler, ServiceHelper {
 
+    private final UUID uuid;
     private final Player player;
     private final User user;
 
     private PlayerState playerState = PlayerState.NONE;
-    private final Optional<UUID> ssId = Optional.empty();
+    private Integer ssId = 0;
 
     public ScreenSharePlayer(Player player, User user, KirbyInstance<? extends KirbyPlugin> instance) {
+        this.uuid = player.getUniqueId();
         this.player = player;
         this.user = user;
         chatProcessor = new ChatProcessor(this, instance.plugin());

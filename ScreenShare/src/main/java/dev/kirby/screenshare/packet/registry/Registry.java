@@ -1,8 +1,10 @@
-package dev.kirby.packet;
+package dev.kirby.screenshare.packet.registry;
 
 import dev.kirby.netty.Packet;
 import dev.kirby.netty.registry.IPacketRegistry;
 import dev.kirby.netty.registry.SimplePacketRegistry;
+import dev.kirby.screenshare.packet.ConnectPacket;
+import dev.kirby.screenshare.packet.StatePacket;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
@@ -21,7 +23,7 @@ public class Registry {
     }
 
     public static IPacketRegistry get() {
-        if (INSTANCE == null) INSTANCE = new Registry(StatePacket.class);
+        if (INSTANCE == null) INSTANCE = new Registry(ConnectPacket.class, StatePacket.class);
         return INSTANCE.getPacketRegistry();
     }
 }

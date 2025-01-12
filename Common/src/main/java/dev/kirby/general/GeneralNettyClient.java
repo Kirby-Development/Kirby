@@ -47,7 +47,7 @@ public class GeneralNettyClient extends ChannelInitializer<Channel> {
 
     public void connect(String host, int port) {
         try {
-            ChannelFuture future = this.bootstrap.connect(new InetSocketAddress(host,port)).sync();
+            ChannelFuture future = this.bootstrap.connect(new InetSocketAddress(host, port)).sync();
             future.addListener((ChannelFutureListener) future1 -> {
                 if (future1.isSuccess()) {
                     logger.info("Connected!");
