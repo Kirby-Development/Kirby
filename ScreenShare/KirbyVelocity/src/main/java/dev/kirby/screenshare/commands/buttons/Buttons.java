@@ -11,6 +11,10 @@ public enum Buttons {
     Refuse,
     Clear;
 
+    public static Buttons[] get() {
+        return new Buttons[]{Admission, Cheating, Refuse};
+    }
+
     public Component getText(Configuration config) {
         return ServerUtils.component(config.getString(path() + ".text"));
     }

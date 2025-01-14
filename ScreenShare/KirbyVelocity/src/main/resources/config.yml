@@ -19,7 +19,6 @@ buttons:
     text: ""
     hover: ""
   clear:
-    duration: ""
     text: ""
     hover: ""
 

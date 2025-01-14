@@ -41,7 +41,7 @@ public class PlayerListener {
 
 
 
-        for (Buttons button : Buttons.values()) {
+        for (Buttons button : Buttons.get()) {
             player.sendMessage(button.getText(config)
                     .hoverEvent(HoverEvent.showText(button.getHover(config)))
                     .clickEvent(ClickEvent.callback(audience -> {
@@ -56,6 +56,11 @@ public class PlayerListener {
                     })));
         }
 
+
+        Buttons button = Buttons.Clear;
+        player.sendMessage(button.getText(config)
+                .hoverEvent(HoverEvent.showText(button.getHover(config)))
+                .clickEvent(ClickEvent.callback(audience -> server.getCommandManager().executeImmediatelyAsync(player, "clear " + sus.getPlayer().getUsername()))));
 
     }
 
