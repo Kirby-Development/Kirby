@@ -4,17 +4,25 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import com.velocitypowered.api.proxy.Player;
+import com.velocitypowered.api.proxy.ProxyServer;
+import dev.kirby.screenshare.commands.buttons.Buttons;
+import dev.kirby.screenshare.configuration.Configuration;
 import dev.kirby.screenshare.player.SSManager;
 import dev.kirby.screenshare.player.SSPlayer;
 import dev.kirby.screenshare.player.Session;
-import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 
 public class PlayerListener {
 
+    private final ProxyServer server;
+    private final Configuration config;
     private final SSManager manager;
     private final Session.Manager sessionManager;
 
-    public PlayerListener(SSManager manager, Session.Manager sessionManager) {
+    public PlayerListener(ProxyServer server, Configuration config, SSManager manager, Session.Manager sessionManager) {
+        this.server = server;
+        this.config = config;
         this.manager = manager;
         this.sessionManager = sessionManager;
     }
@@ -26,8 +34,29 @@ public class PlayerListener {
         if (event.getPreviousServer().isEmpty()) profile = manager.createProfile(player);
         else profile = manager.getProfile(player);
         if (profile == null) return;
-        if (!sessionManager.contains(profile.getSsId())) return;
-        player.sendMessage(Component.text("buttons"));
+        if (!profile.isStaff()) return;
+        Session session = sessionManager.getSession(profile.getSsId());
+        if (session == null) return;
+        SSPlayer sus = session.getSuspect();
+
+
+
+        for (Buttons button : Buttons.values()) {
+            player.sendMessage(button.getText(config)
+                    .hoverEvent(HoverEvent.showText(button.getHover(config)))
+                    .clickEvent(ClickEvent.callback(audience -> {
+                        String command = config.getString("ban.command")
+                                .replace("%player%", sus.getPlayer().getUsername())
+                                .replace("%uuid%", sus.getUuid().toString())
+                                .replace("%duration%", button.getDuration(config));
+                        boolean staff = config.getString("ban.who").equalsIgnoreCase("staff");
+                        server.getCommandManager().executeImmediatelyAsync(staff ? player : server.getConsoleCommandSource(), command);
+
+
+                    })));
+        }
+
+
     }
 
     @Subscribe

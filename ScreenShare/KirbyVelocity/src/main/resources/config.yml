@@ -1,0 +1,28 @@
+servers:
+  ss: "ss"
+  hub: "hub"
+
+messages:
+  a: "a"
+
+buttons:
+  admission:
+    duration: ""
+    text: ""
+    hover: ""
+  cheating:
+    duration: ""
+    text: ""
+    hover: ""
+  refuse:
+    duration: ""
+    text: ""
+    hover: ""
+  clear:
+    duration: ""
+    text: ""
+    hover: ""
+
+ban:
+  who: "staff" # or console
+  command: "ban %duration% %player% %cause%"

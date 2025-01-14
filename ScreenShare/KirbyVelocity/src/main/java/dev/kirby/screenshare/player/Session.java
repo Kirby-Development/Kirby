@@ -3,10 +3,7 @@ package dev.kirby.screenshare.player;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -22,6 +19,14 @@ public class Session {
         this.staff = staff;
         this.suspect = suspect;
         this.debug.addAll(Arrays.asList(debug));
+    }
+
+    public Collection<SSPlayer> getAll() {
+        List<SSPlayer> players = new ArrayList<>();
+        players.add(staff);
+        players.add(suspect);
+        players.addAll(debug);
+        return players;
     }
 
     @Getter

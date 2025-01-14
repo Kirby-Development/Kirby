@@ -4,10 +4,10 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketReceiveEvent;
 import com.github.retrooper.packetevents.util.crypto.MessageSignData;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientChatMessage;
-import dev.kirby.screenshare.PlayerState;
 import dev.kirby.api.packet.listener.Packet;
 import dev.kirby.api.plugin.KirbyPlugin;
 import dev.kirby.api.util.ServiceHelper;
+import dev.kirby.screenshare.PlayerState;
 import dev.kirby.screenshare.player.ScreenShareManager;
 import dev.kirby.screenshare.player.ScreenSharePlayer;
 import org.bukkit.entity.Player;
@@ -25,7 +25,6 @@ public class ChatProcessor extends ScreenShareProcessor implements ServiceHelper
         super(player, plugin);
         manager = get(ScreenShareManager.class);
     }
-
 
     @Override
     public void handle(Packet packet) {

@@ -1,0 +1,24 @@
+package dev.kirby.packet;
+
+import dev.kirby.netty.Packet;
+import dev.kirby.netty.buffer.PacketBuffer;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+public class PingPacket extends Packet {
+
+    @Override
+    public void read(PacketBuffer buffer) {
+
+    }
+
+    @Override
+    public void write(PacketBuffer buffer) {
+
+    }
+}

@@ -1,4 +1,6 @@
-package dev.kirby.screenshare;
+package dev.kirby.screenshare.utils;
+
+import dev.kirby.screenshare.KirbyVelocity;
 
 public interface ServiceHelper {
 

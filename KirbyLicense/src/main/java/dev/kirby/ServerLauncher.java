@@ -8,12 +8,17 @@ import dev.kirby.database.DatabaseManager;
 import dev.kirby.database.entities.ClientEntity;
 import dev.kirby.database.entities.LicenseEntity;
 import dev.kirby.database.entities.ResourceEntity;
+import dev.kirby.packet.PingPacket;
 import dev.kirby.packet.registry.PacketRegister;
 import dev.kirby.server.NettyServer;
 import dev.kirby.server.ServerEvents;
+import dev.kirby.thread.ThreadManager;
+import io.netty.channel.Channel;
 import lombok.Getter;
 
+import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Getter
 public class ServerLauncher implements Runnable {
@@ -24,6 +29,8 @@ public class ServerLauncher implements Runnable {
     private final ServerEvents serverEvents = new ServerEvents(this);
     private final SecureGenerator generator;
     private final Config config;
+
+    private final ThreadManager threadManager = new ThreadManager();
 
     public ServerLauncher() throws Exception {
         configManager.loadConfig(Config.class);
@@ -68,12 +75,27 @@ public class ServerLauncher implements Runnable {
     }
 
     public void run() {
-        final NettyServer server = new NettyServer(PacketRegister.get(), c -> {});
+        final NettyServer server = new NettyServer(PacketRegister.get(), c -> {
+            final AtomicReference<Channel> channel = new AtomicReference<>(c);
+            threadManager.getAvailableProfileThread().execute(() -> {
+                while (true) {
+                    try {
+                        Thread.sleep(Duration.ofMinutes(15));
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        break;
+                    }
+                    channel.get().writeAndFlush(new PingPacket());
+                }
+            });
+
+        });
         server.bind(9900);
         server.getEventRegistry().registerEvents(serverEvents);
     }
 
     private void shutdown() {
         configManager.saveConfig();
+        threadManager.shutdown();
     }
 }

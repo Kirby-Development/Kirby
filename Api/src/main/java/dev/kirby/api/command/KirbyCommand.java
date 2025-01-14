@@ -1,9 +1,10 @@
 package dev.kirby.api.command;
 
+import dev.kirby.Utils;
 import dev.kirby.api.plugin.KirbyInstance;
 import dev.kirby.api.plugin.KirbyPlugin;
+import dev.kirby.api.util.ApiUtils;
 import dev.kirby.api.util.ColorUtils;
-import dev.kirby.api.util.Utils;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -61,7 +62,7 @@ public abstract class KirbyCommand {
             public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException {
                 List<String> commands = new ArrayList<>();
                 tab(sender, commands, args);
-                if (commands.isEmpty()) commands.addAll(Utils.onlineNames());
+                if (commands.isEmpty()) commands.addAll(ApiUtils.onlineNames());
                 List<String> list = new ArrayList<>();
                 for (String n : commands) {
                     if (!n.toLowerCase().contains(args[args.length - 1].toLowerCase())) continue;

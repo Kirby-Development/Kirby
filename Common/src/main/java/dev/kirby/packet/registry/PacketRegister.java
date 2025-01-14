@@ -15,14 +15,18 @@ public class PacketRegister {
 
     @SafeVarargs
     @SneakyThrows
-    private PacketRegister(Class<? extends Packet>... packets)  {
+    private PacketRegister(Class<? extends Packet>... packets) {
         for (int id = 0; id < packets.length; id++) {
             packetRegistry.registerPacket(id, packets[id]);
         }
     }
 
     public static IPacketRegistry get() {
-        if (INSTANCE == null) INSTANCE = new PacketRegister(LoginPacket.class, Status.ResponsePacket.class, TextPacket.class);
+        if (INSTANCE == null)
+            INSTANCE = new PacketRegister(LoginPacket.class,
+                    Status.ResponsePacket.class,
+                    PingPacket.class,
+                    TextPacket.class);
         return INSTANCE.getPacketRegistry();
     }
 }

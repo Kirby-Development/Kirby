@@ -27,8 +27,6 @@ public class ServerEvents {
         responder.respond(new Status.ResponsePacket(status));
     }
 
-
-
     @PacketSubscriber
     public void onPacketReceive(TextPacket packet, ChannelHandlerContext ctx, Responder responder) {
         System.out.println("Received \"" + packet.getText() + "\" from " + Utils.getIp(ctx));
