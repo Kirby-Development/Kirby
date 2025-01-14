@@ -6,17 +6,12 @@ import dev.kirby.netty.handler.PacketDecoder;
 import dev.kirby.netty.handler.PacketEncoder;
 import dev.kirby.netty.registry.IPacketRegistry;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.Getter;
 
-import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
 
@@ -33,23 +28,34 @@ public class GeneralNettyServer extends ChannelInitializer<Channel> {
     private final Consumer<Channel> connect;
     private Channel connectedChannel;
 
-    public GeneralNettyServer(IPacketRegistry packetRegistry, Consumer<Future<? super Void>> doneCallback, Consumer<Channel> connect) {
+    public GeneralNettyServer(IPacketRegistry packetRegistry, Consumer<Channel> connect) {
         this.packetRegistry = packetRegistry;
+        this.connect = connect;
         this.bootstrap = new ServerBootstrap()
                 .option(ChannelOption.AUTO_READ, true)
+                .option(ChannelOption.TCP_NODELAY, true)
                 .childOption(ChannelOption.SO_KEEPALIVE, true)
                 .group(parentGroup, workerGroup)
                 .childHandler(this)
                 .channel(NioServerSocketChannel.class);
+    }
 
-        this.connect = connect;
-
+    public void bind(int port) {
         try {
-            this.bootstrap.bind(new InetSocketAddress("127.0.0.1", 6990))
-                    .awaitUninterruptibly().sync().addListener(doneCallback::accept);
+            this.bootstrap.bind(port)
+                    .awaitUninterruptibly().sync().addListener((ChannelFutureListener) future1 -> {
+                        if (future1.isSuccess()) {
+                            System.out.println("Connected!");
+                            return;
+                        }
+                        System.out.println("Connect failed!");
+                        shutdown();
+                    });
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            System.out.println("Connect failed! " + e);
+            shutdown();
         }
+
     }
 
     @Override

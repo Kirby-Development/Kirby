@@ -10,6 +10,7 @@ import dev.kirby.netty.Packet;
 import dev.kirby.netty.event.PacketSubscriber;
 import dev.kirby.netty.io.Responder;
 import dev.kirby.screenshare.commands.ScreenShareCommand;
+import dev.kirby.screenshare.listener.PlayerListener;
 import dev.kirby.screenshare.netty.ScreenShareServer;
 import dev.kirby.screenshare.netty.ServerEvents;
 import dev.kirby.screenshare.packet.ConnectPacket;
@@ -35,7 +36,7 @@ public class KirbyVelocity implements ServiceHelper {
     protected static final ServiceManager MANAGER = new ServiceManager();
 
     @Inject
-    private Logger logger;
+    private final Logger logger;
     @Inject
     private final ProxyServer server;
 
@@ -44,26 +45,28 @@ public class KirbyVelocity implements ServiceHelper {
         this.logger = logger;
         this.server = server;
         serverSS.getEventRegistry().registerEvents(serverEvents, packetSender);
+        serverSS.bind(6990);
         install(SSManager.class, manager);
+        install(ProxyServer.class, server);
     }
 
     private final SSManager manager = new SSManager();
     private final Session.Manager sessionManager = new Session.Manager();
 
-    private final ScreenShareServer serverSS = new ScreenShareServer(Registry.get(), future -> logger.info("server running"), channel -> channel.writeAndFlush(new ConnectPacket()));
+    private final ScreenShareServer serverSS = new ScreenShareServer(Registry.get(), channel -> channel.writeAndFlush(new ConnectPacket()));
     private final ServerEvents serverEvents = new ServerEvents(this, manager, sessionManager);
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
 
         //todo packeteventsss
-        //server.getEventManager().register(this, new PlayerListener(manager));
+        server.getEventManager().register(this, new PlayerListener(manager, sessionManager));
 
         CommandManager commandManager = server.getCommandManager();
-        commandManager.register(commandManager.metaBuilder("ss").plugin(this).build(), new ScreenShareCommand(sessionManager,manager, server));
+        commandManager.register(commandManager.metaBuilder("ss").plugin(this).build(), new ScreenShareCommand(sessionManager, manager, server));
     }
 
-    private final Object packetSender = new Object(){
+    private final Object packetSender = new Object() {
         private Responder responder;
         private final PacketSender packetSender = this::sendPacket;
 

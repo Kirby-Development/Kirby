@@ -26,10 +26,24 @@ public class Session {
 
     @Getter
     public static class Manager {
+        private int id = 0;
+
         private final Map<Integer, Session> sessions = new ConcurrentHashMap<>();
 
-        public void create(int id, SSPlayer staff, SSPlayer suspect, SSPlayer... debug) {
-            create(new Session(id, staff, suspect, debug));
+        public Session create(SSPlayer staff, SSPlayer suspect, SSPlayer... debug) {
+            Session session = new Session(id++, staff, suspect, debug);
+            create(session);
+            return session;
+        }
+
+        public void delete(int id) {
+            sessions.remove(id);
+            this.id--;
+        }
+
+        public void delete(Session session) {
+            sessions.remove(session.getId());
+            this.id--;
         }
 
         public void create(Session session) {
@@ -37,7 +51,9 @@ public class Session {
         }
 
         public Session getSession(int id) {
-            return sessions.get(id);
+            if (sessions.containsKey(id))
+                return sessions.get(id);
+            return null;
         }
 
         public boolean contains(int id) {

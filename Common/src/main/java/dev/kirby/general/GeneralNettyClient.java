@@ -39,6 +39,7 @@ public class GeneralNettyClient extends ChannelInitializer<Channel> {
         this.logger = new KirbyLogger(loggerName);
         this.bootstrap = new Bootstrap()
                 .option(ChannelOption.AUTO_READ, true)
+                .option(ChannelOption.TCP_NODELAY, true)
                 .group(workerGroup)
                 .handler(this)
                 .channel(NioSocketChannel.class);
@@ -47,8 +48,7 @@ public class GeneralNettyClient extends ChannelInitializer<Channel> {
 
     public void connect(String host, int port) {
         try {
-            ChannelFuture future = this.bootstrap.connect(new InetSocketAddress(host, port)).sync();
-            future.addListener((ChannelFutureListener) future1 -> {
+            this.bootstrap.connect(new InetSocketAddress(host, port)).sync().addListener((ChannelFutureListener) future1 -> {
                 if (future1.isSuccess()) {
                     logger.info("Connected!");
                     return;

@@ -60,7 +60,6 @@ public class ServerLauncher implements Runnable {
             databaseManager.getResourceService().create(resource);
             databaseManager.getLicenseService().create(new LicenseEntity(licenseId, resource, client, configManager.getConfig()));
         }
-
     }
 
     public ResourceEntity getResource(String[] data) throws Exception {
@@ -69,9 +68,9 @@ public class ServerLauncher implements Runnable {
     }
 
     public void run() {
-        final NettyServer server = new NettyServer(PacketRegister.get(),
-                future -> System.out.println("Server running..."),
-                serverEvents);
+        final NettyServer server = new NettyServer(PacketRegister.get(), c -> {});
+        server.bind(9900);
+        server.getEventRegistry().registerEvents(serverEvents);
     }
 
     private void shutdown() {

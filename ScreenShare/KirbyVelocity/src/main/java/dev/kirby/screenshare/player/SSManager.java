@@ -1,6 +1,5 @@
 package dev.kirby.screenshare.player;
 
-import com.github.retrooper.packetevents.protocol.player.User;
 import com.velocitypowered.api.proxy.Player;
 
 import java.util.Map;
@@ -11,10 +10,10 @@ public class SSManager {
 
     private final Map<UUID, SSPlayer> profiles = new ConcurrentHashMap<>();
 
-    public SSPlayer createProfile(final Player player, final User user) {
+    public SSPlayer createProfile(final Player player) {
         final UUID uuid = player.getUniqueId();
         if (this.profiles.containsKey(uuid)) return profiles.get(uuid);
-        final SSPlayer data = new SSPlayer(player, user);
+        final SSPlayer data = new SSPlayer(player);
         this.profiles.put(uuid, data);
         return data;
     }

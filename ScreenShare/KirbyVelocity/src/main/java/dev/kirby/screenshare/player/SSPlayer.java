@@ -1,6 +1,5 @@
 package dev.kirby.screenshare.player;
 
-import com.github.retrooper.packetevents.protocol.player.User;
 import com.velocitypowered.api.proxy.Player;
 import dev.kirby.screenshare.PlayerState;
 import lombok.Getter;
@@ -14,15 +13,17 @@ public class SSPlayer {
 
     private final UUID uuid;
     private final Player player;
-    private final User user;
+    //private final User user;
 
     private PlayerState playerState = PlayerState.NONE;
-    private final Integer ssId = 0;
+    private Integer ssId = -1;
 
-    public SSPlayer(Player player, User user) {
+    public SSPlayer(Player player
+            //, User user
+    ) {
         this.uuid = player.getUniqueId();
         this.player = player;
-        this.user = user;
+        //this.user = user;
     }
 
     public boolean isStaff() {
