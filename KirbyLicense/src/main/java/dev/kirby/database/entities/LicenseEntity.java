@@ -26,6 +26,8 @@ public class LicenseEntity extends DatabaseEntity<String> {
     @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
     private ClientEntity client;
 
+    //todo Type: Customer, Premium, Enterprise
+
     @DatabaseField(canBeNull = false)
     private long expireAt;
 

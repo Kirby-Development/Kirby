@@ -48,7 +48,7 @@ public abstract class KirbyInstance<T extends KirbyPlugin> extends JavaPlugin  {
         if (shutdown.get()) return;
         test.info("Enabling plugin...", shutdown.get());
         //todo uncomment
-        //plugin().getClient().connect();
+        plugin().getClient().connect();
         plugin().enable();
         if (plugin() instanceof PacketEvent packetEvent) packetEvent.initialize();
     }

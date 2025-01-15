@@ -15,7 +15,4 @@ public abstract class Processor<T extends KirbyUser> implements PacketHandler {
         this.plugin = plugin;
     }
 
-
-
-
 }
