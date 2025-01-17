@@ -6,7 +6,7 @@ import com.github.retrooper.packetevents.util.crypto.MessageSignData;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientChatMessage;
 import dev.kirby.api.packet.listener.Packet;
 import dev.kirby.api.plugin.KirbyPlugin;
-import dev.kirby.api.util.ServiceHelper;
+import dev.kirby.api.util.ApiService;
 import dev.kirby.screenshare.PlayerState;
 import dev.kirby.screenshare.player.ScreenShareManager;
 import dev.kirby.screenshare.player.ScreenSharePlayer;
@@ -17,7 +17,7 @@ import java.util.Optional;
 import static com.github.retrooper.packetevents.protocol.packettype.PacketType.Play.Client.CHAT_MESSAGE;
 
 
-public class ChatProcessor extends ScreenShareProcessor implements ServiceHelper {
+public class ChatProcessor extends ScreenShareProcessor implements ApiService {
 
     private final ScreenShareManager manager;
 

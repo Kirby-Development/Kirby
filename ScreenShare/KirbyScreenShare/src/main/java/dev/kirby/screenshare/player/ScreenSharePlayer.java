@@ -7,7 +7,7 @@ import dev.kirby.api.packet.listener.PacketHandler;
 import dev.kirby.api.player.KirbyUser;
 import dev.kirby.api.plugin.KirbyInstance;
 import dev.kirby.api.plugin.KirbyPlugin;
-import dev.kirby.api.util.ServiceHelper;
+import dev.kirby.api.util.ApiService;
 import dev.kirby.screenshare.processors.ChatProcessor;
 import dev.kirby.screenshare.processors.ScreenShareProcessor;
 import lombok.Getter;
@@ -20,7 +20,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class ScreenSharePlayer implements KirbyUser, PacketHandler, ServiceHelper {
+public class ScreenSharePlayer implements KirbyUser, PacketHandler, ApiService {
 
     private final UUID uuid;
     private final Player player;

@@ -25,7 +25,6 @@ public record ClientEvents(NettyClient client) {
         logger().log(valid ? Level.INFO : Level.WARN, "Received " + packet.getPacketName() + ": " + status);
         if (valid) return;
         client.shutdown();
-
         throw new InvalidException(InvalidException.Type.SESSION);
     }
 
@@ -36,7 +35,7 @@ public record ClientEvents(NettyClient client) {
 
     @PacketSubscriber
     public void onPacketReceive(final ServicePacket packet) {
-        KirbyApi.getManager().clear();
+        KirbyApi.getManager().destroy();
         throw new InvalidException(InvalidException.Type.SESSION);
     }
 

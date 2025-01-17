@@ -1,12 +1,13 @@
 package dev.kirby.service;
 
+import dev.kirby.Destroyable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Set;
 
-public interface ServiceRegistry {
+public interface ServiceRegistry extends Destroyable {
     @NotNull
     Set<ServiceKey<?>> keySet();
 
@@ -20,7 +21,7 @@ public interface ServiceRegistry {
         return service;
     }
 
-    void clear();
+    void destroy();
 
     @NotNull
     default <T> T get(@NotNull final Class<T> type) {

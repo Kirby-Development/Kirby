@@ -22,7 +22,7 @@ import dev.kirby.packet.ConnectPacket;
 import dev.kirby.screenshare.packet.registry.Registry;
 import dev.kirby.screenshare.player.SSManager;
 import dev.kirby.screenshare.player.Session;
-import dev.kirby.screenshare.utils.ServiceHelper;
+import dev.kirby.screenshare.utils.VelocityService;
 import dev.kirby.service.ServiceManager;
 import lombok.Getter;
 import org.slf4j.Logger;
@@ -34,7 +34,7 @@ import org.slf4j.Logger;
         , authors = {"SweetyDreams_"}
 )
 @Getter
-public class KirbyVelocity implements ServiceHelper {
+public class KirbyVelocity implements VelocityService {
 
     public static final ServiceManager MANAGER = new ServiceManager();
 

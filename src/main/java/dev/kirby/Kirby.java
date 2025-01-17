@@ -3,13 +3,11 @@ package dev.kirby;
 import dev.kirby.api.packet.PacketEvent;
 import dev.kirby.api.plugin.KirbyInstance;
 import dev.kirby.api.plugin.KirbyPlugin;
-import dev.kirby.api.util.ServiceHelper;
 
-public class Kirby extends KirbyPlugin implements PacketEvent, ServiceHelper {
+public class Kirby extends KirbyPlugin implements PacketEvent {
 
     public Kirby(KirbyInstance<? extends KirbyPlugin> plugin) {
         super(plugin);
-        install(PacketEvent.class, this);
     }
 
     @Override

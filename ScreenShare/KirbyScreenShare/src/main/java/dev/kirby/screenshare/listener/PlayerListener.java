@@ -6,12 +6,12 @@ import com.github.retrooper.packetevents.event.UserLoginEvent;
 import com.github.retrooper.packetevents.protocol.player.User;
 import dev.kirby.api.packet.listener.Packet;
 import dev.kirby.api.packet.listener.PacketListener;
-import dev.kirby.api.util.ServiceHelper;
+import dev.kirby.api.util.ApiService;
 import dev.kirby.screenshare.player.ScreenSharePlayer;
 import dev.kirby.screenshare.player.ScreenShareManager;
 import org.bukkit.entity.Player;
 
-public class PlayerListener implements PacketListener, ServiceHelper {
+public class PlayerListener implements PacketListener, ApiService {
 
     private final ScreenShareManager manager;
     public PlayerListener() {

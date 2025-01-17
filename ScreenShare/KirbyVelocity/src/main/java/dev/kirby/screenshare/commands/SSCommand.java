@@ -6,13 +6,13 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import dev.kirby.screenshare.player.SSManager;
 import dev.kirby.screenshare.player.SSPlayer;
-import dev.kirby.screenshare.utils.ServiceHelper;
+import dev.kirby.screenshare.utils.VelocityService;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public abstract class SSCommand implements SimpleCommand, ServiceHelper {
+public abstract class SSCommand implements SimpleCommand, VelocityService {
 
     private final SSManager manager;
     private final ProxyServer server;
