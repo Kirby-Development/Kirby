@@ -1,39 +1,40 @@
 package dev.kirby.api;
 
-import dev.kirby.api.netty.NettyClient;
-import dev.kirby.api.util.InvalidException;
-import dev.kirby.netty.event.PacketSubscriber;
-import dev.kirby.packet.ServicePacket;
-import dev.kirby.packet.registry.PacketRegister;
+import dev.kirby.api.plugin.KirbyInstance;
+import dev.kirby.api.plugin.KirbyPlugin;
 import dev.kirby.service.ServiceManager;
-import org.bukkit.plugin.java.JavaPlugin;
 
-public class KirbyApi extends JavaPlugin {
+public class KirbyApi extends KirbyInstance<KirbyApi.KirbyLicense> {
 
     private static ServiceManager MANAGER;
 
-    public KirbyApi() {
-        client.getEventRegistry().registerEvents(new Object() {
-            @PacketSubscriber
-            public void onPacket(ServicePacket packet) {
-                if (MANAGER != null) throw new InvalidException(InvalidException.Type.SESSION);
-                MANAGER = new ServiceManager();
-            }
-        });
-    }
-
     public static ServiceManager getManager() {
-        if (MANAGER == null) throw new InvalidException(InvalidException.Type.CONNECTION);
+        if (MANAGER == null) MANAGER = new ServiceManager();
         return MANAGER;
     }
 
-    private final NettyClient client = new NettyClient(PacketRegister.get(), this::onDisable, "KirbyLicense-Api");
+    private final KirbyLicense kirbyLicense = new KirbyLicense(this);
+
+    public static class KirbyLicense extends KirbyPlugin {
+
+        public KirbyLicense(KirbyInstance<? extends KirbyPlugin> kirby) {
+            super(kirby);
+        }
+
+        @Override
+        public void enable() {
+
+        }
+
+        @Override
+        public void shutdown() {
+
+        }
+    }
 
     @Override
-    public void onEnable() {
-        saveDefaultConfig();
-        client.setInfo(new String[]{getName(), getPluginMeta().getVersion()}, getConfig().getString("license"));
-        client.connect();
+    protected KirbyLicense load() {
+        return kirbyLicense;
     }
 
 }

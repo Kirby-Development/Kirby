@@ -5,7 +5,9 @@ import dev.kirby.netty.event.EventRegistry;
 import dev.kirby.netty.response.RespondingPacket;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class PacketChannelInboundHandler extends SimpleChannelInboundHandler<Packet> {
 
     private final EventRegistry eventRegistry;
@@ -23,7 +25,7 @@ public class PacketChannelInboundHandler extends SimpleChannelInboundHandler<Pac
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         //super.exceptionCaught(ctx, cause);
-        System.out.println("exceptionCaught: " + cause.getMessage());
+        log.error("exceptionCaught: {}", cause.getMessage());
     }
 
 

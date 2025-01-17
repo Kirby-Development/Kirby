@@ -6,6 +6,7 @@ import dev.kirby.checker.LoginChecker;
 import dev.kirby.netty.event.PacketSubscriber;
 import dev.kirby.netty.io.Responder;
 import dev.kirby.packet.LoginPacket;
+import dev.kirby.packet.ServicePacket;
 import dev.kirby.packet.Status;
 import dev.kirby.packet.TextPacket;
 import io.netty.channel.ChannelHandlerContext;
@@ -25,6 +26,10 @@ public class ServerEvents {
         Status status = LoginChecker.get(serverLauncher).check(packet, ip.split(":")[0]);
         System.out.println(status.name());
         responder.respond(new Status.ResponsePacket(status));
+
+        if (!status.valid()) {
+            responder.respond(new ServicePacket());
+        }
     }
 
     @PacketSubscriber

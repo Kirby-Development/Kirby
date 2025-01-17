@@ -20,6 +20,8 @@ public interface ServiceRegistry {
         return service;
     }
 
+    void clear();
+
     @NotNull
     default <T> T get(@NotNull final Class<T> type) {
         return get(ServiceKey.key(type));

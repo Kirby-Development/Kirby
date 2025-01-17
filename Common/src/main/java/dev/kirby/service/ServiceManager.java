@@ -21,6 +21,11 @@ public class ServiceManager implements ServiceRegistry {
         return registry.entrySet();
     }
 
+    @Override
+    public void clear() {
+        registry.clear();
+    }
+
     @Nullable
     public <T> T getOrNull(@NotNull final ServiceKey<T> key) {
         final Provider<T> provider = (Provider<T>) registry.get(key);

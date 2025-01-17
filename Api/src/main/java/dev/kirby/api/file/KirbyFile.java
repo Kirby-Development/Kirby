@@ -50,11 +50,11 @@ public class KirbyFile implements FileGetters {
     @SneakyThrows
     public void load() {
         if (!file.exists()) {
+            file.createNewFile();
             config = KirbyConfiguration.loadConfiguration(file);
             if (hasDir && !dir.exists()) dir.mkdirs();
             String path = dirName + fileName + ".yml";
             if (resource.getResource(path) == null) {
-                file.createNewFile();
                 create();
             } else {
                 resource.saveResource(path, false);
@@ -78,7 +78,7 @@ public class KirbyFile implements FileGetters {
     }
 
     public KirbyConfiguration getConfig() {
-        if (config == null) load();
+        if (config == null) init();
         return config;
     }
 

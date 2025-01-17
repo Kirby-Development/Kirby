@@ -19,4 +19,5 @@ public abstract class Packet implements Encoder, Decoder {
     public String getPacketName() {
         return this.getClass().getSimpleName();
     }
+
 }
