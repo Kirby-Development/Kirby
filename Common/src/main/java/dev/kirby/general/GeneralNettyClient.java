@@ -24,6 +24,9 @@ public class GeneralNettyClient extends ChannelInitializer<Channel> {
     private final IPacketRegistry packetRegistry;
     private final EventRegistry eventRegistry = new EventRegistry();
     private final EventLoopGroup workerGroup = new NioEventLoopGroup();
+
+    private final GeneralSender packetSender = new GeneralSender();
+
     private final KirbyLogger logger;
 
     private final Runnable shutdownHook;
@@ -32,6 +35,9 @@ public class GeneralNettyClient extends ChannelInitializer<Channel> {
     private Consumer<ChannelHandlerContext> channelActiveAction;
 
     private Channel channel;
+
+    @Getter
+    private boolean connected;
 
     public GeneralNettyClient(IPacketRegistry packetRegistry, Runnable shutdownHook, String loggerName) {
         this.packetRegistry = packetRegistry;
@@ -51,6 +57,7 @@ public class GeneralNettyClient extends ChannelInitializer<Channel> {
             this.bootstrap.connect(new InetSocketAddress(host, port)).sync().addListener((ChannelFutureListener) future1 -> {
                 if (future1.isSuccess()) {
                     logger.info("Connected!");
+                    this.connected = true;
                     return;
                 }
                 logger.warn("Connect failed!");
@@ -76,9 +83,9 @@ public class GeneralNettyClient extends ChannelInitializer<Channel> {
         );
     }
 
-
     public void shutdown() {
         shutdownHook.run();
+        this.connected = false;
         try {
             workerGroup.shutdownGracefully().sync();
         } catch (InterruptedException e) {
@@ -87,6 +94,5 @@ public class GeneralNettyClient extends ChannelInitializer<Channel> {
             workerGroup.shutdownGracefully(0, 0, TimeUnit.SECONDS).syncUninterruptibly();
         }
     }
-
 
 }

@@ -4,7 +4,7 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import dev.kirby.screenshare.PlayerState;
-import dev.kirby.screenshare.packet.PacketSender;
+import dev.kirby.packet.registry.PacketSender;
 import dev.kirby.screenshare.packet.StatePacket;
 import dev.kirby.screenshare.player.SSManager;
 import dev.kirby.screenshare.player.Session;

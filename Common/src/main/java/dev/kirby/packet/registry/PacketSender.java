@@ -1,4 +1,4 @@
-package dev.kirby.screenshare.packet;
+package dev.kirby.packet.registry;
 
 import dev.kirby.netty.Packet;
 

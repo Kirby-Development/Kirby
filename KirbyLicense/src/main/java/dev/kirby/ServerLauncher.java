@@ -16,6 +16,7 @@ import dev.kirby.thread.ThreadManager;
 import io.netty.channel.Channel;
 import lombok.Getter;
 
+import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -78,9 +79,11 @@ public class ServerLauncher implements Runnable {
         final NettyServer server = new NettyServer(PacketRegister.get(), c -> {
             final AtomicReference<Channel> channel = new AtomicReference<>(c);
             threadManager.getAvailableProfileThread().execute(() -> {
+                SecureRandom random = new SecureRandom();
                 while (true) {
                     try {
-                        Thread.sleep(Duration.ofMinutes(15));
+                        long sleepTime = 5 + random.nextInt(16);
+                        Thread.sleep(Duration.ofMinutes(sleepTime));
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                         break;
@@ -88,6 +91,7 @@ public class ServerLauncher implements Runnable {
                     channel.get().writeAndFlush(new PingPacket());
                 }
             });
+
 
         });
         server.bind(9900);

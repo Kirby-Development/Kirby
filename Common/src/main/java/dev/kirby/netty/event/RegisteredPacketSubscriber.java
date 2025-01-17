@@ -46,12 +46,8 @@ public class RegisteredPacketSubscriber {
 
     public void invoke(Packet rawPacket, ChannelHandlerContext ctx, Responder responder) throws InvocationTargetException, IllegalAccessException {
         Set<InvokableEventMethod> methods = handler.get(rawPacket.getClass());
-        if (methods == null) {
-            return;
-        }
-        for (InvokableEventMethod method : methods) {
-            method.invoke(rawPacket, ctx, responder);
-        }
+        if (methods == null) return;
+        for (InvokableEventMethod method : methods) method.invoke(rawPacket, ctx, responder);
     }
 
 }

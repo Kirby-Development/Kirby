@@ -12,7 +12,7 @@ import lombok.SneakyThrows;
 
 public class LoginChecker extends Checker<LoginPacket> {
 
-    public static boolean DEBUG = false;
+    public static final boolean DEBUG = false;
 
     private final SecureGenerator generator;
     private final ServerLauncher serverLauncher;

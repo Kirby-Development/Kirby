@@ -11,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 public class NettyClient extends GeneralNettyClient {
 
-
     public NettyClient(IPacketRegistry packetRegistry, KirbyPlugin kirby, Runnable shutdownHook) {
         this(packetRegistry, shutdownHook, "KirbyLicense-" + kirby.getName());
         setChannelActiveAction(ctx -> ctx.channel().writeAndFlush(new LoginPacket(Utils.getData(), kirby.data(), kirby.getConfig().getLicense())));
@@ -21,7 +20,6 @@ public class NettyClient extends GeneralNettyClient {
         super(packetRegistry, shutdownHook, loggerName);
         getEventRegistry().registerEvents(new ClientEvents(this));
     }
-
 
     public void connect() {
         super.connect("127.0.0.1", 9900);

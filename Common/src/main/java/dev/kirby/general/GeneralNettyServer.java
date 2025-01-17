@@ -25,6 +25,8 @@ public class GeneralNettyServer extends ChannelInitializer<Channel> {
     private final EventLoopGroup workerGroup = new NioEventLoopGroup();
     private final EventRegistry eventRegistry = new EventRegistry();
 
+    private final GeneralSender packetSender = new GeneralSender();
+
     private final Consumer<Channel> connect;
     private Channel connectedChannel;
 

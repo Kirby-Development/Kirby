@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class PingPacket extends Packet {
+public class ServicePacket extends Packet {
 
     @Override
     public void read(PacketBuffer buffer) {

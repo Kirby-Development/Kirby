@@ -2,6 +2,7 @@ package dev.kirby.api.plugin;
 
 import dev.kirby.api.packet.PacketEvent;
 import dev.kirby.KirbyLogger;
+import dev.kirby.api.util.InvalidException;
 import org.apache.logging.log4j.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
@@ -13,11 +14,11 @@ public abstract class KirbyInstance<T extends KirbyPlugin> extends JavaPlugin  {
 
     private final KirbyLogger test = new KirbyLogger("Test"){
 
-        public final boolean debug = false;
+        public final boolean DEBUG = false;
 
         @Override
         public void log(Level level, Object... input) {
-            if (!debug) return;
+            if (!DEBUG) return;
             super.log(level, input);
         }
     };
@@ -28,6 +29,7 @@ public abstract class KirbyInstance<T extends KirbyPlugin> extends JavaPlugin  {
 
     public T plugin() {
         if (plugin == null) plugin = load();
+        if (!plugin.getClient().isConnected()) throw new InvalidException(InvalidException.Type.CONNECTION);
         return plugin;
     }
 
