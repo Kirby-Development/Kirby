@@ -5,6 +5,7 @@ import dev.kirby.netty.handler.PacketChannelInboundHandler;
 import dev.kirby.netty.handler.PacketDecoder;
 import dev.kirby.netty.handler.PacketEncoder;
 import dev.kirby.netty.registry.IPacketRegistry;
+import dev.kirby.service.ServiceRegistry;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -25,12 +26,12 @@ public class GeneralNettyServer extends ChannelInitializer<Channel> {
     private final EventLoopGroup workerGroup = new NioEventLoopGroup();
     private final EventRegistry eventRegistry = new EventRegistry();
 
-    private final GeneralSender packetSender = new GeneralSender();
+    private final PacketSender packetSender;
 
     private final Consumer<Channel> connect;
     private Channel connectedChannel;
 
-    public GeneralNettyServer(IPacketRegistry packetRegistry, Consumer<Channel> connect) {
+    public GeneralNettyServer(IPacketRegistry packetRegistry, Consumer<Channel> connect, ServiceRegistry serviceRegistry) {
         this.packetRegistry = packetRegistry;
         this.connect = connect;
         this.bootstrap = new ServerBootstrap()
@@ -40,6 +41,8 @@ public class GeneralNettyServer extends ChannelInitializer<Channel> {
                 .group(parentGroup, workerGroup)
                 .childHandler(this)
                 .channel(NioServerSocketChannel.class);
+        packetSender = new PacketSender(serviceRegistry);
+        eventRegistry.registerEvents(packetSender);
     }
 
     public void bind(int port) {

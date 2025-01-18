@@ -6,6 +6,7 @@ import dev.kirby.netty.handler.PacketChannelInboundHandler;
 import dev.kirby.netty.handler.PacketDecoder;
 import dev.kirby.netty.handler.PacketEncoder;
 import dev.kirby.netty.registry.IPacketRegistry;
+import dev.kirby.service.ServiceRegistry;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -25,7 +26,7 @@ public class GeneralNettyClient extends ChannelInitializer<Channel> {
     private final EventRegistry eventRegistry = new EventRegistry();
     private final EventLoopGroup workerGroup = new NioEventLoopGroup();
 
-    private final GeneralSender packetSender = new GeneralSender();
+    private final PacketSender packetSender;
 
     private final KirbyLogger logger;
 
@@ -39,7 +40,7 @@ public class GeneralNettyClient extends ChannelInitializer<Channel> {
     @Getter
     private boolean connected;
 
-    public GeneralNettyClient(IPacketRegistry packetRegistry, Runnable shutdownHook, String loggerName) {
+    public GeneralNettyClient(IPacketRegistry packetRegistry, Runnable shutdownHook, String loggerName, ServiceRegistry serviceRegistry) {
         this.packetRegistry = packetRegistry;
         this.shutdownHook = shutdownHook;
         this.logger = new KirbyLogger(loggerName);
@@ -50,6 +51,8 @@ public class GeneralNettyClient extends ChannelInitializer<Channel> {
                 .handler(this)
                 .channel(NioSocketChannel.class);
 
+        packetSender = new PacketSender(serviceRegistry);
+        eventRegistry.registerEvents(packetSender);
     }
 
     public void connect(String host, int port) {

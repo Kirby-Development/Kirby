@@ -91,6 +91,15 @@
         </configuration>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <outputDirectory>C:/Users/lupic/Desktop/Kirby/out</outputDirectory>
+          <finalName>${project.artifactId}-${project.version}</finalName>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>templating-maven-plugin</artifactId>
         <version>1.0.0</version>
@@ -120,6 +129,20 @@
           </dependency>
         </dependencies>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.2.4</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
@@ -186,13 +209,13 @@
 
     <dependency>
       <groupId>dev.kirby</groupId>
-      <artifactId>Common</artifactId>
+      <artifactId>ScreenShare</artifactId>
       <version>1.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>dev.kirby</groupId>
-      <artifactId>ScreenShare</artifactId>
+      <artifactId>Common</artifactId>
       <version>1.0</version>
       <scope>compile</scope>
     </dependency>
