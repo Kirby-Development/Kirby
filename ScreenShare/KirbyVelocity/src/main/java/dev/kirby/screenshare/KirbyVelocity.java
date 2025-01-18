@@ -7,10 +7,7 @@ import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.PluginDescription;
 import com.velocitypowered.api.proxy.ProxyServer;
-import dev.kirby.general.GeneralSender;
-import dev.kirby.netty.event.PacketSubscriber;
-import dev.kirby.netty.io.Responder;
-import dev.kirby.packet.registry.PacketSender;
+import dev.kirby.packet.ConnectPacket;
 import dev.kirby.screenshare.commands.ClearCommand;
 import dev.kirby.screenshare.commands.ScreenShareCommand;
 import dev.kirby.screenshare.configuration.ConfigManager;
@@ -18,7 +15,6 @@ import dev.kirby.screenshare.configuration.Configuration;
 import dev.kirby.screenshare.listener.PlayerListener;
 import dev.kirby.screenshare.netty.ScreenShareServer;
 import dev.kirby.screenshare.netty.ServerEvents;
-import dev.kirby.packet.ConnectPacket;
 import dev.kirby.screenshare.packet.registry.Registry;
 import dev.kirby.screenshare.player.SSManager;
 import dev.kirby.screenshare.player.Session;
@@ -30,8 +26,8 @@ import org.slf4j.Logger;
 @Plugin(
         id = "kirbyvelocity",
         name = "KirbyVelocity",
-        version = "1.0"
-        , authors = {"SweetyDreams_"}
+        version = "1.0",
+        authors = {"SweetyDreams_"}
 )
 @Getter
 public class KirbyVelocity implements VelocityService {
@@ -63,7 +59,7 @@ public class KirbyVelocity implements VelocityService {
             this.server.shutdown();
         }
 
-        serverSS.getEventRegistry().registerEvents(serverEvents, connectEvent);
+        serverSS.getEventRegistry().registerEvents(serverEvents);
         serverSS.bind(6990);
         install(SSManager.class, manager);
         install(ProxyServer.class, server);
@@ -73,7 +69,7 @@ public class KirbyVelocity implements VelocityService {
     private final SSManager manager = new SSManager();
     private final Session.Manager sessionManager = new Session.Manager();
 
-    private final ScreenShareServer serverSS = new ScreenShareServer(Registry.get(), channel -> channel.writeAndFlush(new ConnectPacket()));
+    private final ScreenShareServer serverSS = new ScreenShareServer(Registry.get(), channel -> channel.writeAndFlush(new ConnectPacket()), manager());
     private final ServerEvents serverEvents = new ServerEvents(this, manager, sessionManager);
 
     @Subscribe
@@ -83,7 +79,7 @@ public class KirbyVelocity implements VelocityService {
             this.server.shutdown();
             return;
         }
-        //todo packeteventsss
+
         server.getEventManager().register(this, new PlayerListener(server,config, manager, sessionManager));
 
         CommandManager commandManager = server.getCommandManager();
@@ -91,14 +87,4 @@ public class KirbyVelocity implements VelocityService {
         commandManager.register(commandManager.metaBuilder("clear").plugin(this).build(), new ClearCommand(sessionManager, manager, server));
     }
 
-    private final Object connectEvent = new Object() {
-
-        @PacketSubscriber
-        public void onConnect(final ConnectPacket packet, final Responder responder) {
-            GeneralSender sender = serverSS.getPacketSender();
-            sender.setResponder(responder);
-            install(Responder.class, responder);
-            install(PacketSender.class, sender::sendPacket);
-        }
-    };
 }

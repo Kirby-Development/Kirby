@@ -5,19 +5,20 @@ import dev.kirby.api.plugin.KirbyPlugin;
 import dev.kirby.general.GeneralNettyClient;
 import dev.kirby.netty.registry.IPacketRegistry;
 import dev.kirby.packet.LoginPacket;
+import dev.kirby.service.ServiceRegistry;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
 @Getter
 public class NettyClient extends GeneralNettyClient {
 
-    public NettyClient(IPacketRegistry packetRegistry, KirbyPlugin kirby, Runnable shutdownHook) {
-        this(packetRegistry, shutdownHook, "KirbyLicense-" + kirby.getName());
+    public NettyClient(IPacketRegistry packetRegistry, KirbyPlugin kirby, Runnable shutdownHook, ServiceRegistry serviceRegistry) {
+        this(packetRegistry, shutdownHook, "KirbyLicense-" + kirby.getName(), serviceRegistry);
         setChannelActiveAction(ctx -> ctx.channel().writeAndFlush(new LoginPacket(Utils.getData(), kirby.data(), kirby.getConfig().getLicense())));
     }
 
-    public NettyClient(IPacketRegistry packetRegistry, Runnable shutdownHook, String loggerName) {
-        super(packetRegistry, shutdownHook, loggerName);
+    public NettyClient(IPacketRegistry packetRegistry, Runnable shutdownHook, String loggerName, ServiceRegistry serviceRegistry) {
+        super(packetRegistry, shutdownHook, loggerName, serviceRegistry);
         getEventRegistry().registerEvents(new ClientEvents(this));
     }
 

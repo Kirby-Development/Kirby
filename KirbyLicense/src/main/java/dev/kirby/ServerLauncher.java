@@ -12,6 +12,9 @@ import dev.kirby.packet.PingPacket;
 import dev.kirby.packet.registry.PacketRegister;
 import dev.kirby.server.NettyServer;
 import dev.kirby.server.ServerEvents;
+import dev.kirby.service.ServiceHelper;
+import dev.kirby.service.ServiceManager;
+import dev.kirby.service.ServiceRegistry;
 import dev.kirby.thread.ThreadManager;
 import io.netty.channel.Channel;
 import lombok.Getter;
@@ -22,8 +25,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Getter
-public class ServerLauncher implements Runnable {
-
+public class ServerLauncher implements Runnable, ServiceHelper {
 
     private final ConfigManager<Config> configManager = new ConfigManager<>(new Config());
     private final DatabaseManager databaseManager;
@@ -91,9 +93,7 @@ public class ServerLauncher implements Runnable {
                     channel.get().writeAndFlush(new PingPacket());
                 }
             });
-
-
-        });
+        }, manager());
         server.bind(9900);
         server.getEventRegistry().registerEvents(serverEvents);
     }
@@ -101,5 +101,12 @@ public class ServerLauncher implements Runnable {
     private void shutdown() {
         configManager.saveConfig();
         threadManager.shutdown();
+    }
+
+    private final ServiceManager MANAGER = new ServiceManager();
+
+    @Override
+    public ServiceRegistry manager() {
+        return MANAGER;
     }
 }

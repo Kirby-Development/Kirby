@@ -23,6 +23,7 @@ public class ServerUtils {
         KirbyVelocity.MANAGER.put(key, service);
     }
 
+    //todo fix here
     public RegisteredServer getServer(String name) {
         return get(ProxyServer.class).getServer(get(Configuration.class).getString("servers." + name)).orElse(null);
     }
