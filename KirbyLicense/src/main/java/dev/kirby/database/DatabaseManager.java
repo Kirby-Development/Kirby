@@ -9,17 +9,18 @@ import dev.kirby.database.entities.ClientEntity;
 import dev.kirby.database.entities.LicenseEntity;
 import dev.kirby.database.entities.ResourceEntity;
 import dev.kirby.database.entities.UsedIp;
-import dev.kirby.database.services.ClientService;
-import dev.kirby.database.services.IpService;
-import dev.kirby.database.services.LicenseService;
-import dev.kirby.database.services.ResourceService;
+import dev.kirby.database.services.*;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public class DatabaseManager {
+
+    private final List<DatabaseService<?, ?>> services = new ArrayList<>();
 
     private final ClientService clientService;
     private final LicenseService licenseService;
@@ -35,6 +36,11 @@ public class DatabaseManager {
         licenseService = new LicenseService(createDao(LicenseEntity.class));
         resourceService = new ResourceService(createDao(ResourceEntity.class));
         ipService = new IpService(createDao(UsedIp.class));
+
+        services.add(clientService);
+        services.add(licenseService);
+        services.add(resourceService);
+        services.add(ipService);
     }
 
     public DatabaseManager(String path) throws SQLException {
@@ -54,5 +60,6 @@ public class DatabaseManager {
         TableUtils.createTableIfNotExists(connectionSource, stats);
         return DaoManager.createDao(connectionSource, stats);
     }
+
 }
 

@@ -5,6 +5,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import dev.kirby.config.Config;
+import dev.kirby.license.Edition;
 import lombok.*;
 
 import java.time.Instant;
@@ -26,7 +27,8 @@ public class LicenseEntity extends DatabaseEntity<String> {
     @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
     private ClientEntity client;
 
-    //todo Type: Customer, Premium, Enterprise
+    @DatabaseField(canBeNull = false)
+    private String edition;
 
     @DatabaseField(canBeNull = false)
     private long expireAt;
@@ -39,6 +41,10 @@ public class LicenseEntity extends DatabaseEntity<String> {
 
     public boolean hasExpiry() {
         return this.expireAt != 0L;
+    }
+
+    public Edition getEdition() {
+        return Edition.valueOf(this.edition);
     }
 
     public Instant getExpiry() {
@@ -55,10 +61,11 @@ public class LicenseEntity extends DatabaseEntity<String> {
         return usedIps.size() >= maxIpInUse;
     }
 
-    public LicenseEntity(String id, ResourceEntity service, ClientEntity client, Config config) {
+    public LicenseEntity(String id, ResourceEntity service, ClientEntity client, Edition edition, Config config) {
         this.id = id;
         this.service = service;
         this.client = client;
+        this.edition = edition.name();
 
         this.expireAt = config.getExpiryTime() == 0L ? 0L : Instant.now().getEpochSecond() + config.getExpiryTime();
         this.maxIpInUse = config.getMaxIps();

@@ -1,7 +1,7 @@
 package dev.kirby.server;
 
 import dev.kirby.ServerLauncher;
-import dev.kirby.Utils;
+import dev.kirby.utils.Utils;
 import dev.kirby.checker.LoginChecker;
 import dev.kirby.netty.event.PacketSubscriber;
 import dev.kirby.netty.io.Responder;

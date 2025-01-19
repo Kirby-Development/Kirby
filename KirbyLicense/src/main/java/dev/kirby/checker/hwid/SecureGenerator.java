@@ -1,6 +1,6 @@
 package dev.kirby.checker.hwid;
 
-import dev.kirby.Utils;
+import dev.kirby.utils.Utils;
 import lombok.SneakyThrows;
 
 import javax.crypto.Mac;

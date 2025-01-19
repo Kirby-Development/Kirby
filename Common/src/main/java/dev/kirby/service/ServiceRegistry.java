@@ -1,6 +1,6 @@
 package dev.kirby.service;
 
-import dev.kirby.Destroyable;
+import dev.kirby.utils.Destroyable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

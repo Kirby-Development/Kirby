@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -102,6 +101,7 @@ public class ConfigManager {
 
     private void createYAML(String resourcePath, String source, boolean replace) {
         try {
+            //todo fix
             File file = new File(this.folder + "/" + resourcePath);
             if (!file.getParentFile().exists() || !file.exists()) {
                 file.getParentFile().mkdir();
@@ -113,9 +113,9 @@ public class ConfigManager {
                     forcereplace = true;
                 }
                 if (forcereplace) {
-                    Files.copy(getResourceAsStream(source), file.toPath(), new CopyOption[]{StandardCopyOption.REPLACE_EXISTING});
+                    Files.copy(getResourceAsStream(source), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 } else {
-                    Files.copy(getResourceAsStream(source), file.toPath(), new CopyOption[0]);
+                    Files.copy(getResourceAsStream(source), file.toPath());
                 }
             }
         } catch (IOException | ClassNotFoundException | URISyntaxException e) {
@@ -129,17 +129,19 @@ public class ConfigManager {
 
 
     private InputStream getResourceAsStream(String name) throws ClassNotFoundException, URISyntaxException, IOException {
-        ZipFile file = new ZipFile(this.pluginJar);
-        ZipInputStream zip = new ZipInputStream(this.pluginJar.toURL().openStream());
-        boolean stop = false;
-        while (!stop) {
-            ZipEntry e = zip.getNextEntry();
-            if (e == null) {
-                stop = true;
-                continue;
-            }
-            if (e.getName().equals(name)) {
-                return file.getInputStream(e);
+        try (ZipFile file = new ZipFile(this.pluginJar)) {
+            try (ZipInputStream zip = new ZipInputStream(this.pluginJar.toURL().openStream())) {
+                boolean stop = false;
+                while (!stop) {
+                    ZipEntry e = zip.getNextEntry();
+                    if (e == null) {
+                        stop = true;
+                        continue;
+                    }
+                    if (e.getName().equals(name)) {
+                        return file.getInputStream(e);
+                    }
+                }
             }
         }
         return null;

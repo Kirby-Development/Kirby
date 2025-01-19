@@ -5,6 +5,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import dev.kirby.screenshare.PlayerState;
 import dev.kirby.packet.registry.PacketSender;
+import dev.kirby.screenshare.configuration.Configuration;
 import dev.kirby.screenshare.packet.StatePacket;
 import dev.kirby.screenshare.player.SSManager;
 import dev.kirby.screenshare.player.Session;
@@ -14,12 +15,10 @@ import net.kyori.adventure.text.Component;
 public class ScreenShareCommand extends SSCommand {
 
     private final Session.Manager sessionManager;
-    private final PacketSender packetSender;
 
     public ScreenShareCommand(Session.Manager sessionManager, SSManager manager, ProxyServer server) {
         super(server, manager);
         this.sessionManager = sessionManager;
-        this.packetSender = get(PacketSender.class);
     }
 
     // /ss negro
@@ -29,14 +28,14 @@ public class ScreenShareCommand extends SSCommand {
         Result result = result(p, args);
         if (result == null) return;
         if (sessionManager.contains(result.staff().getSsId())) {
-            p.sendMessage(Component.text(" already in a ss"));
+            p.sendMessage(Component.text("already in a ss"));
             //todo already in a ss
             return;
         }
 
         final StatePacket packet;
         final int sessionId;
-        final RegisteredServer ss = ServerUtils.getServer("ss");
+        final RegisteredServer ss = ServerUtils.getServer(server, get(Configuration.class),"ss");
         if (sessionManager.contains(result.ssTarget().getSsId())) {
             result.staff().setSsId(sessionId = result.ssTarget().getSsId());
             sessionManager.getSession(sessionId).getDebug().add(result.staff());
@@ -48,6 +47,8 @@ public class ScreenShareCommand extends SSCommand {
 
             p.createConnectionRequest(ss).fireAndForget();
         }
+
+        PacketSender packetSender = get(PacketSender.class);
 
         packetSender.sendPacket(packet);
         packetSender.sendPacket(new StatePacket(result.target().getUniqueId(), PlayerState.SUSPECT, sessionId));

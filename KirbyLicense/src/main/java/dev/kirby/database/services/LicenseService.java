@@ -9,6 +9,7 @@ import dev.kirby.packet.LoginPacket;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class LicenseService extends DatabaseService<LicenseEntity, String> {
@@ -48,6 +49,9 @@ public class LicenseService extends DatabaseService<LicenseEntity, String> {
 
         if (LoginChecker.DEBUG) {
             System.out.println("DEBUG: " + licenseId);
+            System.out.println("clientData: " + Arrays.toString(packet.getClientData()));
+            System.out.println("serviceData: " + Arrays.toString(packet.getServiceData()));
+            System.out.println("licenseKey:" + packet.getLicenseKey());
             getDao().queryForAll().forEach(System.out::println);
         }
 

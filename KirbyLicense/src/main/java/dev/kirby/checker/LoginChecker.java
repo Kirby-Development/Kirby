@@ -32,13 +32,16 @@ public class LoginChecker extends Checker<LoginPacket> {
 
     @SneakyThrows
     public Status check(LoginPacket packet, String ip) {
+        if (DEBUG) System.out.println("Checking client");
         ClientEntity client = manager.getClientService().findByData(serverLauncher, packet.getClientData());
         if (client == null) return Status.INVALID_USER;
         client.setLastIp(ip);
 
+        if (DEBUG) System.out.println("Checking resource");
         ResourceEntity resourceEntity = manager.getResourceService().findByData(generator, packet.getServiceData());
         if (resourceEntity == null) return Status.INVALID_SERVICE;
 
+        if (DEBUG) System.out.println("Checking license");
         LicenseService licenseService = manager.getLicenseService();
         LicenseEntity license = licenseService.findByData(generator, packet);
         if (license == null) return Status.INVALID_KEY;

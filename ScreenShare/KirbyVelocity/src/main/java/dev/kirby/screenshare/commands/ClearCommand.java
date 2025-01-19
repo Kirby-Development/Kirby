@@ -5,6 +5,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import dev.kirby.screenshare.PlayerState;
 import dev.kirby.packet.registry.PacketSender;
+import dev.kirby.screenshare.configuration.Configuration;
 import dev.kirby.screenshare.packet.StatePacket;
 import dev.kirby.screenshare.player.SSManager;
 import dev.kirby.screenshare.player.SSPlayer;
@@ -15,12 +16,10 @@ import net.kyori.adventure.text.Component;
 public class ClearCommand extends SSCommand {
 
     private final Session.Manager sessionManager;
-    private final PacketSender packetSender;
 
     public ClearCommand(Session.Manager sessionManager, SSManager manager, ProxyServer server) {
         super(server, manager);
         this.sessionManager = sessionManager;
-        this.packetSender = get(PacketSender.class);
     }
 
     // /clear negro
@@ -36,9 +35,10 @@ public class ClearCommand extends SSCommand {
             return;
         }
 
-        final RegisteredServer ss = ServerUtils.getServer("hub");
+        final RegisteredServer ss = ServerUtils.getServer(server, get(Configuration.class), "hub");
 
 
+        PacketSender packetSender = get(PacketSender.class);
         for (SSPlayer player : sessionManager.getSession(sessionId).getAll()) {
             player.setSsId(-1);
             Player p1 = player.getPlayer();

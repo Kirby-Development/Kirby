@@ -1,6 +1,6 @@
 package dev.kirby.general;
 
-import dev.kirby.KirbyLogger;
+import dev.kirby.utils.KirbyLogger;
 import dev.kirby.netty.event.EventRegistry;
 import dev.kirby.netty.handler.PacketChannelInboundHandler;
 import dev.kirby.netty.handler.PacketDecoder;

@@ -13,9 +13,7 @@ import java.util.Map;
 public class YamlConfiguration
         extends ConfigurationProvider {
     private final ThreadLocal<Yaml> yaml = ThreadLocal.withInitial(() -> {
-        Representer representer = new Representer() {
-
-        };
+        Representer representer = new Representer();
 
 
         DumperOptions options = new DumperOptions();
@@ -56,9 +54,8 @@ public class YamlConfiguration
 
     public Configuration load(Reader reader, Configuration defaults) {
         Map<String, Object> map = (Map<String, Object>) this.yaml.get().loadAs(reader, LinkedHashMap.class);
-        if (map == null) {
-            map = new LinkedHashMap<>();
-        }
+        if (map == null) map = new LinkedHashMap<>();
+
         return new Configuration(map, defaults);
     }
 
@@ -70,9 +67,7 @@ public class YamlConfiguration
 
     public Configuration load(InputStream is, Configuration defaults) {
         Map<String, Object> map = (Map<String, Object>) this.yaml.get().loadAs(is, LinkedHashMap.class);
-        if (map == null) {
-            map = new LinkedHashMap<>();
-        }
+        if (map == null) map = new LinkedHashMap<>();
         return new Configuration(map, defaults);
     }
 
@@ -84,9 +79,7 @@ public class YamlConfiguration
 
     public Configuration load(String string, Configuration defaults) {
         Map<String, Object> map = (Map<String, Object>) this.yaml.get().loadAs(string, LinkedHashMap.class);
-        if (map == null) {
-            map = new LinkedHashMap<>();
-        }
+        if (map == null) map = new LinkedHashMap<>();
         return new Configuration(map, defaults);
     }
 }

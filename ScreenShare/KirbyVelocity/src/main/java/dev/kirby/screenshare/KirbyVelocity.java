@@ -7,6 +7,7 @@ import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.PluginDescription;
 import com.velocitypowered.api.proxy.ProxyServer;
+import dev.kirby.KirbyService;
 import dev.kirby.packet.ConnectPacket;
 import dev.kirby.screenshare.commands.ClearCommand;
 import dev.kirby.screenshare.commands.ScreenShareCommand;
@@ -20,6 +21,8 @@ import dev.kirby.screenshare.player.SSManager;
 import dev.kirby.screenshare.player.Session;
 import dev.kirby.screenshare.utils.VelocityService;
 import dev.kirby.service.ServiceManager;
+import dev.kirby.service.ServiceRegistry;
+import dev.kirby.utils.InvalidException;
 import lombok.Getter;
 import org.slf4j.Logger;
 
@@ -30,7 +33,7 @@ import org.slf4j.Logger;
         authors = {"SweetyDreams_"}
 )
 @Getter
-public class KirbyVelocity implements VelocityService {
+public class KirbyVelocity extends KirbyService implements VelocityService {
 
     public static final ServiceManager MANAGER = new ServiceManager();
 
@@ -39,6 +42,7 @@ public class KirbyVelocity implements VelocityService {
     @Inject
     private final ProxyServer server;
 
+    private final Plugin plugin;
     private final Configuration config;
 
     public Configuration getConfig() {
@@ -49,6 +53,8 @@ public class KirbyVelocity implements VelocityService {
 
     @Inject
     public KirbyVelocity(ProxyServer server, PluginDescription description, Logger logger) {
+        super("KirbyVelocity", "1.0");
+        plugin = getClass().getAnnotation(Plugin.class);
         this.logger = logger;
         this.server = server;
         this.configManager = new ConfigManager(description);
@@ -58,6 +64,8 @@ public class KirbyVelocity implements VelocityService {
             logger.error("Failed to load config.yml. Shutting down.");
             this.server.shutdown();
         }
+        client.setInfo(this);
+        client.connect();
 
         serverSS.getEventRegistry().registerEvents(serverEvents);
         serverSS.bind(6990);
@@ -87,4 +95,27 @@ public class KirbyVelocity implements VelocityService {
         commandManager.register(commandManager.metaBuilder("clear").plugin(this).build(), new ClearCommand(sessionManager, manager, server));
     }
 
+    @Override
+    public ServiceRegistry manager() {
+        return MANAGER;
+    }
+
+    @Override
+    public String getLicense() {
+        String license = getConfig().getString("license");
+        if (license == null) {
+            setLicense("INSERT-LICENSE-HERE");
+            throw new InvalidException(InvalidException.Type.LICENSE);
+        }
+        return license;
+    }
+
+    public void setLicense(String license) {
+        getConfig().set("license", license);
+    }
+
+    @Override
+    public void disable() {
+
+    }
 }

@@ -28,7 +28,7 @@
         - `APIRegister`: Per la gestione dei plugin registrati.
         - `ServiceManager`: Per la gestione dei servizi interni.
 
-- **KirbyScreenShare**
+- **KirbySS**
     - Plugin dimostrativo che estende `KirbyPlugin` e rappresenta un esempio di implementazione di un plugin che utilizza KirbyApi.
 
 - **Kirby**

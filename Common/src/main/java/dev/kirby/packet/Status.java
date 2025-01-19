@@ -12,7 +12,7 @@ public enum Status {
     MAX_IP,
     EXPIRED,
     INVALID,
-    INVALID_IP, //todo user can register allowed ips
+    INVALID_IP,
     INVALID_KEY,
     INVALID_USER,
     INVALID_SERVICE,

@@ -39,4 +39,11 @@ public abstract class DatabaseService<Entity extends DatabaseEntity<ID>, ID> {
     private void r(final Entity stats) {
         dao.createOrUpdate(stats);
     }
+
+    @SneakyThrows
+    public void clear() {
+        for (Entity entity : dao) {
+            dao.delete(entity);
+        }
+    }
 }

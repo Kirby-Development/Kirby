@@ -36,7 +36,7 @@ public class GeneralNettyServer extends ChannelInitializer<Channel> {
         this.connect = connect;
         this.bootstrap = new ServerBootstrap()
                 .option(ChannelOption.AUTO_READ, true)
-                .option(ChannelOption.TCP_NODELAY, true)
+                //.option(ChannelOption.TCP_NODELAY, true)
                 .childOption(ChannelOption.SO_KEEPALIVE, true)
                 .group(parentGroup, workerGroup)
                 .childHandler(this)

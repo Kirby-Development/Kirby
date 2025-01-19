@@ -2,8 +2,7 @@ package dev.kirby.screenshare.utils;
 
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
-import dev.kirby.Utils;
-import dev.kirby.screenshare.KirbyVelocity;
+import dev.kirby.utils.Utils;
 import dev.kirby.screenshare.configuration.Configuration;
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.text.Component;
@@ -15,17 +14,8 @@ import java.util.regex.Pattern;
 @UtilityClass
 public class ServerUtils {
 
-    private <T> T get(Class<T> key) {
-        return KirbyVelocity.MANAGER.get(key);
-    }
-
-    private <T> void install(Class<T> key, T service) {
-        KirbyVelocity.MANAGER.put(key, service);
-    }
-
-    //todo fix here
-    public RegisteredServer getServer(String name) {
-        return get(ProxyServer.class).getServer(get(Configuration.class).getString("servers." + name)).orElse(null);
+    public RegisteredServer getServer(ProxyServer proxy,Configuration config, String name) {
+        return proxy.getServer(config.getString("servers." + name)).orElse(null);
     }
 
 

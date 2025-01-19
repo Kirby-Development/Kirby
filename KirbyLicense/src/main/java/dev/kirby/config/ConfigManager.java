@@ -13,7 +13,7 @@ public class ConfigManager<T> {
 
     public static final Gson GSON = new Gson().newBuilder().disableHtmlEscaping().setPrettyPrinting().create();
 
-    private final File file = new File("config.json");
+    private final File file;
 
     @Setter
     @Getter
@@ -21,6 +21,13 @@ public class ConfigManager<T> {
 
     public ConfigManager(final T defaultConfig) {
         this.config = defaultConfig;
+        String name = defaultConfig.getClass().getSimpleName().toLowerCase();
+        this.file = new File(name + ".json");
+    }
+
+    public ConfigManager(final T defaultConfig, final String name) {
+        this.config = defaultConfig;
+        this.file = new File(name + ".json");
     }
 
     public void saveConfig() {

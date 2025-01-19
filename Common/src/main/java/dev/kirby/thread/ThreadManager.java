@@ -1,6 +1,6 @@
 package dev.kirby.thread;
 
-import dev.kirby.Utils;
+import dev.kirby.utils.Utils;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
@@ -33,10 +33,12 @@ public class ThreadManager {
     }
 
     public void shutdown(final ProfileThread profileThread) {
+        if (profileThread == null) return;
         if (profileThread.getProfileCount() > 1) {
             profileThread.decrement();
             return;
         }
+        if (!this.profileThreads.contains(profileThread)) return;
         this.profileThreads.remove(profileThread.shutdownThread());
     }
 

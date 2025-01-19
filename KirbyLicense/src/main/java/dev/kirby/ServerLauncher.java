@@ -4,10 +4,13 @@ import dev.kirby.checker.hwid.HwidCalculator;
 import dev.kirby.checker.hwid.SecureGenerator;
 import dev.kirby.config.Config;
 import dev.kirby.config.ConfigManager;
+import dev.kirby.config.Datas;
 import dev.kirby.database.DatabaseManager;
 import dev.kirby.database.entities.ClientEntity;
 import dev.kirby.database.entities.LicenseEntity;
 import dev.kirby.database.entities.ResourceEntity;
+import dev.kirby.database.services.DatabaseService;
+import dev.kirby.license.Edition;
 import dev.kirby.packet.PingPacket;
 import dev.kirby.packet.registry.PacketRegister;
 import dev.kirby.server.NettyServer;
@@ -16,6 +19,7 @@ import dev.kirby.service.ServiceHelper;
 import dev.kirby.service.ServiceManager;
 import dev.kirby.service.ServiceRegistry;
 import dev.kirby.thread.ThreadManager;
+import dev.kirby.utils.Utils;
 import io.netty.channel.Channel;
 import lombok.Getter;
 
@@ -28,6 +32,9 @@ import java.util.concurrent.atomic.AtomicReference;
 public class ServerLauncher implements Runnable, ServiceHelper {
 
     private final ConfigManager<Config> configManager = new ConfigManager<>(new Config());
+
+    private final ConfigManager<Datas> dataManager = new ConfigManager<>(new Datas());
+
     private final DatabaseManager databaseManager;
     private final ServerEvents serverEvents = new ServerEvents(this);
     private final SecureGenerator generator;
@@ -35,9 +42,12 @@ public class ServerLauncher implements Runnable, ServiceHelper {
 
     private final ThreadManager threadManager = new ThreadManager();
 
-    public ServerLauncher() throws Exception {
+    public ServerLauncher(boolean clean) throws Exception {
         configManager.loadConfig(Config.class);
         config = configManager.getConfig();
+
+        dataManager.loadConfig(Datas.class);
+
         generator = new SecureGenerator(config.getSecurityKey());
 
         Config.Database database = config.getDatabase();
@@ -48,28 +58,68 @@ public class ServerLauncher implements Runnable, ServiceHelper {
                     new DatabaseManager(database.getHost(), database.getPort(), database.getDatabase(), "", database.getUsername(), database.getPassword());
         };
 
+        if (clean) {
+            System.out.println("cleaning db");
+            databaseManager.getServices().forEach(DatabaseService::clear);
+        }
 
-        //genTest();
+        //genData();
+        refreshDb();
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
     }
 
+
     public static void main(String[] args) throws Exception {
-        ServerLauncher launcher = new ServerLauncher();
+        ServerLauncher launcher = new ServerLauncher(args.length > 0 && args[0].equalsIgnoreCase("--clean"));
         launcher.run();
     }
 
-    private void genTest() throws Exception {
-        ClientEntity client;
-        databaseManager.getClientService().create(client = new ClientEntity(HwidCalculator.get(this).calculate(Utils.getData()), "127.0.0.1"));
+    private void genData() throws Exception {
+        Datas datas = dataManager.getConfig();
 
-        for (String name : List.of("KirbyApi", "Kirby", "KirbyScreenShare")) {
+        Datas.Client client;
+        datas.getClients().add(client = new Datas.Client(0,Utils.getData(), "127.0.0.1"));
+        List<String> kirbyApi = List.of("KirbyApi", "KirbyVelocity", "Kirby", "KirbySS");
+        for (int i = 0; i < kirbyApi.size(); i++) {
+            String name = kirbyApi.get(i);
             String[] data = new String[]{name, "1.0"};
-            ResourceEntity resource = getResource(data);
-            String licenseId = generator.generateSecureID(Utils.getData(), data, new String[]{"LUCKY"});
-            databaseManager.getResourceService().create(resource);
-            databaseManager.getLicenseService().create(new LicenseEntity(licenseId, resource, client, configManager.getConfig()));
+            Datas.Resource resource = new Datas.Resource(i, name, data);
+            datas.getResources().add(resource);
+            datas.getLicenses().add(new Datas.License(client.getId(), resource.getId(), "LUCKY", Edition.Enterprise));
         }
+
+        dataManager.saveConfig();
+
+
+    }
+
+    private void refreshDb() throws Exception {
+        Datas datas = dataManager.getConfig();
+
+        for (Datas.Client client : datas.getClients()) {
+            databaseManager.getClientService().create(new ClientEntity(HwidCalculator.get(this).calculate(client.getData()), client.getIp()));
+        }
+
+
+        for (Datas.Resource resource : datas.getResources()) {
+            databaseManager.getResourceService().create(getResource(resource.getData()));
+        }
+
+        for (Datas.License license : datas.getLicenses()) {
+            Datas.Client client = license.getClient(datas);
+            Datas.Resource resource = license.getResource(datas);
+
+            String licenseId = generator.generateSecureID(client.getData(), resource.getData(), new String[]{license.getLicense()});
+            LicenseEntity lic = new LicenseEntity(licenseId,
+                    getResource(resource.getData()),
+                    new ClientEntity(HwidCalculator.get(this).calculate(client.getData()), client.getIp()),
+                    license.getEdition(),
+                    config);
+
+            databaseManager.getLicenseService().create(lic);
+        }
+
     }
 
     public ResourceEntity getResource(String[] data) throws Exception {
@@ -100,6 +150,7 @@ public class ServerLauncher implements Runnable, ServiceHelper {
 
     private void shutdown() {
         configManager.saveConfig();
+        dataManager.saveConfig();
         threadManager.shutdown();
     }
 

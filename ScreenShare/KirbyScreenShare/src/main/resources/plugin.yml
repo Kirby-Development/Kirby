@@ -1,4 +1,4 @@
-name: KirbyScreenShare
+name: KirbySS
 version: '1.0'
 main: dev.kirby.screenshare.Instance
 api-version: '1.20'
