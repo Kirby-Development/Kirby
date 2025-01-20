@@ -4,7 +4,7 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketReceiveEvent;
 import com.github.retrooper.packetevents.util.crypto.MessageSignData;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientChatMessage;
-import dev.kirby.api.packet.listener.Packet;
+import dev.kirby.api.packet.Packet;
 import dev.kirby.api.plugin.KirbyPlugin;
 import dev.kirby.api.util.ApiService;
 import dev.kirby.screenshare.PlayerState;

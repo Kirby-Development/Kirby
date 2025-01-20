@@ -129,21 +129,12 @@ public class ConfigManager {
 
 
     private InputStream getResourceAsStream(String name) throws ClassNotFoundException, URISyntaxException, IOException {
-        try (ZipFile file = new ZipFile(this.pluginJar)) {
-            try (ZipInputStream zip = new ZipInputStream(this.pluginJar.toURL().openStream())) {
-                boolean stop = false;
-                while (!stop) {
-                    ZipEntry e = zip.getNextEntry();
-                    if (e == null) {
-                        stop = true;
-                        continue;
-                    }
-                    if (e.getName().equals(name)) {
-                        return file.getInputStream(e);
-                    }
-                }
-            }
-        }
+        ZipFile file = new ZipFile(this.pluginJar);
+        ZipInputStream zip = new ZipInputStream(this.pluginJar.toURL().openStream());
+
+        ZipEntry e;
+        while ((e = zip.getNextEntry()) != null) if (e.getName().equals(name)) return file.getInputStream(e);
+
         return null;
     }
 }

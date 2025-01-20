@@ -18,7 +18,6 @@ public class ThreadManager {
 
     @SneakyThrows
     public ProfileThread getAvailableProfileThread() {
-
         ProfileThread profileThread;
 
         if (this.profileThreads.size() < MAX_THREADS) {
@@ -43,6 +42,6 @@ public class ThreadManager {
     }
 
     public void shutdown() {
-        profileThreads.stream().forEach(this::shutdown);
+        profileThreads.forEach(this::shutdown);
     }
 }

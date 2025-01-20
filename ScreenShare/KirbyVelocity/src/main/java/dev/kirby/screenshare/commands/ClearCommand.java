@@ -4,7 +4,7 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import dev.kirby.screenshare.PlayerState;
-import dev.kirby.packet.registry.PacketSender;
+import dev.kirby.packet.registry.SendPacket;
 import dev.kirby.screenshare.configuration.Configuration;
 import dev.kirby.screenshare.packet.StatePacket;
 import dev.kirby.screenshare.player.SSManager;
@@ -38,11 +38,11 @@ public class ClearCommand extends SSCommand {
         final RegisteredServer ss = ServerUtils.getServer(server, get(Configuration.class), "hub");
 
 
-        PacketSender packetSender = get(PacketSender.class);
+        SendPacket sendPacket = get(SendPacket.class);
         for (SSPlayer player : sessionManager.getSession(sessionId).getAll()) {
             player.setSsId(-1);
             Player p1 = player.getPlayer();
-            packetSender.sendPacket(new StatePacket(player.getUuid(), PlayerState.NONE, -1));
+            sendPacket.sendPacket(new StatePacket(player.getUuid(), PlayerState.NONE, -1));
             p1.createConnectionRequest(ss).fireAndForget();
         }
 

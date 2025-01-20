@@ -1,9 +1,10 @@
 package dev.kirby.screenshare;
 
 import dev.kirby.api.plugin.KirbyPlugin;
-import dev.kirby.packet.ConnectPacket;
+import dev.kirby.packet.empty.ConnectPacket;
 import dev.kirby.screenshare.listener.PlayerListener;
 import dev.kirby.screenshare.listener.ScreenShareEvents;
+import dev.kirby.screenshare.netty.ScreenShareClient;
 import dev.kirby.screenshare.packet.registry.Registry;
 import dev.kirby.screenshare.player.ScreenShareManager;
 import lombok.Getter;

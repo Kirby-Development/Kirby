@@ -3,7 +3,7 @@ package dev.kirby.screenshare.packet.registry;
 import dev.kirby.netty.Packet;
 import dev.kirby.netty.registry.IPacketRegistry;
 import dev.kirby.netty.registry.SimplePacketRegistry;
-import dev.kirby.packet.ConnectPacket;
+import dev.kirby.packet.empty.ConnectPacket;
 import dev.kirby.screenshare.packet.StatePacket;
 import lombok.Getter;
 import lombok.SneakyThrows;

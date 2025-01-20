@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class Config {
 
     private int maxIps = 5;
+    private int maxAttempts = 3;
     private long expiryTime = 0L;
     private String securityKey = "LUCKY";
 

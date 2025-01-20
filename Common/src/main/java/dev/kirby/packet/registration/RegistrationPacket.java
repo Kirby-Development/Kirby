@@ -1,4 +1,4 @@
-package dev.kirby.packet;
+package dev.kirby.packet.registration;
 
 import dev.kirby.netty.Packet;
 import dev.kirby.netty.buffer.PacketBuffer;
@@ -11,24 +11,24 @@ import java.util.Arrays;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginPacket extends Packet {
+public abstract class RegistrationPacket extends Packet {
 
-    private String[] clientData;
-    private String[] serviceData;
-    private String licenseKey;
+    protected String[] clientData;
+    protected String[] resourceData;
+    protected String licenseKey;
 
     @Override
     public void read(PacketBuffer buffer) {
         this.licenseKey = buffer.readUTF8();
         this.clientData = buffer.readStringCollection().toArray(new String[0]);
-        this.serviceData = buffer.readStringCollection().toArray(new String[0]);
+        this.resourceData = buffer.readStringCollection().toArray(new String[0]);
     }
 
     @Override
     public void write(PacketBuffer buffer) {
         buffer.writeUTF8(licenseKey);
         buffer.writeStringCollection(Arrays.stream(clientData).toList());
-        buffer.writeStringCollection(Arrays.stream(serviceData).toList());
+        buffer.writeStringCollection(Arrays.stream(resourceData).toList());
     }
 
 }

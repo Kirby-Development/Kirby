@@ -1,4 +1,4 @@
-package dev.kirby.api.packet.listener;
+package dev.kirby.api.packet;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;

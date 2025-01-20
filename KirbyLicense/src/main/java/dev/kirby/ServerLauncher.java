@@ -11,8 +11,8 @@ import dev.kirby.database.entities.LicenseEntity;
 import dev.kirby.database.entities.ResourceEntity;
 import dev.kirby.database.services.DatabaseService;
 import dev.kirby.license.Edition;
-import dev.kirby.packet.PingPacket;
 import dev.kirby.packet.registry.PacketRegister;
+import dev.kirby.resources.ClientManager;
 import dev.kirby.server.NettyServer;
 import dev.kirby.server.ServerEvents;
 import dev.kirby.service.ServiceHelper;
@@ -20,13 +20,9 @@ import dev.kirby.service.ServiceManager;
 import dev.kirby.service.ServiceRegistry;
 import dev.kirby.thread.ThreadManager;
 import dev.kirby.utils.Utils;
-import io.netty.channel.Channel;
 import lombok.Getter;
 
-import java.security.SecureRandom;
-import java.time.Duration;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Getter
 public class ServerLauncher implements Runnable, ServiceHelper {
@@ -34,6 +30,8 @@ public class ServerLauncher implements Runnable, ServiceHelper {
     private final ConfigManager<Config> configManager = new ConfigManager<>(new Config());
 
     private final ConfigManager<Datas> dataManager = new ConfigManager<>(new Datas());
+
+    private final ClientManager clientManager;
 
     private final DatabaseManager databaseManager;
     private final ServerEvents serverEvents = new ServerEvents(this);
@@ -47,6 +45,8 @@ public class ServerLauncher implements Runnable, ServiceHelper {
         config = configManager.getConfig();
 
         dataManager.loadConfig(Datas.class);
+
+        clientManager = new ClientManager(this);
 
         generator = new SecureGenerator(config.getSecurityKey());
 
@@ -79,7 +79,7 @@ public class ServerLauncher implements Runnable, ServiceHelper {
         Datas datas = dataManager.getConfig();
 
         Datas.Client client;
-        datas.getClients().add(client = new Datas.Client(0,Utils.getData(), "127.0.0.1"));
+        datas.getClients().add(client = new Datas.Client(0, Utils.getData(), "127.0.0.1"));
         List<String> kirbyApi = List.of("KirbyApi", "KirbyVelocity", "Kirby", "KirbySS");
         for (int i = 0; i < kirbyApi.size(); i++) {
             String name = kirbyApi.get(i);
@@ -128,24 +128,10 @@ public class ServerLauncher implements Runnable, ServiceHelper {
     }
 
     public void run() {
-        final NettyServer server = new NettyServer(PacketRegister.get(), c -> {
-            final AtomicReference<Channel> channel = new AtomicReference<>(c);
-            threadManager.getAvailableProfileThread().execute(() -> {
-                SecureRandom random = new SecureRandom();
-                while (true) {
-                    try {
-                        long sleepTime = 5 + random.nextInt(16);
-                        Thread.sleep(Duration.ofMinutes(sleepTime));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                        break;
-                    }
-                    channel.get().writeAndFlush(new PingPacket());
-                }
-            });
-        }, manager());
+        final NettyServer server = new NettyServer(PacketRegister.get(), manager(), threadManager);
         server.bind(9900);
         server.getEventRegistry().registerEvents(serverEvents);
+
     }
 
     private void shutdown() {

@@ -1,4 +1,4 @@
-package dev.kirby.api.packet.listener;
+package dev.kirby.api.packet;
 
 public interface PacketHandler {
 

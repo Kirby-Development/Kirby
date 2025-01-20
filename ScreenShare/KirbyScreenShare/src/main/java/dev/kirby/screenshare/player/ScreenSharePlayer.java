@@ -2,8 +2,8 @@ package dev.kirby.screenshare.player;
 
 import com.github.retrooper.packetevents.protocol.player.User;
 import dev.kirby.screenshare.PlayerState;
-import dev.kirby.api.packet.listener.Packet;
-import dev.kirby.api.packet.listener.PacketHandler;
+import dev.kirby.api.packet.Packet;
+import dev.kirby.api.packet.PacketHandler;
 import dev.kirby.api.player.KirbyUser;
 import dev.kirby.api.plugin.KirbyInstance;
 import dev.kirby.api.plugin.KirbyPlugin;

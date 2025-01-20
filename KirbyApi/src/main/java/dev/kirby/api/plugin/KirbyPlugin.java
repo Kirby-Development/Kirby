@@ -1,6 +1,6 @@
 package dev.kirby.api.plugin;
 
-import dev.kirby.KirbyService;
+import dev.kirby.KirbyResource;
 import dev.kirby.api.file.ConfigYaml;
 import dev.kirby.api.util.ApiService;
 import dev.kirby.service.ServiceRegistry;
@@ -11,7 +11,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public abstract class KirbyPlugin extends KirbyService implements Initializer, ApiService {
+public abstract class KirbyPlugin extends KirbyResource implements Initializer, ApiService {
 
     protected final KirbyInstance<? extends KirbyPlugin> instance;
     private final KirbyLogger logger;

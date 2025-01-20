@@ -1,6 +1,6 @@
 package dev.kirby.api.player.processor;
 
-import dev.kirby.api.packet.listener.PacketHandler;
+import dev.kirby.api.packet.PacketHandler;
 import dev.kirby.api.player.KirbyUser;
 import dev.kirby.api.plugin.KirbyPlugin;
 import lombok.Getter;

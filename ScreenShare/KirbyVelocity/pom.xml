@@ -95,7 +95,7 @@
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.4</version>
         <configuration>
-          <outputDirectory>C:/Users/lupic/Desktop/Kirby/out</outputDirectory>
+          <outputDirectory>C:/Users/lupic/Desktop/Kirby/srv/velocity/plugins</outputDirectory>
           <finalName>${project.artifactId}-${project.version}</finalName>
         </configuration>
       </plugin>

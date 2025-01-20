@@ -7,8 +7,8 @@ import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.PluginDescription;
 import com.velocitypowered.api.proxy.ProxyServer;
-import dev.kirby.KirbyService;
-import dev.kirby.packet.ConnectPacket;
+import dev.kirby.KirbyResource;
+import dev.kirby.packet.empty.ConnectPacket;
 import dev.kirby.screenshare.commands.ClearCommand;
 import dev.kirby.screenshare.commands.ScreenShareCommand;
 import dev.kirby.screenshare.configuration.ConfigManager;
@@ -33,7 +33,7 @@ import org.slf4j.Logger;
         authors = {"SweetyDreams_"}
 )
 @Getter
-public class KirbyVelocity extends KirbyService implements VelocityService {
+public class KirbyVelocity extends KirbyResource implements VelocityService {
 
     public static final ServiceManager MANAGER = new ServiceManager();
 

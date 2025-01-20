@@ -6,7 +6,7 @@ import dev.kirby.database.entities.ClientEntity;
 import dev.kirby.database.entities.LicenseEntity;
 import dev.kirby.database.entities.ResourceEntity;
 import dev.kirby.database.services.LicenseService;
-import dev.kirby.packet.LoginPacket;
+import dev.kirby.packet.registration.LoginPacket;
 import dev.kirby.packet.Status;
 import lombok.SneakyThrows;
 
@@ -38,8 +38,8 @@ public class LoginChecker extends Checker<LoginPacket> {
         client.setLastIp(ip);
 
         if (DEBUG) System.out.println("Checking resource");
-        ResourceEntity resourceEntity = manager.getResourceService().findByData(generator, packet.getServiceData());
-        if (resourceEntity == null) return Status.INVALID_SERVICE;
+        ResourceEntity resourceEntity = manager.getResourceService().findByData(generator, packet.getResourceData());
+        if (resourceEntity == null) return Status.INVALID_RESOURCE;
 
         if (DEBUG) System.out.println("Checking license");
         LicenseService licenseService = manager.getLicenseService();

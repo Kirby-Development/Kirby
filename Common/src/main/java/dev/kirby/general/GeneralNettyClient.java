@@ -37,8 +37,9 @@ public class GeneralNettyClient extends ChannelInitializer<Channel> {
 
     private Channel channel;
 
-    @Getter
     private boolean connected;
+    @Setter
+    private long id;
 
     public GeneralNettyClient(IPacketRegistry packetRegistry, Runnable shutdownHook, String loggerName, ServiceRegistry serviceRegistry) {
         this.packetRegistry = packetRegistry;

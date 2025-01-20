@@ -1,9 +1,9 @@
 package dev.kirby.license;
 
-import dev.kirby.KirbyService;
+import dev.kirby.KirbyResource;
 import dev.kirby.netty.event.PacketSubscriber;
-import dev.kirby.packet.PingPacket;
-import dev.kirby.packet.ServicePacket;
+import dev.kirby.packet.empty.PingPacket;
+import dev.kirby.packet.empty.ShutdownPacket;
 import dev.kirby.packet.Status;
 import dev.kirby.packet.TextPacket;
 import dev.kirby.utils.InvalidException;
@@ -11,7 +11,7 @@ import dev.kirby.utils.KirbyLogger;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.logging.log4j.Level;
 
-public record ClientEvents(NettyClient client, KirbyService kirby) {
+public record ClientEvents(NettyClient client, KirbyResource kirby) {
 
     @PacketSubscriber
     public void onPacketReceive(TextPacket packet) {
@@ -30,11 +30,12 @@ public record ClientEvents(NettyClient client, KirbyService kirby) {
 
     @PacketSubscriber
     public void onPacketReceive(final PingPacket packet, final ChannelHandlerContext ctx) {
+        client.setId(packet.getClientId());
         client.getChannelActiveAction().accept(ctx);
     }
 
     @PacketSubscriber
-    public void onPacketReceive(final ServicePacket packet) {
+    public void onPacketReceive(final ShutdownPacket packet) {
         kirby.manager().destroy();
         throw new InvalidException(InvalidException.Type.SESSION);
     }

@@ -4,7 +4,7 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import dev.kirby.screenshare.PlayerState;
-import dev.kirby.packet.registry.PacketSender;
+import dev.kirby.packet.registry.SendPacket;
 import dev.kirby.screenshare.configuration.Configuration;
 import dev.kirby.screenshare.packet.StatePacket;
 import dev.kirby.screenshare.player.SSManager;
@@ -48,10 +48,10 @@ public class ScreenShareCommand extends SSCommand {
             p.createConnectionRequest(ss).fireAndForget();
         }
 
-        PacketSender packetSender = get(PacketSender.class);
+        SendPacket sendPacket = get(SendPacket.class);
 
-        packetSender.sendPacket(packet);
-        packetSender.sendPacket(new StatePacket(result.target().getUniqueId(), PlayerState.SUSPECT, sessionId));
+        sendPacket.sendPacket(packet);
+        sendPacket.sendPacket(new StatePacket(result.target().getUniqueId(), PlayerState.SUSPECT, sessionId));
         result.target().createConnectionRequest(ss).fireAndForget();
     }
 

@@ -3,7 +3,8 @@ package dev.kirby.general;
 import dev.kirby.netty.Packet;
 import dev.kirby.netty.event.PacketSubscriber;
 import dev.kirby.netty.io.Responder;
-import dev.kirby.packet.ConnectPacket;
+import dev.kirby.packet.empty.ConnectPacket;
+import dev.kirby.packet.registry.SendPacket;
 import dev.kirby.service.ServiceRegistry;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,7 +28,7 @@ public class PacketSender {
     @PacketSubscriber
     public void onConnect(final ConnectPacket packet, final Responder responder) {
         install(Responder.class, this.responder = responder);
-        install(dev.kirby.packet.registry.PacketSender.class, this::sendPacket);
+        install(SendPacket.class, this::sendPacket);
     }
 
     private <T> void install(Class<T> key, T service) {

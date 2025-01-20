@@ -7,13 +7,13 @@ import dev.kirby.service.ServiceRegistry;
 import lombok.Getter;
 
 @Getter
-public abstract class KirbyService implements ServiceHelper {
+public abstract class KirbyResource implements ServiceHelper {
 
     protected final String name;
     protected final String version;
     protected final NettyClient client;
 
-    protected KirbyService(String name, String version) {
+    protected KirbyResource(String name, String version) {
         this.name = name;
         this.version = version;
         client = new NettyClient(PacketRegister.get(), this, this::disable, manager());

@@ -5,7 +5,7 @@ import dev.kirby.checker.LoginChecker;
 import dev.kirby.checker.hwid.SecureGenerator;
 import dev.kirby.database.entities.LicenseEntity;
 import dev.kirby.database.entities.UsedIp;
-import dev.kirby.packet.LoginPacket;
+import dev.kirby.packet.registration.LoginPacket;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -43,14 +43,14 @@ public class LicenseService extends DatabaseService<LicenseEntity, String> {
     }
 
     public LicenseEntity findByData(SecureGenerator generator, LoginPacket packet) throws SQLException {
-        String licenseId = generator.generateSecureID(packet.getClientData(), packet.getServiceData(), new String[]{packet.getLicenseKey()});
+        String licenseId = generator.generateSecureID(packet.getClientData(), packet.getResourceData(), new String[]{packet.getLicenseKey()});
 
         LicenseEntity license = findById(licenseId);
 
         if (LoginChecker.DEBUG) {
             System.out.println("DEBUG: " + licenseId);
             System.out.println("clientData: " + Arrays.toString(packet.getClientData()));
-            System.out.println("serviceData: " + Arrays.toString(packet.getServiceData()));
+            System.out.println("serviceData: " + Arrays.toString(packet.getResourceData()));
             System.out.println("licenseKey:" + packet.getLicenseKey());
             getDao().queryForAll().forEach(System.out::println);
         }

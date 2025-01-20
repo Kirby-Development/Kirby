@@ -1,4 +1,4 @@
-package dev.kirby.api.packet.listener;
+package dev.kirby.api.packet;
 
 import com.github.retrooper.packetevents.event.PacketReceiveEvent;
 import com.github.retrooper.packetevents.event.PacketSendEvent;
@@ -6,8 +6,8 @@ import com.github.retrooper.packetevents.protocol.packettype.PacketTypeCommon;
 import dev.kirby.api.player.processor.Processor;
 import org.jetbrains.annotations.NotNull;
 
-import static dev.kirby.api.packet.listener.Side.Receive;
-import static dev.kirby.api.packet.listener.Side.Send;
+import static dev.kirby.api.packet.Side.Receive;
+import static dev.kirby.api.packet.Side.Send;
 
 public record Packet(PacketReceiveEvent receive, PacketSendEvent send, Side side) {
 

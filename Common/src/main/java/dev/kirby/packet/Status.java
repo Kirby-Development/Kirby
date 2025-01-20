@@ -15,8 +15,8 @@ public enum Status {
     INVALID_IP,
     INVALID_KEY,
     INVALID_USER,
-    INVALID_SERVICE,
-    ;
+    INVALID_RESOURCE,
+    TOO_MANY_ATTEMPTS;
 
     public boolean valid() {
         return this == VALID;
