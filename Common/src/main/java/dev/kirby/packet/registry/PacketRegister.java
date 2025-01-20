@@ -4,6 +4,7 @@ import dev.kirby.netty.Packet;
 import dev.kirby.netty.registry.IPacketRegistry;
 import dev.kirby.netty.registry.SimplePacketRegistry;
 import dev.kirby.packet.*;
+import dev.kirby.packet.empty.ConnectPacket;
 import dev.kirby.packet.empty.PingPacket;
 import dev.kirby.packet.registration.LoginPacket;
 import lombok.Getter;
@@ -27,6 +28,7 @@ public class PacketRegister {
         if (INSTANCE == null)
             INSTANCE = new PacketRegister(LoginPacket.class,
                     Status.ResponsePacket.class,
+                    ConnectPacket.class,
                     PingPacket.class,
                     TextPacket.class);
         return INSTANCE.getPacketRegistry();

@@ -10,9 +10,6 @@ import lombok.Getter;
 
 import java.security.SecureRandom;
 import java.time.Duration;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ThreadLocalRandom;
 
 
 @Getter
@@ -25,17 +22,13 @@ public class NettyServer extends GeneralNettyServer {
     }
 
     @Override
-    protected void initChannel(Channel channel) {
+    protected void initChannel(final Channel channel) {
         super.initChannel(channel);
         init(channel);
     }
 
-    private final Map<Long, Channel> channels = new ConcurrentHashMap<>();
-
     public void init(final Channel channel) {
-        final long id = ThreadLocalRandom.current().nextLong();
-        channels.put(id, channel);
-        final PingPacket ping = new PingPacket(id);
+        final PingPacket ping = new PingPacket();
         threadManager.getAvailableProfileThread().execute(() -> {
             SecureRandom random = new SecureRandom();
             while (true) {

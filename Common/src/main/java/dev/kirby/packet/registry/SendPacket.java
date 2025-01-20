@@ -4,6 +4,5 @@ import dev.kirby.netty.Packet;
 
 public interface SendPacket {
 
-    //todo cazzo è
-        void sendPacket(Packet packet);
+        void sendPacket(final Packet packet);
     }

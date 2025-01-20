@@ -30,7 +30,6 @@ public record ClientEvents(NettyClient client, KirbyResource kirby) {
 
     @PacketSubscriber
     public void onPacketReceive(final PingPacket packet, final ChannelHandlerContext ctx) {
-        client.setId(packet.getClientId());
         client.getChannelActiveAction().accept(ctx);
     }
 

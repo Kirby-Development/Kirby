@@ -1,12 +1,16 @@
 package dev.kirby.general;
 
-import dev.kirby.utils.KirbyLogger;
+import dev.kirby.netty.Packet;
 import dev.kirby.netty.event.EventRegistry;
+import dev.kirby.netty.event.PacketSubscriber;
 import dev.kirby.netty.handler.PacketChannelInboundHandler;
 import dev.kirby.netty.handler.PacketDecoder;
 import dev.kirby.netty.handler.PacketEncoder;
 import dev.kirby.netty.registry.IPacketRegistry;
+import dev.kirby.packet.empty.ConnectPacket;
+import dev.kirby.packet.registry.SendPacket;
 import dev.kirby.service.ServiceRegistry;
+import dev.kirby.utils.KirbyLogger;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -38,8 +42,6 @@ public class GeneralNettyClient extends ChannelInitializer<Channel> {
     private Channel channel;
 
     private boolean connected;
-    @Setter
-    private long id;
 
     public GeneralNettyClient(IPacketRegistry packetRegistry, Runnable shutdownHook, String loggerName, ServiceRegistry serviceRegistry) {
         this.packetRegistry = packetRegistry;
@@ -80,8 +82,8 @@ public class GeneralNettyClient extends ChannelInitializer<Channel> {
                 new PacketChannelInboundHandler(eventRegistry) {
                     @Override
                     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-                        if (channelActiveAction != null) channelActiveAction.accept(ctx);
                         super.channelActive(ctx);
+                        if (channelActiveAction != null) channelActiveAction.accept(ctx);
                     }
                 }
         );
@@ -96,6 +98,38 @@ public class GeneralNettyClient extends ChannelInitializer<Channel> {
             logger.error("Failed to shutdown", e);
         } finally {
             workerGroup.shutdownGracefully(0, 0, TimeUnit.SECONDS).syncUninterruptibly();
+        }
+    }
+
+    @Setter
+    @Getter
+    public static class PacketSender {
+
+        private final ServiceRegistry service;
+
+        public PacketSender(ServiceRegistry service) {
+            this.service = service;
+        }
+
+        private ChannelHandlerContext ctx;
+
+        public void sendPacket(Packet packet) {
+            if (ctx == null) return;
+            ctx.writeAndFlush(packet);
+        }
+
+        @PacketSubscriber
+        public void onConnect(final ConnectPacket packet, final ChannelHandlerContext ctx) {
+            this.ctx = ctx;
+            install(SendPacket.class, this::sendPacket);
+        }
+
+        private <T> void install(Class<T> key, T service) {
+            manager().put(key, service);
+        }
+
+        public ServiceRegistry manager() {
+            return service;
         }
     }
 
