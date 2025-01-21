@@ -3,7 +3,7 @@ package dev.kirby;
 import dev.kirby.checker.hwid.HwidCalculator;
 import dev.kirby.checker.hwid.SecureGenerator;
 import dev.kirby.config.Config;
-import dev.kirby.config.ConfigManager;
+import dev.kirby.config.impl.JsonConfigManager;
 import dev.kirby.config.Datas;
 import dev.kirby.database.DatabaseManager;
 import dev.kirby.database.entities.ClientEntity;
@@ -27,9 +27,9 @@ import java.util.List;
 @Getter
 public class ServerLauncher implements Runnable, ServiceHelper {
 
-    private final ConfigManager<Config> configManager = new ConfigManager<>(new Config());
+    private final JsonConfigManager<Config> configManager = new JsonConfigManager<>(new Config());
 
-    private final ConfigManager<Datas> dataManager = new ConfigManager<>(new Datas());
+    private final JsonConfigManager<Datas> dataManager = new JsonConfigManager<>(new Datas());
 
     private final ClientManager clientManager;
 

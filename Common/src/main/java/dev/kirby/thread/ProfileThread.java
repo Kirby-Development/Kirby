@@ -1,5 +1,6 @@
 package dev.kirby.thread;
 
+import dev.kirby.utils.Destroyable;
 import lombok.Getter;
 
 import java.util.concurrent.Executors;
@@ -36,8 +37,10 @@ public class ProfileThread {
         this.profileCount--;
     }
 
-    public ProfileThread shutdownThread() {
+    public ProfileThread shutdown() {
         this.thread.shutdownNow();
         return this;
     }
+
+
 }

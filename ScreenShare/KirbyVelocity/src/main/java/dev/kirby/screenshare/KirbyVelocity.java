@@ -115,7 +115,7 @@ public class KirbyVelocity extends KirbyResource implements VelocityService {
     }
 
     @Override
-    public void disable() {
+    public void destroy() {
 
     }
 }

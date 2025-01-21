@@ -1,5 +1,6 @@
 package dev.kirby.api.plugin;
 
+import dev.kirby.utils.Destroyable;
 import dev.kirby.utils.InvalidException;
 import dev.kirby.utils.KirbyLogger;
 import org.apache.logging.log4j.Level;
@@ -9,7 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class KirbyInstance<T extends KirbyPlugin> extends JavaPlugin {
+public abstract class KirbyInstance<T extends KirbyPlugin> extends JavaPlugin implements Destroyable {
 
     private final KirbyLogger test = new KirbyLogger("Test") {
 
@@ -34,12 +35,12 @@ public abstract class KirbyInstance<T extends KirbyPlugin> extends JavaPlugin {
         return plugin;
     }
 
-    public AtomicBoolean shutdown = new AtomicBoolean(false);
+    public AtomicBoolean destroyed = new AtomicBoolean(false);
 
 
     @Override
     public void onLoad() {
-        if (shutdown.get()) return;
+        if (destroyed.get()) return;
         test.info("Loading plugin...");
         //if (this instanceof PacketEvent packetEvent) packetEvent.initialize();
         plugin().init();
@@ -47,7 +48,7 @@ public abstract class KirbyInstance<T extends KirbyPlugin> extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        if (shutdown.get()) return;
+        if (destroyed.get()) return;
         test.info("Enabling plugin...");
         plugin().enable();
         //if (this instanceof PacketEvent packetEvent) packetEvent.enable();
@@ -55,7 +56,7 @@ public abstract class KirbyInstance<T extends KirbyPlugin> extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (shutdown.get()) return;
+        if (destroyed.get()) return;
         test.info("Disabling plugin...");
         //if (this instanceof PacketEvent packetEvent) packetEvent.terminate();
         HandlerList.unregisterAll(this);
@@ -63,8 +64,8 @@ public abstract class KirbyInstance<T extends KirbyPlugin> extends JavaPlugin {
         plugin().shutdown();
     }
 
-    public void shutdown() {
+    public void destroy() {
         onDisable();
-        shutdown.set(true);
+        destroyed.set(true);
     }
 }

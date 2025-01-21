@@ -34,8 +34,8 @@ public abstract class KirbyPlugin extends KirbyResource implements Initializer, 
     public abstract void shutdown();
 
     @Override
-    public void disable() {
-        instance.shutdown();
+    public void destroy() {
+        instance.destroy();
     }
 
     @Override

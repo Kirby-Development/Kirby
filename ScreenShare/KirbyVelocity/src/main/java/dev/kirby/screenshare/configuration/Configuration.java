@@ -150,8 +150,8 @@ public final class Configuration {
         List<Short> result = new ArrayList<>();
 
         for (Object object : list) {
-            if (object instanceof Number) {
-                result.add(Short.valueOf(((Number) object).shortValue()));
+            if (object instanceof Number n) {
+                result.add(n.shortValue());
             }
         }
 

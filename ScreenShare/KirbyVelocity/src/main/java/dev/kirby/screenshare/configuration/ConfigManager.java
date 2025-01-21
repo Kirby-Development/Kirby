@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.zip.ZipEntry;
@@ -17,26 +16,22 @@ import java.util.zip.ZipInputStream;
 
 
 public class ConfigManager {
-    private final HashMap<String, Configuration> configs;
-    private final PluginDescription pluginDescription;
+    private final HashMap<String, Configuration> configs = new HashMap<>();
     private File folder;
-    private File serverJar;
     private File pluginJar;
 
     public ConfigManager(PluginDescription pluginDescription) {
-        this.configs = new HashMap<>();
-        this.pluginDescription = pluginDescription;
         try {
-            this.serverJar = new File(Plugin.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-            this.pluginJar = new File(this.serverJar.getParentFile(), ((Path) pluginDescription.getSource().get()).toString());
-            this.folder = new File(this.serverJar.getParentFile() + "/plugins/" + this.pluginDescription.getId());
-            if (!this.folder.exists()) {
-                this.folder.mkdir();
-            }
-        } catch (URISyntaxException ex) {
-            ex.printStackTrace();
+            File serverJar = new File(Plugin.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            this.pluginJar = new File(serverJar.getParentFile(), pluginDescription.getSource().get().toString());
+            this.folder = new File(serverJar.getParentFile() + "/plugins/" + pluginDescription.getId());
+            if (!this.folder.exists()) this.folder.mkdir();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
     }
+
+
 
     public Configuration get(String file) {
         return this.configs.getOrDefault(file, null);

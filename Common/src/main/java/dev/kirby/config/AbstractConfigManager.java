@@ -1,17 +1,11 @@
 package dev.kirby.config;
 
-import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
-public class ConfigManager<T> {
-
-    public static final Gson GSON = new Gson().newBuilder().disableHtmlEscaping().setPrettyPrinting().create();
+public abstract class AbstractConfigManager<T> {
 
     private final File file;
 
@@ -19,20 +13,20 @@ public class ConfigManager<T> {
     @Getter
     private T config;
 
-    public ConfigManager(final T defaultConfig) {
+    public AbstractConfigManager(final T defaultConfig) {
         this.config = defaultConfig;
         String name = defaultConfig.getClass().getSimpleName().toLowerCase();
-        this.file = new File(name + ".json");
+        this.file = new File(name + "." + extension());
     }
 
-    public ConfigManager(final T defaultConfig, final String name) {
+    public AbstractConfigManager(final T defaultConfig, final String name) {
         this.config = defaultConfig;
-        this.file = new File(name + ".json");
+        this.file = new File(name + "." + extension());
     }
 
     public void saveConfig() {
         try (FileWriter writer = new FileWriter(file)) {
-            GSON.toJson(config, writer);
+            save(config, writer);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -44,10 +38,15 @@ public class ConfigManager<T> {
             return;
         }
         try (FileReader reader = new FileReader(file)) {
-            this.config = GSON.fromJson(reader, configClass);
+            this.config = load(reader, configClass);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    protected abstract String extension();
+
+    protected abstract void save(T config, FileWriter writer);
+    protected abstract T load(FileReader reader, Class<T> configClass);
 
 }
