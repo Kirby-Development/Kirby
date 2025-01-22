@@ -22,7 +22,6 @@ public class PacketChannelInboundHandler extends SimpleChannelInboundHandler<Pac
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        //super.exceptionCaught(ctx, cause);
         System.out.println("exceptionCaught: " + cause.getMessage());
         System.exit(-1);
     }

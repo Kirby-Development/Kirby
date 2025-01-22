@@ -8,7 +8,6 @@ public final class Instance extends KirbyInstance<KirbySS>  {
 
     private final KirbySS kirbySS = new KirbySS(this);
 
-
     @Override
     public void onLoad() {
         super.onLoad();

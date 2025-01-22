@@ -1,7 +1,6 @@
 package dev.kirby.api.player;
 
 import com.github.retrooper.packetevents.protocol.player.User;
-import dev.kirby.api.plugin.KirbyInstance;
 import dev.kirby.api.plugin.KirbyPlugin;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -11,13 +10,13 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
-public abstract class KirbyManager<T extends KirbyUser> {
+public abstract class KirbyManager<T extends KirbyUser, K extends KirbyPlugin> {
 
     private final Map<UUID, T> profiles = new ConcurrentHashMap<>();
-    protected final KirbyInstance<? extends KirbyPlugin> instance;
+    protected final K plugin;
 
-    public KirbyManager(KirbyInstance<? extends KirbyPlugin> instance) {
-        this.instance = instance;
+    protected KirbyManager(K plugin) {
+        this.plugin = plugin;
     }
 
     public T createProfile(final Player player, final User user) {

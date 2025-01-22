@@ -3,39 +3,39 @@ package dev.kirby.screenshare.commands;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
-import dev.kirby.screenshare.PlayerState;
+import dev.kirby.config.ConfigManager;
 import dev.kirby.packet.registry.SendPacket;
-import dev.kirby.screenshare.configuration.Configuration;
+import dev.kirby.screenshare.PlayerState;
+import dev.kirby.screenshare.configuration.Config;
 import dev.kirby.screenshare.packet.StatePacket;
 import dev.kirby.screenshare.player.SSManager;
 import dev.kirby.screenshare.player.Session;
 import dev.kirby.screenshare.utils.ServerUtils;
-import net.kyori.adventure.text.Component;
 
 public class ScreenShareCommand extends SSCommand {
 
     private final Session.Manager sessionManager;
 
-    public ScreenShareCommand(Session.Manager sessionManager, SSManager manager, ProxyServer server) {
-        super(server, manager);
+
+    public ScreenShareCommand(Session.Manager sessionManager, ConfigManager<Config> configManager, SSManager manager, ProxyServer server) {
+        super(server, manager, configManager);
         this.sessionManager = sessionManager;
     }
 
-    // /ss negro
 
     @Override
     protected void execute(Player p, String[] args) {
         Result result = result(p, args);
         if (result == null) return;
+        Config config = configManager.get();
         if (sessionManager.contains(result.staff().getSsId())) {
-            p.sendMessage(Component.text("already in a ss"));
-            //todo already in a ss
+            p.sendMessage(config.getMessages().getAlreadyInSS(result.target().getUsername()));
             return;
         }
 
         final StatePacket packet;
         final int sessionId;
-        final RegisteredServer ss = ServerUtils.getServer(server, get(Configuration.class),"ss");
+        final RegisteredServer ss = ServerUtils.getServer(server, config.getServers().getSs());
         if (sessionManager.contains(result.ssTarget().getSsId())) {
             result.staff().setSsId(sessionId = result.ssTarget().getSsId());
             sessionManager.getSession(sessionId).getDebug().add(result.staff());

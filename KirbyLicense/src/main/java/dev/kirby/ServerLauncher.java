@@ -3,7 +3,7 @@ package dev.kirby;
 import dev.kirby.checker.hwid.HwidCalculator;
 import dev.kirby.checker.hwid.SecureGenerator;
 import dev.kirby.config.Config;
-import dev.kirby.config.impl.JsonConfigManager;
+import dev.kirby.config.ConfigManager;
 import dev.kirby.config.Datas;
 import dev.kirby.database.DatabaseManager;
 import dev.kirby.database.entities.ClientEntity;
@@ -22,14 +22,17 @@ import dev.kirby.thread.ThreadManager;
 import dev.kirby.utils.Utils;
 import lombok.Getter;
 
+import java.io.File;
 import java.util.List;
 
 @Getter
 public class ServerLauncher implements Runnable, ServiceHelper {
 
-    private final JsonConfigManager<Config> configManager = new JsonConfigManager<>(new Config());
+    private final File dir = new File(new File("").getAbsolutePath(), "license");
 
-    private final JsonConfigManager<Datas> dataManager = new JsonConfigManager<>(new Datas());
+    private final ConfigManager<Config> configManager = new ConfigManager<>(dir, new Config());
+
+    private final ConfigManager<Datas> dataManager = new ConfigManager<>(dir, new Datas());
 
     private final ClientManager clientManager;
 
@@ -41,10 +44,10 @@ public class ServerLauncher implements Runnable, ServiceHelper {
     private final ThreadManager threadManager = new ThreadManager();
 
     public ServerLauncher(boolean clean) throws Exception {
-        configManager.loadConfig(Config.class);
-        config = configManager.getConfig();
+        configManager.load();
+        config = configManager.get();
 
-        dataManager.loadConfig(Datas.class);
+        dataManager.load();
 
         clientManager = new ClientManager(this);
 
@@ -76,7 +79,7 @@ public class ServerLauncher implements Runnable, ServiceHelper {
     }
 
     private void genData() throws Exception {
-        Datas datas = dataManager.getConfig();
+        Datas datas = dataManager.get();
 
         Datas.Client client;
         datas.getClients().add(client = new Datas.Client(0, Utils.getData(), "127.0.0.1"));
@@ -89,13 +92,13 @@ public class ServerLauncher implements Runnable, ServiceHelper {
             datas.getLicenses().add(new Datas.License(client.getId(), resource.getId(), "LUCKY", Edition.Enterprise));
         }
 
-        dataManager.saveConfig();
+        dataManager.save();
 
 
     }
 
     private void refreshDb() throws Exception {
-        Datas datas = dataManager.getConfig();
+        Datas datas = dataManager.get();
 
         for (Datas.Client client : datas.getClients()) {
             databaseManager.getClientService().create(new ClientEntity(HwidCalculator.get(this).calculate(client.getData()), client.getIp()));
@@ -135,8 +138,8 @@ public class ServerLauncher implements Runnable, ServiceHelper {
     }
 
     private void shutdown() {
-        configManager.saveConfig();
-        dataManager.saveConfig();
+        configManager.save();
+        dataManager.save();
         threadManager.shutdown();
     }
 

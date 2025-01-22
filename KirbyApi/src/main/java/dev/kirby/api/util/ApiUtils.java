@@ -1,6 +1,8 @@
 package dev.kirby.api.util;
 
+import dev.kirby.utils.ColorUtils;
 import lombok.experimental.UtilityClass;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -14,6 +16,10 @@ import java.util.UUID;
 
 @UtilityClass
 public class ApiUtils {
+
+    public static @NotNull Component component(Object o) {
+        return Component.text(ColorUtils.color(o));
+    }
 
     @UtilityClass
     public class Command {

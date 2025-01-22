@@ -1,7 +1,9 @@
 package dev.kirby.screenshare;
 
 import dev.kirby.api.plugin.KirbyPlugin;
+import dev.kirby.config.ConfigManager;
 import dev.kirby.packet.empty.ConnectPacket;
+import dev.kirby.screenshare.config.Config;
 import dev.kirby.screenshare.listener.PlayerListener;
 import dev.kirby.screenshare.listener.ScreenShareEvents;
 import dev.kirby.screenshare.netty.ScreenShareClient;
@@ -15,17 +17,20 @@ public class KirbySS extends KirbyPlugin {
     private final ScreenShareManager manager;
     private final ScreenShareClient kirbySS = new ScreenShareClient(Registry.get(), this::shutdown, "KirbySS", manager());
 
+    private final ConfigManager<Config> configManager;
+
     public KirbySS(Instance instance) {
         super(instance);
-        manager = new ScreenShareManager(this.instance);
-        install(ScreenShareManager.class, manager);
+        configManager = new ConfigManager<>(instance.getDataFolder(), new Config());
+        manager = new ScreenShareManager(this);
         kirbySS.getEventRegistry().registerEvents(new ScreenShareEvents(this, manager));
         kirbySS.setChannelActiveAction(ctx -> ctx.writeAndFlush(new ConnectPacket()));
+
     }
 
     @Override
     public void enable() {
-        new PlayerListener().register();
+        new PlayerListener(manager).register();
         kirbySS.connect("127.0.0.1", 6990);
     }
 

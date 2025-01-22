@@ -5,8 +5,8 @@ import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
-import dev.kirby.screenshare.commands.buttons.Buttons;
-import dev.kirby.screenshare.configuration.Configuration;
+import dev.kirby.config.ConfigManager;
+import dev.kirby.screenshare.configuration.Config;
 import dev.kirby.screenshare.player.SSManager;
 import dev.kirby.screenshare.player.SSPlayer;
 import dev.kirby.screenshare.player.Session;
@@ -16,11 +16,11 @@ import net.kyori.adventure.text.event.HoverEvent;
 public class PlayerListener {
 
     private final ProxyServer server;
-    private final Configuration config;
+    private final ConfigManager<Config> config;
     private final SSManager manager;
     private final Session.Manager sessionManager;
 
-    public PlayerListener(ProxyServer server, Configuration config, SSManager manager, Session.Manager sessionManager) {
+    public PlayerListener(ProxyServer server, ConfigManager<Config> config, SSManager manager, Session.Manager sessionManager) {
         this.server = server;
         this.config = config;
         this.manager = manager;
@@ -33,33 +33,37 @@ public class PlayerListener {
         SSPlayer profile;
         if (event.getPreviousServer().isEmpty()) profile = manager.createProfile(player);
         else profile = manager.getProfile(player);
+        //todo check server
         if (profile == null) return;
         if (!profile.isStaff()) return;
         Session session = sessionManager.getSession(profile.getSsId());
         if (session == null) return;
         SSPlayer sus = session.getSuspect();
 
+        Config config = this.config.get();
+        Config.Buttons buttons = config.getButtons();
+
+        Config.Ban ban = config.getBan();
 
 
-        for (Buttons button : Buttons.get()) {
-            player.sendMessage(button.getText(config)
-                    .hoverEvent(HoverEvent.showText(button.getHover(config)))
+
+        for (Config.Buttons.Button button : buttons.getButtons()) {
+            player.sendMessage(button.getText()
+                    .hoverEvent(HoverEvent.showText(button.getHover()))
                     .clickEvent(ClickEvent.callback(audience -> {
-                        String command = config.getString("ban.command")
+                        String command = ban.getCommand()
                                 .replace("%player%", sus.getPlayer().getUsername())
                                 .replace("%uuid%", sus.getUuid().toString())
-                                .replace("%duration%", button.getDuration(config));
-                        boolean staff = config.getString("ban.who").equalsIgnoreCase("staff");
+                                .replace("%duration%", button.getDuration());
+                        boolean staff = ban.getWho().isStaff();
                         server.getCommandManager().executeImmediatelyAsync(staff ? player : server.getConsoleCommandSource(), command);
-
-
                     })));
         }
 
 
-        Buttons button = Buttons.Clear;
-        player.sendMessage(button.getText(config)
-                .hoverEvent(HoverEvent.showText(button.getHover(config)))
+        Config.Buttons.Button button = buttons.getClear();
+        player.sendMessage(button.getText()
+                .hoverEvent(HoverEvent.showText(button.getHover()))
                 .clickEvent(ClickEvent.callback(audience -> server.getCommandManager().executeImmediatelyAsync(player, "clear " + sus.getPlayer().getUsername()))));
 
     }

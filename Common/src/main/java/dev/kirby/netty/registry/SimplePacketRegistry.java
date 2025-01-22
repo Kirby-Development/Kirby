@@ -1,7 +1,7 @@
 package dev.kirby.netty.registry;
 
 import dev.kirby.netty.Packet;
-import dev.kirby.netty.exception.PacketRegistrationException;
+import dev.kirby.exception.PacketRegistrationException;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;

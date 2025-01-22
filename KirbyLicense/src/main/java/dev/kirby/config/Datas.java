@@ -10,6 +10,7 @@ import java.util.Set;
 
 @Data
 @NoArgsConstructor
+@ConfigInfo(format = Format.JSON)
 public class Datas {
 
     private final Set<Client> clients = new HashSet<>();

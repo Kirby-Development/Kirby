@@ -1,10 +1,6 @@
-package dev.kirby.api.util;
+package dev.kirby.utils;
 
-import dev.kirby.utils.Utils;
 import lombok.experimental.UtilityClass;
-import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,16 +17,19 @@ public class ColorUtils {
         return colorize(translateHexColorCodes(message));
     }
 
-    public static @NotNull Component component(Object o) {
-        return Component.text(color(o));
-    }
-
     private String colorize(final String message) {
-        return ChatColor.translateAlternateColorCodes('&', message);
+        char[] b = message.toCharArray();
+        for (int i = 0; i < b.length - 1; i++) {
+            if (b[i] == '&' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRrXx".indexOf(b[i + 1]) > -1) {
+                b[i] = '\u00A7';
+                b[i + 1] = Character.toLowerCase(b[i + 1]);
+            }
+        }
+        return new String(b);
     }
 
     private String translateHexColorCodes(final String message) {
-        final char colorChar = ChatColor.COLOR_CHAR;
+        final char colorChar = '\u00A7';
 
         final Matcher matcher = HEX_PATTERN.matcher(message);
         final StringBuffer buffer = new StringBuffer(message.length() + 4 * 8);

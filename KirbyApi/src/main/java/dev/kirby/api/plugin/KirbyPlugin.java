@@ -1,7 +1,6 @@
 package dev.kirby.api.plugin;
 
 import dev.kirby.KirbyResource;
-import dev.kirby.api.file.ConfigYaml;
 import dev.kirby.api.util.ApiService;
 import dev.kirby.service.ServiceRegistry;
 import dev.kirby.utils.Initializer;
@@ -15,15 +14,13 @@ public abstract class KirbyPlugin extends KirbyResource implements Initializer, 
 
     protected final KirbyInstance<? extends KirbyPlugin> instance;
     private final KirbyLogger logger;
-    private final ConfigYaml config;
 
     public KirbyPlugin(KirbyInstance<? extends KirbyPlugin> kirby) {
         super(kirby.getName(), kirby.getPluginMeta().getVersion());
         this.instance = kirby;
-        this.config = new ConfigYaml(this.instance);
         this.logger = new KirbyLogger(this.name);
-        client.setInfo(this);
-        client.connect();
+        licenseClient.setInfo(this);
+        licenseClient.connect();
     }
 
     public void init() {
@@ -43,8 +40,6 @@ public abstract class KirbyPlugin extends KirbyResource implements Initializer, 
         return ApiService.super.manager();
     }
 
-    @Override
-    public String getLicense() {
-        return getConfig().getLicense();
-    }
+
+
 }

@@ -91,6 +91,7 @@ public class GeneralNettyClient extends ChannelInitializer<Channel> {
 
     public void shutdown() {
         shutdownHook.run();
+        packetSender.service.destroy();
         this.connected = false;
         try {
             workerGroup.shutdownGracefully().sync();

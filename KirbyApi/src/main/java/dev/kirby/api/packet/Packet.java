@@ -43,7 +43,7 @@ public record Packet(PacketReceiveEvent receive, PacketSendEvent send, Side side
         return new IllegalStateException("Packet is " + type().getSide() + " side");
     }
 
-    public void handle(Processor<?> processor) {
+    public void handle(Processor<?, ?> processor) {
         processor.handle(this);
     }
 

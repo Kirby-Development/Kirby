@@ -1,10 +1,10 @@
 package dev.kirby.api.command;
 
+import dev.kirby.utils.ColorUtils;
 import dev.kirby.utils.Utils;
 import dev.kirby.api.plugin.KirbyInstance;
 import dev.kirby.api.plugin.KirbyPlugin;
 import dev.kirby.api.util.ApiUtils;
-import dev.kirby.api.util.ColorUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;

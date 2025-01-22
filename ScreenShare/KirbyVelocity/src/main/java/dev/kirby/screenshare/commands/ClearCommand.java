@@ -3,39 +3,40 @@ package dev.kirby.screenshare.commands;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
-import dev.kirby.screenshare.PlayerState;
+import dev.kirby.config.ConfigManager;
 import dev.kirby.packet.registry.SendPacket;
-import dev.kirby.screenshare.configuration.Configuration;
+import dev.kirby.screenshare.PlayerState;
+import dev.kirby.screenshare.configuration.Config;
 import dev.kirby.screenshare.packet.StatePacket;
 import dev.kirby.screenshare.player.SSManager;
 import dev.kirby.screenshare.player.SSPlayer;
 import dev.kirby.screenshare.player.Session;
 import dev.kirby.screenshare.utils.ServerUtils;
-import net.kyori.adventure.text.Component;
 
 public class ClearCommand extends SSCommand {
 
     private final Session.Manager sessionManager;
+    private final ConfigManager<Config> configManager;
 
-    public ClearCommand(Session.Manager sessionManager, SSManager manager, ProxyServer server) {
-        super(server, manager);
+    public ClearCommand(Session.Manager sessionManager, ConfigManager<Config> configManager, SSManager manager, ProxyServer server) {
+        super(server, manager, configManager);
         this.sessionManager = sessionManager;
+        this.configManager = configManager;
     }
 
-    // /clear negro
 
     @Override
     protected void execute(Player p, String[] args) {
         Result result = result(p, args);
         if (result == null) return;
         final int sessionId = result.ssTarget().getSsId();
+        Config config = configManager.get();
         if (!sessionManager.contains(sessionId)) {
-            p.sendMessage(Component.text("not in a ss"));
-            //todo not in a ss
+            p.sendMessage(config.getMessages().getNotInSS(result.target().getUsername()));
             return;
         }
 
-        final RegisteredServer ss = ServerUtils.getServer(server, get(Configuration.class), "hub");
+        final RegisteredServer ss = ServerUtils.getServer(server, config.getServers().getHub());
 
 
         SendPacket sendPacket = get(SendPacket.class);

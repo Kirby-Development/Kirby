@@ -6,11 +6,11 @@ import dev.kirby.api.plugin.KirbyPlugin;
 import lombok.Getter;
 
 @Getter
-public abstract class Processor<T extends KirbyUser> implements PacketHandler {
+public abstract class Processor<T extends KirbyUser, K extends KirbyPlugin> implements PacketHandler {
 
     protected final T player;
-    private final KirbyPlugin plugin;
-    protected Processor(T player, KirbyPlugin plugin) {
+    private final K plugin;
+    protected Processor(T player, K plugin) {
         this.player = player;
         this.plugin = plugin;
     }

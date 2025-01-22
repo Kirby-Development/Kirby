@@ -14,8 +14,8 @@ import org.bukkit.entity.Player;
 public class PlayerListener implements PacketListener, ApiService {
 
     private final ScreenShareManager manager;
-    public PlayerListener() {
-        manager = get(ScreenShareManager.class);
+    public PlayerListener(ScreenShareManager manager) {
+        this.manager = manager;
     }
 
     @Override

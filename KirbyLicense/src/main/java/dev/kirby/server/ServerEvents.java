@@ -65,7 +65,6 @@ public class ServerEvents {
         clientManager.disconnect(packet);
     }
 
-
     @PacketSubscriber
     public void onText(TextPacket packet, ChannelHandlerContext ctx, Responder responder) {
         System.out.println("Received \"" + packet.getText() + "\" from " + Utils.getIp(ctx));

@@ -8,23 +8,24 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.PluginDescription;
 import com.velocitypowered.api.proxy.ProxyServer;
 import dev.kirby.KirbyResource;
+import dev.kirby.config.ConfigManager;
 import dev.kirby.packet.empty.ConnectPacket;
 import dev.kirby.screenshare.commands.ClearCommand;
 import dev.kirby.screenshare.commands.ScreenShareCommand;
-import dev.kirby.screenshare.configuration.ConfigManager;
-import dev.kirby.screenshare.configuration.Configuration;
+import dev.kirby.screenshare.configuration.Config;
 import dev.kirby.screenshare.listener.PlayerListener;
-import dev.kirby.screenshare.netty.ScreenShareServer;
-import dev.kirby.screenshare.netty.ServerEvents;
+import dev.kirby.screenshare.netty.ServerSS;
 import dev.kirby.screenshare.packet.registry.Registry;
 import dev.kirby.screenshare.player.SSManager;
 import dev.kirby.screenshare.player.Session;
 import dev.kirby.screenshare.utils.VelocityService;
 import dev.kirby.service.ServiceManager;
 import dev.kirby.service.ServiceRegistry;
-import dev.kirby.utils.InvalidException;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
+
+import java.io.File;
 
 @Plugin(
         id = "kirbyvelocity",
@@ -40,59 +41,54 @@ public class KirbyVelocity extends KirbyResource implements VelocityService {
     @Inject
     private final Logger logger;
     @Inject
-    private final ProxyServer server;
+    private final ProxyServer proxy;
 
     private final Plugin plugin;
-    private final Configuration config;
+    private final File dataFolder;
 
-    public Configuration getConfig() {
-        return configManager.get("config.yml");
-    }
+    private final ConfigManager<Config> configManager;
 
-    private final ConfigManager configManager;
-
+    @SneakyThrows
     @Inject
-    public KirbyVelocity(ProxyServer server, PluginDescription description, Logger logger) {
+    public KirbyVelocity(ProxyServer proxy, PluginDescription description, Logger logger) {
         super("KirbyVelocity", "1.0");
         plugin = getClass().getAnnotation(Plugin.class);
         this.logger = logger;
-        this.server = server;
-        this.configManager = new ConfigManager(description);
-        this.configManager.create("config.yml");
-        config = getConfig();
-        if (config == null) {
-            logger.error("Failed to load config.yml. Shutting down.");
-            this.server.shutdown();
-        }
-        client.setInfo(this);
-        client.connect();
+        this.proxy = proxy;
 
-        serverSS.getEventRegistry().registerEvents(serverEvents);
+        File serverJar = new File(Plugin.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+        dataFolder = new File(serverJar.getParentFile() + "/plugins/" + description.getId());
+
+
+        configManager = new ConfigManager<>(dataFolder, new Config());
+        this.configManager.load();
+
+        licenseClient.setInfo(this);
+        licenseClient.connect();
+
+        //serverSS.getEventRegistry().registerEvents(serverEvents);
         serverSS.bind(6990);
-        install(SSManager.class, manager);
-        install(ProxyServer.class, server);
-        install(Configuration.class, config);
     }
 
     private final SSManager manager = new SSManager();
     private final Session.Manager sessionManager = new Session.Manager();
 
-    private final ScreenShareServer serverSS = new ScreenShareServer(Registry.get(), channel -> channel.writeAndFlush(new ConnectPacket()), manager());
-    private final ServerEvents serverEvents = new ServerEvents(this, manager, sessionManager);
+    private final ServerSS serverSS = new ServerSS(Registry.get(), channel -> channel.writeAndFlush(new ConnectPacket()), manager());
+    //private final ServerEvents serverEvents = new ServerEvents();
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        if (config == null) {
+        if (configManager == null) {
             logger.warn("Failed to load config.yml. Shutting down.");
-            this.server.shutdown();
+            this.proxy.shutdown();
             return;
         }
 
-        server.getEventManager().register(this, new PlayerListener(server,config, manager, sessionManager));
+        proxy.getEventManager().register(this, new PlayerListener(proxy, configManager, manager, sessionManager));
 
-        CommandManager commandManager = server.getCommandManager();
-        commandManager.register(commandManager.metaBuilder("ss").plugin(this).build(), new ScreenShareCommand(sessionManager, manager, server));
-        commandManager.register(commandManager.metaBuilder("clear").plugin(this).build(), new ClearCommand(sessionManager, manager, server));
+        CommandManager commandManager = proxy.getCommandManager();
+        commandManager.register(commandManager.metaBuilder("ss").plugin(this).build(), new ScreenShareCommand(sessionManager, configManager, manager, proxy));
+        commandManager.register(commandManager.metaBuilder("clear").plugin(this).build(), new ClearCommand(sessionManager, configManager, manager, proxy));
     }
 
     @Override
@@ -101,21 +97,9 @@ public class KirbyVelocity extends KirbyResource implements VelocityService {
     }
 
     @Override
-    public String getLicense() {
-        String license = getConfig().getString("license");
-        if (license == null) {
-            setLicense("INSERT-LICENSE-HERE");
-            throw new InvalidException(InvalidException.Type.LICENSE);
-        }
-        return license;
-    }
-
-    public void setLicense(String license) {
-        getConfig().set("license", license);
-    }
-
-    @Override
     public void destroy() {
 
     }
+
+
 }

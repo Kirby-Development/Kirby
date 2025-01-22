@@ -1,13 +1,12 @@
 package dev.kirby.screenshare.player;
 
 import com.github.retrooper.packetevents.protocol.player.User;
-import dev.kirby.screenshare.PlayerState;
 import dev.kirby.api.packet.Packet;
 import dev.kirby.api.packet.PacketHandler;
 import dev.kirby.api.player.KirbyUser;
-import dev.kirby.api.plugin.KirbyInstance;
-import dev.kirby.api.plugin.KirbyPlugin;
 import dev.kirby.api.util.ApiService;
+import dev.kirby.screenshare.KirbySS;
+import dev.kirby.screenshare.PlayerState;
 import dev.kirby.screenshare.processors.ChatProcessor;
 import dev.kirby.screenshare.processors.ScreenShareProcessor;
 import lombok.Getter;
@@ -29,11 +28,11 @@ public class ScreenSharePlayer implements KirbyUser, PacketHandler, ApiService {
     private PlayerState playerState = PlayerState.NONE;
     private Integer ssId = 0;
 
-    public ScreenSharePlayer(Player player, User user, KirbyInstance<? extends KirbyPlugin> instance) {
+    public ScreenSharePlayer(Player player, User user, KirbySS plugin) {
         this.uuid = player.getUniqueId();
         this.player = player;
         this.user = user;
-        chatProcessor = new ChatProcessor(this, instance.plugin());
+        chatProcessor = new ChatProcessor(this, plugin);
     }
 
     public boolean isStaff() {

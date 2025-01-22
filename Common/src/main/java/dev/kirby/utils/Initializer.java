@@ -1,13 +1,10 @@
 package dev.kirby.utils;
 
-public interface Initializer extends Destroyable {
+public interface Initializer {
 
     void init();
-    void enable();
+    default void enable(){}
     void shutdown();
 
-    @Override
-    default void destroy() {
-        shutdown();
-    }
+
 }

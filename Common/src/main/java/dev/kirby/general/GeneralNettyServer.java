@@ -78,6 +78,7 @@ public class GeneralNettyServer extends ChannelInitializer<Channel> {
     }
 
     public void shutdown() {
+        packetSender.service.destroy();
         try {
             parentGroup.shutdownGracefully().get();
             workerGroup.shutdownGracefully().get();

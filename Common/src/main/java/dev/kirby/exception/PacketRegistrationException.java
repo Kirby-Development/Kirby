@@ -1,4 +1,4 @@
-package dev.kirby.netty.exception;
+package dev.kirby.exception;
 
 public class PacketRegistrationException extends Exception {
 

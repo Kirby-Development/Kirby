@@ -5,9 +5,10 @@ import com.github.retrooper.packetevents.event.PacketReceiveEvent;
 import com.github.retrooper.packetevents.util.crypto.MessageSignData;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientChatMessage;
 import dev.kirby.api.packet.Packet;
-import dev.kirby.api.plugin.KirbyPlugin;
 import dev.kirby.api.util.ApiService;
+import dev.kirby.screenshare.KirbySS;
 import dev.kirby.screenshare.PlayerState;
+import dev.kirby.screenshare.config.Config;
 import dev.kirby.screenshare.player.ScreenShareManager;
 import dev.kirby.screenshare.player.ScreenSharePlayer;
 import org.bukkit.entity.Player;
@@ -21,9 +22,9 @@ public class ChatProcessor extends ScreenShareProcessor implements ApiService {
 
     private final ScreenShareManager manager;
 
-    public ChatProcessor(ScreenSharePlayer player, KirbyPlugin plugin) {
+    public ChatProcessor(ScreenSharePlayer player, KirbySS plugin) {
         super(player, plugin);
-        manager = get(ScreenShareManager.class);
+        manager = plugin.getManager();
     }
 
     @Override
@@ -40,8 +41,11 @@ public class ChatProcessor extends ScreenShareProcessor implements ApiService {
         int id = player.getSsId();
         final Player p = player.getPlayer();
         final String message = wrap.getMessage();
-        String tag = getPlugin().getConfig().getString("tags." + player.getPlayerState().name().toLowerCase());
-        String format = getPlugin().getConfig().getString("format");
+
+        Config config = getPlugin().getConfigManager().get();
+
+        String tag = config.getTag(player.getPlayerState());
+        String format = config.getFormat();
         String newMessage = format.replace("%tag%", tag).replace("%name%", p.getName()).replace("%message%", message);
 
         WrapperPlayClientChatMessage wrap1 = new WrapperPlayClientChatMessage(newMessage, data.get(), wrap.getLastSeenMessages());

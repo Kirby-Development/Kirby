@@ -1,4 +1,4 @@
-package dev.kirby.utils;
+package dev.kirby.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

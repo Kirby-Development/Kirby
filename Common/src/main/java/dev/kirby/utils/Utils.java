@@ -56,12 +56,13 @@ public class Utils {
     }
 
 
-    public boolean maikol(String string) {
-        return string == null || string.isBlank();
+    public <T> boolean maikol(T t) {
+        if (t == null) return true;
+        return t instanceof String s && s.isBlank();
     }
 
-    public String fanculoMaikol(String string, String fallback) {
-        return maikol(string) ? fallback : string;
+    public <T> T fanculoMaikol(T t, T fallback) {
+        return maikol(t) ? fallback : t;
     }
 
 

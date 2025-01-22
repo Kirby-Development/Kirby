@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ConfigInfo(format = Format.JSON)
 public class Config {
 
     private int maxIps = 5;

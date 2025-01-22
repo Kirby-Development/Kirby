@@ -20,9 +20,9 @@ public class PacketDecoder extends ByteToMessageDecoder {
 
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
         int packetId = byteBuf.readInt();
-        if (!packetRegistry.containsPacketId(packetId)) {
+        if (!packetRegistry.containsPacketId(packetId))
             throw new DecoderException("Received invalid packet id");
-        }
+
         long sessionId = byteBuf.readLong();
         PacketBuffer buffer = new PacketBuffer(byteBuf.readBytes(byteBuf.readableBytes()));
         Packet packet = packetRegistry.constructPacket(packetId);
