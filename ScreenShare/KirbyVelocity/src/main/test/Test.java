@@ -11,6 +11,9 @@ public class Test implements Runnable {
         test.run();
     }
 
+    //C:/Users/lupic/Desktop/Kirby
+    //V:/Kirby
+
     ConfigManager<Config> config = new ConfigManager<>(new File(new File("").getAbsolutePath(), "test"), new Config());
 
     @Override

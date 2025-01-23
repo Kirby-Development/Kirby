@@ -30,22 +30,23 @@ public class PlayerListener {
     @Subscribe
     public void onPlayerJoin(ServerConnectedEvent event) {
         Player player = event.getPlayer();
-        System.out.println("joined " + player.getUsername());
+        String username = player.getUsername();
+        System.out.println("joined " + username);
         SSPlayer profile;
         if (event.getPreviousServer().isEmpty()) profile = manager.createProfile(player);
         else profile = manager.getProfile(player);
         //todo check server
         if (profile == null) {
-            System.out.println("profile is null");
+            System.out.println(username + " profile is null");
             return;
         }
         if (!profile.isStaff()) {
-            System.out.println("player not staff");
+            System.out.println(username + " not staff");
             return;
         }
         Session session = sessionManager.getSession(profile.getSsId());
         if (session == null) {
-            System.out.println("session not found");
+            System.out.println(username + " session not found");
             return;
         }
         SSPlayer sus = session.getSuspect();
@@ -55,7 +56,7 @@ public class PlayerListener {
 
         Config.Ban ban = config.getBan();
 
-
+        System.out.println("sending buttons to " + username);
 
         for (Config.Buttons.Button button : buttons.getButtons()) {
             player.sendMessage(button.text()

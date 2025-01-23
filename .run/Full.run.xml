@@ -37,6 +37,7 @@
       <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/ScreenShare/pom.xml" goal="clean install" />
       <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/ScreenShare/KirbyVelocity/pom.xml" goal="clean package" />
       <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/ScreenShare/KirbyScreenShare/pom.xml" goal="clean package" />
+      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="clean package" />
     </method>
   </configuration>
 </component>

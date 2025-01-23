@@ -38,7 +38,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
-                    <outputDirectory>C:/Users/lupic/Desktop/Kirby/out</outputDirectory>
+                    <outputDirectory>V:/Kirby/out</outputDirectory>
                     <finalName>${project.artifactId}-${project.version}</finalName>
                 </configuration>
             </plugin>
