@@ -114,8 +114,9 @@ public class GeneralNettyClient extends ChannelInitializer<Channel> {
 
         private ChannelHandlerContext ctx;
 
-        public void sendPacket(Packet packet) {
+        public void sendPacket(final Packet packet) {
             if (ctx == null) return;
+            System.out.println("sending packet: " + packet.getPacketName());
             ctx.writeAndFlush(packet);
         }
 

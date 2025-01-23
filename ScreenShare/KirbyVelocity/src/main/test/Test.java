@@ -17,7 +17,7 @@ public class Test implements Runnable {
     public void run() {
         config.load();
 
-        System.out.println(config.get().getMessages().getA());
+        System.out.println(config.get().getMessages());
     }
 
 }

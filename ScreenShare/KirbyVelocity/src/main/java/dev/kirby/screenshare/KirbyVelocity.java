@@ -88,7 +88,7 @@ public class KirbyVelocity extends KirbyResource implements VelocityService {
 
         CommandManager commandManager = proxy.getCommandManager();
         commandManager.register(commandManager.metaBuilder("ss").plugin(this).build(), new ScreenShareCommand(sessionManager, configManager, manager, proxy));
-        commandManager.register(commandManager.metaBuilder("clear").plugin(this).build(), new ClearCommand(sessionManager, configManager, manager, proxy));
+        commandManager.register(commandManager.metaBuilder("clean").plugin(this).build(), new ClearCommand(sessionManager, configManager, manager, proxy));
     }
 
     @Override

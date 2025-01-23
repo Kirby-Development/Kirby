@@ -1,28 +1,32 @@
 package dev.kirby.license;
 
 import dev.kirby.KirbyResource;
+import dev.kirby.exception.InvalidException;
 import dev.kirby.netty.event.PacketSubscriber;
 import dev.kirby.packet.empty.PingPacket;
 import dev.kirby.packet.empty.ShutdownPacket;
-import dev.kirby.packet.Status;
-import dev.kirby.packet.TextPacket;
-import dev.kirby.exception.InvalidException;
+import dev.kirby.packet.registration.Status;
+import dev.kirby.packet.text.BroadCastPacket;
+import dev.kirby.packet.text.TextPacket;
 import dev.kirby.utils.KirbyLogger;
 import io.netty.channel.ChannelHandlerContext;
-import org.apache.logging.log4j.Level;
 
 public record ClientEvents(NettyClient client, KirbyResource kirby) {
 
     @PacketSubscriber
-    public void onTextPacket(TextPacket packet) {
+    public void onTextPacket(final TextPacket packet) {
         logger().info("Received \"" + packet.getText() + "\"");
+    }
+
+    @PacketSubscriber
+    public void onBroadCast(final BroadCastPacket packet) {
+        logger().log(packet.getLevel(), packet.getFormat(), (Object[]) packet.getArgs());
     }
 
     @PacketSubscriber
     public void onStatusPacket(Status.ResponsePacket packet) {
         Status status = packet.getStatus();
         boolean valid = status.valid();
-        logger().log(valid ? Level.INFO : Level.WARN, "Received " + packet.getPacketName() + ": " + status);
         if (valid) return;
         client.shutdown();
         throw new InvalidException(InvalidException.Type.SESSION);

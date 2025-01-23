@@ -8,6 +8,6 @@ import java.lang.annotation.RetentionPolicy;
 public @interface ConfigInfo {
 
     String name() default "";
-    Format format() default Format.YAML;
+    Format format() default Format.JSON;
 
 }

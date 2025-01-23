@@ -7,20 +7,21 @@ import dev.kirby.database.entities.LicenseEntity;
 import dev.kirby.database.entities.ResourceEntity;
 import dev.kirby.database.services.LicenseService;
 import dev.kirby.packet.registration.LoginPacket;
-import dev.kirby.packet.Status;
+import dev.kirby.packet.registration.Status;
 import lombok.SneakyThrows;
 
 public class LoginChecker extends Checker<LoginPacket> {
 
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = false, BYPASS = true;
 
     private final SecureGenerator generator;
     private final ServerLauncher serverLauncher;
-
+    private final Checker.Debug debug;
     private LoginChecker(ServerLauncher serverLauncher) {
         super(serverLauncher.getDatabaseManager());
         this.serverLauncher = serverLauncher;
         generator = serverLauncher.getGenerator();
+        debug = new Debug(manager);
     }
 
     private static LoginChecker INSTANCE;
@@ -32,6 +33,7 @@ public class LoginChecker extends Checker<LoginPacket> {
 
     @SneakyThrows
     public Status check(LoginPacket packet, String ip) {
+        if (BYPASS) return debug.check(packet, ip);
         if (DEBUG) System.out.println("Checking client");
         ClientEntity client = manager.getClientService().findByData(serverLauncher, packet.getClientData());
         if (client == null) return Status.INVALID_USER;

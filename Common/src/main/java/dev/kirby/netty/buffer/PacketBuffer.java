@@ -188,6 +188,17 @@ public class PacketBuffer extends ByteBuf {
         return readCollection(PacketBuffer::readUUID);
     }
 
+    public void writeStringArray(String[] arr) {
+        writeInt(arr.length);
+        for (String arg : arr) writeUTF8(arg);
+    }
+
+    public String[] readStringArray() {
+        String[] arr = new String[readInt()];
+        for (int i = 0; i < arr.length; i++) arr[i] = readUTF8();
+        return arr;
+    }
+
     /**
      * Returns the number of bytes (octets) this buffer can contain.
      */
@@ -2669,4 +2680,5 @@ public class PacketBuffer extends ByteBuf {
     public boolean release(int i) {
         return internalBuffer.release(i);
     }
+
 }

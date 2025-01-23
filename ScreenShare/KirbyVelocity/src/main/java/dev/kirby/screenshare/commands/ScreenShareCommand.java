@@ -26,7 +26,10 @@ public class ScreenShareCommand extends SSCommand {
     @Override
     protected void execute(Player p, String[] args) {
         Result result = result(p, args);
-        if (result == null) return;
+        if (result == null) {
+            System.out.println("null result");
+            return;
+        }
         Config config = configManager.get();
         if (sessionManager.contains(result.staff().getSsId())) {
             p.sendMessage(config.getMessages().alreadyInSS(result.target().getUsername()));
@@ -37,10 +40,12 @@ public class ScreenShareCommand extends SSCommand {
         final int sessionId;
         final RegisteredServer ss = ServerUtils.getServer(server, config.getServers().getSs());
         if (sessionManager.contains(result.ssTarget().getSsId())) {
+            System.out.println("session already exists, joining debug");
             result.staff().setSsId(sessionId = result.ssTarget().getSsId());
             sessionManager.getSession(sessionId).getDebug().add(result.staff());
             packet = new StatePacket(p.getUniqueId(), PlayerState.DEBUG, sessionId);
         } else {
+            System.out.println("creating new session");
             Session session = sessionManager.create(result.staff(), result.ssTarget());
             sessionId = session.getId();
             packet = new StatePacket(p.getUniqueId(), PlayerState.STAFF, sessionId);

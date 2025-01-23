@@ -5,8 +5,8 @@ import dev.kirby.checker.LoginChecker;
 import dev.kirby.netty.event.PacketSubscriber;
 import dev.kirby.netty.io.Responder;
 import dev.kirby.packet.empty.ShutdownPacket;
-import dev.kirby.packet.Status;
-import dev.kirby.packet.TextPacket;
+import dev.kirby.packet.registration.Status;
+import dev.kirby.packet.text.TextPacket;
 import dev.kirby.packet.registration.LoginPacket;
 import dev.kirby.packet.registration.LogoutPacket;
 import dev.kirby.resources.ClientManager;
@@ -24,9 +24,10 @@ public class ServerEvents {
         clientManager = serverLauncher.getClientManager();
     }
 
-    @PacketSubscriber
+
     public void onLogin(LoginPacket packet, ChannelHandlerContext ctx, Responder responder) {
         final String ip = Utils.getIp(ctx);
+        //todo webhook or bot
         System.out.println("Received " + packet.getPacketName() + " from " + ip);
 
         final String cleanIp = ip.split(":")[0];

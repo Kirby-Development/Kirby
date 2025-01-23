@@ -52,7 +52,7 @@ public class ServerLauncher implements Runnable, ServiceHelper {
         Config.Database database = config.getDatabase();
 
         databaseManager = switch (database.getMode()) {
-            case SQLite -> new DatabaseManager(String.format("./%s.db", database.getDatabase()));
+            case SQLite -> new DatabaseManager(String.format("./license/%s.db", database.getDatabase()));
             case null, default ->
                     new DatabaseManager(database.getHost(), database.getPort(), database.getDatabase(), "", database.getUsername(), database.getPassword());
         };

@@ -30,14 +30,24 @@ public class PlayerListener {
     @Subscribe
     public void onPlayerJoin(ServerConnectedEvent event) {
         Player player = event.getPlayer();
+        System.out.println("joined " + player.getUsername());
         SSPlayer profile;
         if (event.getPreviousServer().isEmpty()) profile = manager.createProfile(player);
         else profile = manager.getProfile(player);
         //todo check server
-        if (profile == null) return;
-        if (!profile.isStaff()) return;
+        if (profile == null) {
+            System.out.println("profile is null");
+            return;
+        }
+        if (!profile.isStaff()) {
+            System.out.println("player not staff");
+            return;
+        }
         Session session = sessionManager.getSession(profile.getSsId());
-        if (session == null) return;
+        if (session == null) {
+            System.out.println("session not found");
+            return;
+        }
         SSPlayer sus = session.getSuspect();
 
         Config config = this.config.get();
@@ -64,7 +74,7 @@ public class PlayerListener {
         Config.Buttons.Button button = buttons.getClear();
         player.sendMessage(button.text()
                 .hoverEvent(HoverEvent.showText(button.hover()))
-                .clickEvent(ClickEvent.callback(audience -> server.getCommandManager().executeImmediatelyAsync(player, "clear " + sus.getPlayer().getUsername()))));
+                .clickEvent(ClickEvent.callback(audience -> server.getCommandManager().executeImmediatelyAsync(player, "clean " + sus.getPlayer().getUsername()))));
 
     }
 

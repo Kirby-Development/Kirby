@@ -1,6 +1,7 @@
 package dev.kirby.screenshare.configuration;
 
 import dev.kirby.config.ConfigInfo;
+import dev.kirby.config.Format;
 import dev.kirby.config.License;
 import dev.kirby.screenshare.utils.ServerUtils;
 import lombok.Data;
@@ -15,7 +16,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
-@ConfigInfo()
+@ConfigInfo(format = Format.YAML)
 public class Config extends License {
 
     private Servers servers = new Servers();

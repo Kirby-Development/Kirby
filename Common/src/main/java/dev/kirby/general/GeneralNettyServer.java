@@ -117,6 +117,7 @@ public class GeneralNettyServer extends ChannelInitializer<Channel> {
         }
 
         private void sendPacket(final Packet packet) {
+            System.out.println("sending packet: " + packet.getPacketName());
             channels.values().forEach(resp -> resp.writeAndFlush(packet));
         }
 

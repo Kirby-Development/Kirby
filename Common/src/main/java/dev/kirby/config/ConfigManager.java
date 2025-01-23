@@ -80,7 +80,7 @@ public class ConfigManager<T> {
 
             @Override
             public Format format() {
-                return Format.YAML;
+                return Format.JSON;
             }
 
         };

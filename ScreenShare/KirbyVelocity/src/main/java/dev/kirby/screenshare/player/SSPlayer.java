@@ -27,6 +27,8 @@ public class SSPlayer {
     }
 
     public boolean isStaff() {
-        return playerState.isStaff() || player.hasPermission("kirby.screenshare.staff");
+        boolean staff = playerState.isStaff() || player.hasPermission("kirby.screenshare.staff");
+        System.out.println(player.getUsername()+" staff: "+staff);
+        return staff;
     }
 }

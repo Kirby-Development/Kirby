@@ -1,4 +1,4 @@
-package dev.kirby.packet;
+package dev.kirby.packet.text;
 
 import dev.kirby.netty.Packet;
 import dev.kirby.netty.buffer.PacketBuffer;

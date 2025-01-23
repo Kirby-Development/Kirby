@@ -3,14 +3,16 @@ package dev.kirby.packet.registration;
 import dev.kirby.netty.Packet;
 import dev.kirby.netty.buffer.PacketBuffer;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.Arrays;
 
-@Getter
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public abstract class RegistrationPacket extends Packet {
 
     protected String[] clientData;

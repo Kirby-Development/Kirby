@@ -14,5 +14,4 @@ public class License {
 
     private String license = "LUCKY"; //todo INSERT-LICENSE-HERE
 
-
 }

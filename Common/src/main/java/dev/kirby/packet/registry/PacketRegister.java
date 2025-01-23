@@ -3,10 +3,11 @@ package dev.kirby.packet.registry;
 import dev.kirby.netty.Packet;
 import dev.kirby.netty.registry.IPacketRegistry;
 import dev.kirby.netty.registry.SimplePacketRegistry;
-import dev.kirby.packet.*;
 import dev.kirby.packet.empty.ConnectPacket;
 import dev.kirby.packet.empty.PingPacket;
 import dev.kirby.packet.registration.LoginPacket;
+import dev.kirby.packet.registration.Status;
+import dev.kirby.packet.text.TextPacket;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
