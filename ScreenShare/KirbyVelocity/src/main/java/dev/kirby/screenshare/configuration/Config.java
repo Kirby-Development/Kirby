@@ -15,7 +15,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
-@ConfigInfo
+@ConfigInfo()
 public class Config extends License {
 
     private Servers servers = new Servers();
@@ -39,19 +39,19 @@ public class Config extends License {
         private String notArgs = "Not enough args";
         private String playerNotFound = "Player %player% not found";
 
-        public @NotNull Component getNotInSS(String username) {
+        public @NotNull Component notInSS(String username) {
             return ServerUtils.component(notInSS.replace("%player%", username));
         }
 
-        public @NotNull Component getAlreadyInSS(String username) {
+        public @NotNull Component alreadyInSS(String username) {
             return ServerUtils.component(alreadyInSS.replace("%player%", username));
         }
 
-        public @NotNull Component getNotEnoughArgs() {
+        public @NotNull Component notEnoughArgs() {
             return ServerUtils.component(notArgs);
         }
 
-        public @NotNull Component getPlayerNotFound(String name) {
+        public @NotNull Component playerNotFound(String name) {
             return ServerUtils.component(playerNotFound.replace("%player%", name));
         }
     }
@@ -73,11 +73,11 @@ public class Config extends License {
             private String text = "";
             private String hover = "";
 
-            public Component getText() {
+            public Component text() {
                 return ServerUtils.component(text);
             }
 
-            public Component getHover() {
+            public Component hover() {
                 return ServerUtils.component(hover);
             }
         }

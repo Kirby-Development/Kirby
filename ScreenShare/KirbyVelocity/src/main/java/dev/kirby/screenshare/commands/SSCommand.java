@@ -47,12 +47,12 @@ public abstract class SSCommand implements SimpleCommand, VelocityService {
     protected @Nullable Result result(Player p, String[] args) {
         Config config = configManager.get();
         if (args.length == 0) {
-            p.sendMessage(config.getMessages().getNotEnoughArgs());
+            p.sendMessage(config.getMessages().notEnoughArgs());
             return null;
         }
         Optional<Player> optional = server.getPlayer(args[0]);
         if (optional.isEmpty()) {
-            p.sendMessage(config.getMessages().getPlayerNotFound(args[0]));
+            p.sendMessage(config.getMessages().playerNotFound(args[0]));
             return null;
         }
         SSPlayer staff = manager.getProfile(p);

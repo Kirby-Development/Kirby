@@ -24,7 +24,7 @@
             <list />
           </option>
           <option name="resolveToWorkspace" value="false" />
-          <option name="workingDirPath" value="$PROJECT_DIR$" />
+          <option name="workingDirPath" value="$PROJECT_DIR$/KirbyLicense" />
         </MavenRunnerParameters>
       </option>
     </MavenSettings>

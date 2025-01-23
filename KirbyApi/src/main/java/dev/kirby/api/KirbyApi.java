@@ -26,6 +26,8 @@ public class KirbyApi extends KirbyInstance<KirbyApi.KirbyLicense> {
         public KirbyLicense(KirbyInstance<? extends KirbyPlugin> plugin) {
             super(plugin);
             configManager = new ConfigManager<>(plugin.getDataFolder(), new License());
+            configManager.load();
+            connect();
         }
 
         @Override
@@ -40,7 +42,7 @@ public class KirbyApi extends KirbyInstance<KirbyApi.KirbyLicense> {
     }
 
     @Override
-    protected KirbyLicense load() {
+    protected KirbyLicense init() {
         return kirbyLicense;
     }
 

@@ -8,6 +8,8 @@ import io.netty.channel.SimpleChannelInboundHandler;
 
 public class PacketChannelInboundHandler extends SimpleChannelInboundHandler<Packet> {
 
+    private final boolean DEBUG = false;
+
     private final EventRegistry eventRegistry;
 
     public PacketChannelInboundHandler(EventRegistry eventRegistry) {
@@ -22,8 +24,10 @@ public class PacketChannelInboundHandler extends SimpleChannelInboundHandler<Pac
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        System.out.println("exceptionCaught: " + cause.getMessage());
-        System.exit(-1);
+        if (DEBUG) {
+            System.out.println("exceptionCaught: " + cause.getMessage());
+            cause.printStackTrace(System.out);
+        }
     }
 
 

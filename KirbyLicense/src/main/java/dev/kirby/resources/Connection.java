@@ -21,7 +21,7 @@ public final class Connection {
     private final AtomicInteger attempts = new AtomicInteger(0);
 
     public void ip(@NotNull String ip) {
-        if (!this.ip.equals(ip)) reset();
+        if (this.ip != null&& !this.ip.equals(ip)) reset();
         this.ip = ip;
     }
 

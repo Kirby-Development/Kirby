@@ -3,6 +3,7 @@ package dev.kirby.config;
 import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -30,7 +31,11 @@ public enum Format {
     },
     YAML(".yml") {
 
-        private static final ThreadLocal<Yaml> yaml = ThreadLocal.withInitial(() -> {
+        private static final Yaml yaml;
+
+        static {
+
+            //todo serializer cause yaml is bullshit
             DumperOptions yamlDumperOptions = new DumperOptions();
             yamlDumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
             yamlDumperOptions.setIndent(2);
@@ -43,17 +48,21 @@ public enum Format {
             Representer representer = new Representer(yamlDumperOptions);
             representer.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
 
-            return new Yaml(constructor, representer, yamlDumperOptions, yamlLoaderOptions);
-        });
 
-        @Override
-        protected <T> void save(T config, FileWriter writer) {
-            yaml.get().dump(config, writer);
+            //constructor, representer, -  , yamlLoaderOptions
+            yaml = new Yaml(yamlDumperOptions);
         }
 
+        @SneakyThrows
+        @Override
+        protected <T> void save(T config, FileWriter writer) {
+            yaml.dump(config, writer);
+        }
+
+        @SneakyThrows
         @Override
         protected <T> T load(FileReader reader, Class<T> configClass) {
-            return yaml.get().loadAs(reader, configClass);
+            return yaml.loadAs(reader, configClass);
         }
     };
 

@@ -28,6 +28,8 @@ Kirby extends KirbyPlugin {
     public Kirby(KirbyInstance<? extends KirbyPlugin> plugin) {
         super(plugin);
         configManager = new ConfigManager<>(plugin.getDataFolder(), new License());
+        configManager.load();
+        connect();
     }
 
     @Override

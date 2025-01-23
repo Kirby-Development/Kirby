@@ -22,10 +22,11 @@ public class KirbySS extends KirbyPlugin {
     public KirbySS(Instance instance) {
         super(instance);
         configManager = new ConfigManager<>(instance.getDataFolder(), new Config());
+        configManager.load();
+        connect();
         manager = new ScreenShareManager(this);
         kirbySS.getEventRegistry().registerEvents(new ScreenShareEvents(this, manager));
         kirbySS.setChannelActiveAction(ctx -> ctx.writeAndFlush(new ConnectPacket()));
-
     }
 
     @Override

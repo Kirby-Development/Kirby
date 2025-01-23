@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ServerLauncher" type="Application" factoryName="Application" nameIsGenerated="true">
+  <configuration default="false" name="FullBuild-LaunchServer" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="dev.kirby.ServerLauncher" />
     <module name="KirbyLicense" />
     <option name="PROGRAM_PARAMETERS" value="--clean" />
@@ -13,6 +13,7 @@
       <option name="Make" enabled="true" />
       <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/Common/pom.xml" goal="clean package" />
       <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/Common/pom.xml" goal="clean install" />
+      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/KirbyLicense/pom.xml" goal="clean package" />
       <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/ScreenShare/pom.xml" goal="clean package" />
       <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/ScreenShare/pom.xml" goal="clean install" />
       <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/ScreenShare/KirbyVelocity/pom.xml" goal="clean package" />

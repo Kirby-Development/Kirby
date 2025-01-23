@@ -32,7 +32,7 @@ public class ClearCommand extends SSCommand {
         final int sessionId = result.ssTarget().getSsId();
         Config config = configManager.get();
         if (!sessionManager.contains(sessionId)) {
-            p.sendMessage(config.getMessages().getNotInSS(result.target().getUsername()));
+            p.sendMessage(config.getMessages().notInSS(result.target().getUsername()));
             return;
         }
 

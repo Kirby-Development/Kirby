@@ -49,7 +49,7 @@
             <artifactId>maven-jar-plugin</artifactId>
             <version>2.4</version>
             <configuration>
-                <outputDirectory>../../out</outputDirectory>
+                <outputDirectory>C:/Users/lupic/Desktop/Kirby/srv/test/plugins</outputDirectory>
                 <finalName>${project.artifactId}-${project.version}</finalName>
             </configuration>
         </plugin>
@@ -154,10 +154,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.github.xEcho1337</groupId>
-            <artifactId>brain4j</artifactId>
-            <version>2.5.2</version>
-        </dependency>
+        
     </dependencies>
 </project>

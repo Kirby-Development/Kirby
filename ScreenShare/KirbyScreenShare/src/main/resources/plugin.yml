@@ -2,7 +2,7 @@ name: KirbySS
 version: '1.0'
 main: dev.kirby.screenshare.Instance
 api-version: '1.20'
-load: STARTUP
+load: POSTWORLD
 authors: [SweetyDreams_]
 
 depend:

@@ -11,12 +11,13 @@ public class Test implements Runnable {
         test.run();
     }
 
-
     ConfigManager<Config> config = new ConfigManager<>(new File(new File("").getAbsolutePath(), "test"), new Config());
 
     @Override
     public void run() {
         config.load();
+
+        System.out.println(config.get().getMessages().getA());
     }
 
 }

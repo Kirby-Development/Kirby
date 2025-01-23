@@ -19,6 +19,9 @@ public abstract class KirbyPlugin extends KirbyResource implements Initializer, 
         super(kirby.getName(), kirby.getPluginMeta().getVersion());
         this.instance = kirby;
         this.logger = new KirbyLogger(this.name);
+    }
+
+    protected void connect() {
         licenseClient.setInfo(this);
         licenseClient.connect();
     }

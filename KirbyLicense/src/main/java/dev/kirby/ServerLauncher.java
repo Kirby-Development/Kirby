@@ -31,25 +31,21 @@ public class ServerLauncher implements Runnable, ServiceHelper {
     private final File dir = new File(new File("").getAbsolutePath(), "license");
 
     private final ConfigManager<Config> configManager = new ConfigManager<>(dir, new Config());
-
     private final ConfigManager<Datas> dataManager = new ConfigManager<>(dir, new Datas());
 
-    private final ClientManager clientManager;
+    private final ThreadManager threadManager = new ThreadManager();
+    private final ClientManager clientManager = new ClientManager(this);
 
-    private final DatabaseManager databaseManager;
     private final ServerEvents serverEvents = new ServerEvents(this);
+    private final DatabaseManager databaseManager;
     private final SecureGenerator generator;
     private final Config config;
-
-    private final ThreadManager threadManager = new ThreadManager();
 
     public ServerLauncher(boolean clean) throws Exception {
         configManager.load();
         config = configManager.get();
 
         dataManager.load();
-
-        clientManager = new ClientManager(this);
 
         generator = new SecureGenerator(config.getSecurityKey());
 

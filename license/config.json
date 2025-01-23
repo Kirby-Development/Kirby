@@ -1,5 +1,6 @@
 {
   "maxIps": 5,
+  "maxAttempts": 3,
   "expiryTime": 0,
   "securityKey": "LUCKY",
   "database": {

@@ -17,12 +17,10 @@ public class ClientManager {
 
     private final Map<String, Connection> clients = new ConcurrentHashMap<>();
     private final ServerLauncher serverLauncher;
-    private final int maxAttempts;
     private final ThreadManager threadManager;
 
     public ClientManager(ServerLauncher serverLauncher) {
         this.serverLauncher = serverLauncher;
-        maxAttempts = serverLauncher.getConfig().getMaxAttempts();
         threadManager = serverLauncher.getThreadManager();
     }
 
@@ -54,7 +52,7 @@ public class ClientManager {
         Connection connection = clients.get(license);
         connection.ip(ip);
         connection.setValid(false);
-        return connection.getAttempts().get() < maxAttempts;
+        return connection.getAttempts().get() < serverLauncher.getConfig().getMaxAttempts();
     }
 
     public void update(Connection connection) {

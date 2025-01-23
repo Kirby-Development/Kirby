@@ -48,8 +48,8 @@ public class PlayerListener {
 
 
         for (Config.Buttons.Button button : buttons.getButtons()) {
-            player.sendMessage(button.getText()
-                    .hoverEvent(HoverEvent.showText(button.getHover()))
+            player.sendMessage(button.text()
+                    .hoverEvent(HoverEvent.showText(button.hover()))
                     .clickEvent(ClickEvent.callback(audience -> {
                         String command = ban.getCommand()
                                 .replace("%player%", sus.getPlayer().getUsername())
@@ -62,8 +62,8 @@ public class PlayerListener {
 
 
         Config.Buttons.Button button = buttons.getClear();
-        player.sendMessage(button.getText()
-                .hoverEvent(HoverEvent.showText(button.getHover()))
+        player.sendMessage(button.text()
+                .hoverEvent(HoverEvent.showText(button.hover()))
                 .clickEvent(ClickEvent.callback(audience -> server.getCommandManager().executeImmediatelyAsync(player, "clear " + sus.getPlayer().getUsername()))));
 
     }

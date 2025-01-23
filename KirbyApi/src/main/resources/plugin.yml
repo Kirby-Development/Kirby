@@ -2,7 +2,7 @@ name: KirbyApi
 version: '1.0'
 main: dev.kirby.api.KirbyApi
 api-version: '1.20'
-load: STARTUP
+load: POSTWORLD
 authors: [SweetyDreams_]
 
 depend:

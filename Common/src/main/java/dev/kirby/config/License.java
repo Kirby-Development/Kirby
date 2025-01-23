@@ -12,7 +12,7 @@ import lombok.Setter;
 @ConfigInfo(name = "config")
 public class License {
 
-    private String license = "INSERT-LICENSE-HERE";
+    private String license = "LUCKY"; //todo INSERT-LICENSE-HERE
 
 
 }

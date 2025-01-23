@@ -29,7 +29,7 @@ public class ScreenShareCommand extends SSCommand {
         if (result == null) return;
         Config config = configManager.get();
         if (sessionManager.contains(result.staff().getSsId())) {
-            p.sendMessage(config.getMessages().getAlreadyInSS(result.target().getUsername()));
+            p.sendMessage(config.getMessages().alreadyInSS(result.target().getUsername()));
             return;
         }
 
