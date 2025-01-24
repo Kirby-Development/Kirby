@@ -70,7 +70,6 @@ public enum Format {
         }
     };
 
-
     private final String extension;
 
     protected abstract <T> void save(T config, FileWriter writer);
