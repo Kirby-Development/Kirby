@@ -35,7 +35,6 @@ public enum Format {
     },
     YAML(".yml") {
 
-        private final Yaml yaml;
         private final DumperOptions yamlDumperOptions = new DumperOptions();
         private final LoaderOptions yamlLoaderOptions = new LoaderOptions();
 
@@ -56,17 +55,12 @@ public enum Format {
             yamlDumperOptions.setWidth(80);
             yamlLoaderOptions.setMaxAliasesForCollections(Integer.MAX_VALUE);
             yamlLoaderOptions.setCodePointLimit(Integer.MAX_VALUE);
-
-            Representer representer = new Representer(yamlDumperOptions);
-            representer.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-            Constructor constructor = new Constructor(yamlLoaderOptions);
-            yaml = new Yaml(constructor, representer, yamlDumperOptions, yamlLoaderOptions);
         }
 
         @SneakyThrows
         @Override
         protected <T> void save(T config, FileWriter writer) {
-            yaml.dump(config, writer);
+            provider.apply(config.getClass()).dump(config, writer);
         }
 
         @SneakyThrows
