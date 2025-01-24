@@ -24,10 +24,9 @@ public class ServerEvents {
         clientManager = serverLauncher.getClientManager();
     }
 
-
     public void onLogin(LoginPacket packet, ChannelHandlerContext ctx, Responder responder) {
         final String ip = Utils.getIp(ctx);
-        //todo webhook or bot
+        //todo webhook
         System.out.println("Received " + packet.getPacketName() + " from " + ip);
 
         final String cleanIp = ip.split(":")[0];
@@ -48,7 +47,6 @@ public class ServerEvents {
         Status status = LoginChecker.get(serverLauncher).check(packet, cleanIp);
         System.out.println(status.name());
         responder.respond(new Status.ResponsePacket(status));
-
 
         if (status.valid()) {
             clientManager.connect(connection, cleanIp);

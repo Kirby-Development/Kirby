@@ -12,6 +12,7 @@ import lombok.SneakyThrows;
 
 public class LoginChecker extends Checker<LoginPacket> {
 
+    //todo remove bypass
     public static final boolean DEBUG = false, BYPASS = true;
 
     private final SecureGenerator generator;

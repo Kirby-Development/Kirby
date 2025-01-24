@@ -7,6 +7,7 @@ import dev.kirby.config.ConfigManager;
 import dev.kirby.packet.registry.SendPacket;
 import dev.kirby.screenshare.PlayerState;
 import dev.kirby.screenshare.configuration.Config;
+import dev.kirby.screenshare.packet.EndSession;
 import dev.kirby.screenshare.packet.StatePacket;
 import dev.kirby.screenshare.player.SSManager;
 import dev.kirby.screenshare.player.SSPlayer;
@@ -38,19 +39,42 @@ public class ClearCommand extends SSCommand {
             return;
         }
 
+
+        finishSS(sessionManager, sessionId, server, config, get(SendPacket.class));
+    }
+
+    public static void finishSS(Session.Manager sessionManager, int sessionId, ProxyServer server, Config config, SendPacket sendPacket) {
+        Session session = sessionManager.getSession(sessionId);
+        SSPlayer sus = session.getSuspect();
+        SSPlayer stf = session.getStaff();
+
         final RegisteredServer ss = ServerUtils.getServer(server, config.getServers().getHub());
 
+        final String susName = sus.getPlayer().getUsername();
 
-        SendPacket sendPacket = get(SendPacket.class);
-        for (SSPlayer player : sessionManager.getSession(sessionId).getAll()) {
+        Config.Message.Param staffParam = new Config.Message.Param("%staff%", stf.getPlayer().getUsername());
+        Config.Message.Param susParam = new Config.Message.Param("%suspect%", susName);
+
+
+        for (SSPlayer player : session.getAll()) {
             player.setSsId(-1);
-            Player p1 = player.getPlayer();
+
+            player.setPlayerState(PlayerState.NONE);
             sendPacket.sendPacket(new StatePacket(player.getUuid(), PlayerState.NONE, -1));
+
+            Player p1 = player.getPlayer();
+            if (p1 == null || !p1.isActive()) continue;
+            Config.Titles.TitleState end = config.getTitles().getEnd();
+            switch (player.getPlayerState()) {
+                case DEBUG -> end.getDebug().send(p1, staffParam, susParam);
+                case STAFF -> end.getStaff().send(p1, staffParam, susParam);
+                case SUSPECT -> end.getSus().send(p1, staffParam, susParam);
+            }
             p1.createConnectionRequest(ss).fireAndForget();
         }
 
         sessionManager.delete(sessionId);
-
+        sendPacket.sendPacket(new EndSession(sessionId));
     }
 
     @Override
