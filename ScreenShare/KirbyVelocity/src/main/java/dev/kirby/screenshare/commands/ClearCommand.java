@@ -13,6 +13,8 @@ import dev.kirby.screenshare.player.SSPlayer;
 import dev.kirby.screenshare.player.Session;
 import dev.kirby.screenshare.utils.ServerUtils;
 
+import java.util.List;
+
 public class ClearCommand extends SSCommand {
 
     private final Session.Manager sessionManager;
@@ -49,5 +51,10 @@ public class ClearCommand extends SSCommand {
 
         sessionManager.delete(sessionId);
 
+    }
+
+    @Override
+    public List<String> suggest(Invocation invocation) {
+        return sessionManager.getSessions().values().stream().map(Session::getSuspect).map(SSPlayer::getPlayer).map(Player::getUsername).toList();
     }
 }

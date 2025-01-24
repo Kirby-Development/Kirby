@@ -71,8 +71,10 @@ public class PlayerListener {
                     })));
         }
 
+        //todo messages and titles for suspect
 
-        Config.Buttons.Button button = buttons.getClear();
+
+        Config.Buttons.Button button = buttons.getClean();
         player.sendMessage(button.text()
                 .hoverEvent(HoverEvent.showText(button.hover()))
                 .clickEvent(ClickEvent.callback(audience -> server.getCommandManager().executeImmediatelyAsync(player, "clean " + sus.getPlayer().getUsername()))));

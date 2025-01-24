@@ -15,7 +15,7 @@ import java.util.Optional;
 
 public abstract class SSCommand implements SimpleCommand, VelocityService {
 
-    private final SSManager manager;
+    protected final SSManager manager;
     protected final ConfigManager<Config> configManager;
     protected final ProxyServer server;
     public SSCommand(ProxyServer server, SSManager manager, ConfigManager<Config> configManager) {

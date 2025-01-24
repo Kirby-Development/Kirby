@@ -145,4 +145,7 @@ public class ServerLauncher implements Runnable, ServiceHelper {
     public ServiceRegistry manager() {
         return MANAGER;
     }
+
+
+    //todo command executor or command panel here
 }

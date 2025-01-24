@@ -4,6 +4,7 @@ import dev.kirby.config.ConfigInfo;
 import dev.kirby.config.Format;
 import dev.kirby.config.License;
 import dev.kirby.screenshare.utils.ServerUtils;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -57,18 +58,21 @@ public class Config extends License {
         }
     }
 
+    //todo messages and titles for suspect
+
     @Data
     @NoArgsConstructor
     public static class Buttons {
-        private Button admission = new Button();
-        private Button cheating = new Button();
-        private Button refuse = new Button();
-        private Button clear = new Button();
+        private Button admission = new Button("7d", "Admission", "Click to Ban!");
+        private Button cheating = new Button("14d", "Cheating", "Click to Ban!");
+        private Button refuse = new Button("18d", "Refuse", "Click to Ban!");
+        private Button clean = new Button("", "Clean", "Click to Leave!");
 
-        private final List<Button> buttons = new ArrayList<>(List.of(admission, cheating, refuse, clear));
+        private final List<Button> buttons = new ArrayList<>(List.of(admission, cheating, refuse, clean));
 
         @Data
         @NoArgsConstructor
+        @AllArgsConstructor
         public static class Button {
             private String duration = "";
             private String text = "";

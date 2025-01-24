@@ -9,8 +9,11 @@ import dev.kirby.screenshare.PlayerState;
 import dev.kirby.screenshare.configuration.Config;
 import dev.kirby.screenshare.packet.StatePacket;
 import dev.kirby.screenshare.player.SSManager;
+import dev.kirby.screenshare.player.SSPlayer;
 import dev.kirby.screenshare.player.Session;
 import dev.kirby.screenshare.utils.ServerUtils;
+
+import java.util.List;
 
 public class ScreenShareCommand extends SSCommand {
 
@@ -61,5 +64,9 @@ public class ScreenShareCommand extends SSCommand {
         result.target().createConnectionRequest(ss).fireAndForget();
     }
 
+    @Override
+    public List<String> suggest(Invocation invocation) {
+        return manager.getProfiles().stream().filter(player -> !player.isStaff()).map(SSPlayer::getPlayer).map(Player::getUsername).toList();
+    }
 
 }
