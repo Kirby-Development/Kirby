@@ -10,9 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/*
- * todo stuff with ai
- */
+
 public class ClientManager {
 
     private final Map<String, Connection> clients = new ConcurrentHashMap<>();

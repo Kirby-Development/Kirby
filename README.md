@@ -1,3 +1,5 @@
+TODO EDIT THIS SHIT
+
 # Kirby API
 
 **Kirby API** è un framework estendibile progettato per la costruzione e gestione di plugin su piattaforma Minecraft tramite l'API Paper. Offre una struttura modulare per il caricamento, la gestione e la registrazione di plugin, oltre a un sistema di servizi flessibile.

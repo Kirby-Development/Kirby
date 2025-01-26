@@ -26,7 +26,9 @@ public class ServerEvents {
 
     public void onLogin(LoginPacket packet, ChannelHandlerContext ctx, Responder responder) {
         final String ip = Utils.getIp(ctx);
+
         //todo webhook
+        serverLauncher.getConfig().getWebhook().send();
         System.out.println("Received " + packet.getPacketName() + " from " + ip);
 
         final String cleanIp = ip.split(":")[0];

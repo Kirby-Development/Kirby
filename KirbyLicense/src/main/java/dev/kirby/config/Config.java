@@ -15,6 +15,8 @@ public class Config {
     private long expiryTime = 0L;
     private String securityKey = "LUCKY";
 
+    private Webhook webhook = new Webhook();
+
     private Database database = new Database();
 
 
@@ -32,10 +34,23 @@ public class Config {
         private String username = "root";
         private String password = "";
 
-        public enum Mode{
+        public enum Mode {
             SQLite,
             MySQL;
         }
     }
 
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Webhook {
+        private String url = "";
+
+        private String content = "";
+
+        public void send() {
+            //todo
+        }
+
+    }
 }
