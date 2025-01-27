@@ -40,23 +40,23 @@ public class PlayerListener implements VelocityService {
 
         String serverName = event.getServer().getServerInfo().getName();
         Config config = this.config.get();
-        if (!serverName.equals(config.getServers().getSs())) {
-            System.out.println(username + "server is " + serverName);
-            return;
-        }
+
 
         SSPlayer profile;
         if (event.getPreviousServer().isEmpty()) profile = manager.createProfile(player);
-        else profile = manager.getProfile(player);
+        else if (!serverName.equals(config.getServers().getSs())) {
+            System.out.println(username + "'s server is " + serverName);
+            return;
+        } else profile = manager.getProfile(player);
 
         if (profile == null) {
-            System.out.println(username + " profile is null");
+            System.out.println(username + "'s profile is null");
             return;
         }
 
         Session session = sessionManager.getSession(profile.getSsId());
         if (session == null) {
-            System.out.println(username + " session not found");
+            System.out.println(username + "'s session not found");
             return;
         }
 
@@ -70,13 +70,13 @@ public class PlayerListener implements VelocityService {
 
         Config.Titles.TitleState start = config.getTitles().getStart();
         if (!profile.isStaff()) {
-            System.out.println(username + " sending title ecc");
+            System.out.println("sending title ecc to " + username);
             start.getSus().send(player, staffParam, susParam);
             return;
         }
 
         if (profile.getPlayerState().equals(PlayerState.DEBUG)) {
-            System.out.println(username + " debug");
+            System.out.println(username + " is debug");
             start.getDebug().send(player, staffParam, susParam);
             return;
         }
@@ -101,10 +101,10 @@ public class PlayerListener implements VelocityService {
                                 .replace("%duration%", button.getDuration());
                         boolean staff = ban.getWho().isStaff();
                         server.getCommandManager().executeImmediatelyAsync(staff ? player : server.getConsoleCommandSource(), command);
+                        System.out.println("executing " + command);
                         finishSS(sessionManager, sessionId, server, config, get(SendPacket.class));
                     })));
         }
-
 
         Config.Buttons.Button button = buttons.getClean();
         player.sendMessage(button.text(staffParam, susParam)

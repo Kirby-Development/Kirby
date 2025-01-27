@@ -45,6 +45,7 @@ public class KirbySS extends KirbyPlugin {
             if (id == -1) return "";
 
             Long l = screenShareTime.get(id);
+            if (l == null) return "";
 
             return Utils.Time.format(l);
         }, "time");

@@ -4,8 +4,7 @@
   "expiryTime": 0,
   "securityKey": "LUCKY",
   "webhook": {
-    "url": "",
-    "content": ""
+    "url": ""
   },
   "database": {
     "mode": "SQLite",

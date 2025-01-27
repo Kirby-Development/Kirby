@@ -56,10 +56,16 @@ public abstract class SSCommand implements SimpleCommand, VelocityService {
             return null;
         }
         SSPlayer staff = manager.getProfile(p);
-        if (staff == null) return null;
+        if (staff == null) {
+            System.out.println("staff not found");
+            return null;
+        }
         Player target = optional.get();
         SSPlayer ssTarget = manager.getProfile(target);
-        if (ssTarget == null) return null;
+        if (ssTarget == null) {
+            System.out.println("ssTarget is null");
+            return null;
+        }
         return new Result(staff, target, ssTarget);
     }
 

@@ -13,7 +13,7 @@ import lombok.SneakyThrows;
 public class LoginChecker extends Checker<LoginPacket> {
 
     //todo remove bypass
-    public static final boolean DEBUG = false, BYPASS = true;
+    public static final boolean DEBUG = false, BYPASS = false;
 
     private final SecureGenerator generator;
     private final ServerLauncher serverLauncher;
@@ -34,8 +34,8 @@ public class LoginChecker extends Checker<LoginPacket> {
 
     @SneakyThrows
     public Status check(LoginPacket packet, String ip) {
-        if (BYPASS) return debug.check(packet, ip);
         if (DEBUG) System.out.println("Checking client");
+        if (BYPASS) return debug.check(packet, ip);
         ClientEntity client = manager.getClientService().findByData(serverLauncher, packet.getClientData());
         if (client == null) return Status.INVALID_USER;
         client.setLastIp(ip);

@@ -27,7 +27,6 @@ public class ClearCommand extends SSCommand {
         this.configManager = configManager;
     }
 
-
     @Override
     protected void execute(Player p, String[] args) {
         Result result = result(p, args);
