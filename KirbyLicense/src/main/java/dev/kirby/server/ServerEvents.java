@@ -20,17 +20,18 @@ public class ServerEvents {
     private final ServerLauncher serverLauncher;
     private final ClientManager clientManager;
 
-    private final Config.Webhook webhook;
+    private Config.Webhook webhook;
 
     public ServerEvents(ServerLauncher serverLauncher) {
         this.serverLauncher = serverLauncher;
         clientManager = serverLauncher.getClientManager();
-        webhook = serverLauncher.getConfig().getWebhook();
     }
+
 
     public void onLogin(LoginPacket packet, ChannelHandlerContext ctx, Responder responder) {
         final String ip = Utils.getIp(ctx);
 
+        webhook = serverLauncher.getConfig().getWebhook();
         webhook.send("Received " + packet.getPacketName() + " from " + ip);
 
         final String cleanIp = ip.split(":")[0];
