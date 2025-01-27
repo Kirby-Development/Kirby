@@ -4,6 +4,7 @@ import dev.kirby.api.packet.PacketRegistry;
 import dev.kirby.api.papi.PapiHook;
 import dev.kirby.exception.InvalidException;
 import dev.kirby.utils.Destroyable;
+import dev.kirby.utils.KirbyLogo;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -44,6 +45,8 @@ public abstract class KirbyInstance<T extends KirbyPlugin> extends JavaPlugin im
         if (destroyed.get()) return;
         plugin().enable();
         if (this instanceof PacketRegistry packetEvent) packetEvent.initialize();
+
+        plugin.getLogger().info(KirbyLogo.get(getName()));
     }
 
     @Override

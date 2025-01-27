@@ -11,15 +11,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class StartSession extends Packet {
 
-    int session;
+    long session;
 
     @Override
     public void read(PacketBuffer buffer) {
-        session = buffer.readInt();
+        session = buffer.readLong();
     }
 
     @Override
     public void write(PacketBuffer buffer) {
-        buffer.writeInt(session);
+        buffer.writeLong(session);
     }
 }

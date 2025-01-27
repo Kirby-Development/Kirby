@@ -20,7 +20,7 @@ public class Datas {
     @Data
     @AllArgsConstructor
     public static class Client {
-        int id;
+        long id;
         String[] data;
         String ip;
     }
@@ -28,7 +28,7 @@ public class Datas {
     @Data
     @AllArgsConstructor
     public static class Resource {
-        int id;
+        long id;
         String name;
         String[] data;
     }
@@ -36,8 +36,8 @@ public class Datas {
     @Data
     @AllArgsConstructor
     public static class License {
-        int clientId;
-        int resourceId;
+        long clientId;
+        long resourceId;
         String license;
         Edition edition;
 

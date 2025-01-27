@@ -29,6 +29,8 @@ public class Config extends License {
     private Ban ban = new Ban();
     private Titles titles = new Titles();
 
+    private int port = 6990;
+
     @Data
     @NoArgsConstructor
     public static class Servers {
@@ -125,6 +127,7 @@ public class Config extends License {
             private String duration = "";
             private Message text = new Message("text");
             private Message hover = new Message("hover");
+            private Message cause = new Message("cause");
 
 
             public Button(String duration, String text, String hover) {
@@ -140,6 +143,10 @@ public class Config extends License {
             public Component hover(Message.Param... params) {
                 return hover.toComponent(params);
             }
+
+            public String cause(Message.Param... params) {
+                return cause.replace(params);
+            }
         }
     }
 
@@ -150,9 +157,14 @@ public class Config extends License {
         private String message = "message";
 
         public @NotNull Component toComponent(Param... params) {
+            String result = replace(params);
+            return ServerUtils.component(result);
+        }
+
+        private String replace(Param[] params) {
             String result = getMessage();
             for (Param param : params) result = param.replace(result);
-            return ServerUtils.component(result);
+            return result;
         }
 
         public record Param(String target, String value) {

@@ -32,13 +32,13 @@ public abstract class KirbyResource implements ServiceHelper, Destroyable {
 
     public abstract <T extends License> ConfigManager<T> getConfigManager();
 
-    public <T extends License> void setLicense( String license) {
-        ConfigManager<License> manager = getConfigManager();
+    public <T extends License> void setLicense(String license) {
+        ConfigManager<T> manager = getConfigManager();
         manager.get().setLicense(license);
         manager.save();
     }
 
-    public <T extends License> String getLicense() {
+    public String getLicense() {
         String license = getConfigManager().get().getLicense();
         if (license != null)
             return license;

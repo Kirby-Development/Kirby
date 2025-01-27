@@ -31,7 +31,7 @@ public class ClearCommand extends SSCommand {
     protected void execute(Player p, String[] args) {
         Result result = result(p, args);
         if (result == null) return;
-        final int sessionId = result.ssTarget().getSsId();
+        final long sessionId = result.ssTarget().getSsId();
         Config config = configManager.get();
         if (!sessionManager.contains(sessionId)) {
             p.sendMessage(config.getMessages().notInSS(result.target().getUsername()));
@@ -42,8 +42,8 @@ public class ClearCommand extends SSCommand {
         finishSS(sessionManager, sessionId, server, config, get(SendPacket.class));
     }
 
-    public static void finishSS(Session.Manager sessionManager, int sessionId, ProxyServer server, Config config, SendPacket sendPacket) {
-        Session session = sessionManager.getSession(sessionId);
+    public static void finishSS(Session.Manager sessionManager, long sessionId, ProxyServer server, Config config, SendPacket sendPacket) {
+        Session session = sessionManager.getProfile(sessionId);
         SSPlayer sus = session.getSuspect();
         SSPlayer stf = session.getStaff();
 
@@ -72,12 +72,12 @@ public class ClearCommand extends SSCommand {
             p1.createConnectionRequest(ss).fireAndForget();
         }
 
-        sessionManager.delete(sessionId);
+        sessionManager.removeProfile(sessionId);
         sendPacket.sendPacket(new EndSession(sessionId));
     }
 
     @Override
     public List<String> suggest(Invocation invocation) {
-        return sessionManager.getSessions().values().stream().map(Session::getSuspect).map(SSPlayer::getPlayer).map(Player::getUsername).toList();
+        return sessionManager.getProfiles().stream().map(Session::getSuspect).map(SSPlayer::getPlayer).map(Player::getUsername).toList();
     }
 }

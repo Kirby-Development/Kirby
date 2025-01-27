@@ -15,7 +15,7 @@ public class SSPlayer {
     private final Player player;
 
     private PlayerState playerState = PlayerState.NONE;
-    private Integer ssId = -1;
+    private long ssId = -1;
 
     public SSPlayer(Player player) {
         this.uuid = player.getUniqueId();

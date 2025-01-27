@@ -42,11 +42,11 @@ public class ScreenShareCommand extends SSCommand {
         }
 
         final StatePacket packet;
-        final int sessionId;
+        final long sessionId;
         final RegisteredServer ss = ServerUtils.getServer(server, config.getServers().getSs());
         if (sessionManager.contains(ssTarget.getSsId())) {
             staff.setSsId(sessionId = ssTarget.getSsId());
-            sessionManager.getSession(sessionId).getDebug().add(staff);
+            sessionManager.getProfile(sessionId).getDebug().add(staff);
             packet = new StatePacket(p.getUniqueId(), PlayerState.DEBUG, sessionId);
             staff.setPlayerState(PlayerState.DEBUG);
             System.out.println("session already exists, joining debug " + sessionId);

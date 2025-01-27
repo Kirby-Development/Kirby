@@ -16,19 +16,19 @@ public class StatePacket extends Packet {
 
     UUID player;
     PlayerState state;
-    int ssId;
+    long ssId;
 
     @Override
     public void read(PacketBuffer buffer) {
         player = buffer.readUUID();
         state = buffer.readEnum(PlayerState.class);
-        ssId = buffer.readInt();
+        ssId = buffer.readLong();
     }
 
     @Override
     public void write(PacketBuffer buffer) {
         buffer.writeUUID(player);
         buffer.writeEnum(state);
-        buffer.writeInt(ssId);
+        buffer.writeLong(ssId);
     }
 }

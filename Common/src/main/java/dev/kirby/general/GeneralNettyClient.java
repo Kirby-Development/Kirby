@@ -19,6 +19,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -58,7 +60,12 @@ public class GeneralNettyClient extends ChannelInitializer<Channel> {
         eventRegistry.registerEvents(packetSender);
     }
 
+    private String host;
+    private int port;
+
     public void connect(String host, int port) {
+        this.host = host;
+        this.port = port;
         try {
             this.bootstrap.connect(new InetSocketAddress(host, port)).sync().addListener((ChannelFutureListener) future1 -> {
                 if (future1.isSuccess()) {
@@ -85,8 +92,27 @@ public class GeneralNettyClient extends ChannelInitializer<Channel> {
                         super.channelActive(ctx);
                         if (channelActiveAction != null) channelActiveAction.accept(ctx);
                     }
+
+                    @Override
+                    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+                        super.channelInactive(ctx);
+                        logger.warn("Disconnected from server!");
+                        if (connected) {
+                            connected = false;
+                            attemptReconnect();
+                        }
+                    }
                 }
         );
+    }
+
+    private final ScheduledExecutorService reconnectExecutor = Executors.newSingleThreadScheduledExecutor();
+
+    private void attemptReconnect() {
+        logger.info("Attempting to reconnect in " + 15 + " seconds...");
+        reconnectExecutor.schedule(() -> {
+            if (!connected) connect(host, port);
+        }, 15, TimeUnit.SECONDS);
     }
 
     public void shutdown() {

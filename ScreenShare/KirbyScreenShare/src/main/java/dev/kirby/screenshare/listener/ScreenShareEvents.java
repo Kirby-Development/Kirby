@@ -10,7 +10,7 @@ import dev.kirby.screenshare.player.ScreenSharePlayer;
 
 import java.util.Map;
 
-public record ScreenShareEvents(KirbySS plugin, ScreenShareManager manager, Map<Integer, Long> screenShareTime) {
+public record ScreenShareEvents(KirbySS plugin, ScreenShareManager manager, Map<Long, Long> screenShareTime) {
 
     @PacketSubscriber
     public void onState(final StatePacket packet) {

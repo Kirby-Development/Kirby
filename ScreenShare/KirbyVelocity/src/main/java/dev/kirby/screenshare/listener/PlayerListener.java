@@ -54,7 +54,7 @@ public class PlayerListener implements VelocityService {
             return;
         }
 
-        Session session = sessionManager.getSession(profile.getSsId());
+        Session session = sessionManager.getProfile(profile.getSsId());
         if (session == null) {
             System.out.println(username + "'s session not found");
             return;
@@ -89,15 +89,16 @@ public class PlayerListener implements VelocityService {
 
         start.getStaff().send(player, staffParam, susParam);
 
-        int sessionId = session.getId();
+        long sessionId = session.getId();
 
         for (Config.Buttons.Button button : buttons.getButtons()) {
-            player.sendMessage(button.text()
-                    .hoverEvent(HoverEvent.showText(button.hover()))
+            player.sendMessage(button.text(staffParam, susParam)
+                    .hoverEvent(HoverEvent.showText(button.hover(staffParam, susParam)))
                     .clickEvent(ClickEvent.callback(audience -> {
                         String command = ban.getCommand()
                                 .replace("%player%", susName)
                                 .replace("%uuid%", sus.getUuid().toString())
+                                .replace("%cause%", button.cause(staffParam, susParam))
                                 .replace("%duration%", button.getDuration());
                         boolean staff = ban.getWho().isStaff();
                         server.getCommandManager().executeImmediatelyAsync(staff ? player : server.getConsoleCommandSource(), command);

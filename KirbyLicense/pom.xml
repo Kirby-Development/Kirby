@@ -6,8 +6,6 @@
 
     <groupId>dev.kirby</groupId>
     <version>1.0</version>
-
-
     <artifactId>KirbyLicense</artifactId>
 
     <properties>
@@ -49,7 +47,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
-                    <outputDirectory>V:/Kirby</outputDirectory>
+                    <outputDirectory>V:/Kirby/out</outputDirectory>
                     <finalName>${project.artifactId}-${project.version}</finalName>
                     <archive>
                         <manifest>
@@ -147,7 +145,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.33</version>
+            <version>2.3</version>
             <scope>compile</scope>
         </dependency>
 

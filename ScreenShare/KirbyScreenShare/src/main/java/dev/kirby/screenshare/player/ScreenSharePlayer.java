@@ -26,7 +26,7 @@ public class ScreenSharePlayer implements KirbyUser, PacketHandler, ApiService {
     private final User user;
 
     private PlayerState playerState = PlayerState.NONE;
-    private int ssId = 0;
+    private long ssId = 0;
 
     public ScreenSharePlayer(Player player, User user, KirbySS plugin) {
         this.uuid = player.getUniqueId();

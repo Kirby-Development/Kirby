@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Getter
 public class KirbySS extends KirbyPlugin {
 
-    private final Map<Integer, Long> screenShareTime = new ConcurrentHashMap<>();
+    private final Map<Long, Long> screenShareTime = new ConcurrentHashMap<>();
 
     private final ScreenShareManager manager;
     private final ScreenShareClient kirbySS = new ScreenShareClient(Registry.get(), this::shutdown, "KirbySS", manager());
@@ -41,7 +41,7 @@ public class KirbySS extends KirbyPlugin {
 
             if (profile.getPlayerState() == PlayerState.NONE) return "";
 
-            int id = profile.getSsId();
+            long id = profile.getSsId();
             if (id == -1) return "";
 
             Long l = screenShareTime.get(id);
@@ -54,7 +54,8 @@ public class KirbySS extends KirbyPlugin {
     @Override
     public void enable() {
         new PlayerListener(manager).register();
-        kirbySS.connect("127.0.0.1", 6990);
+
+        kirbySS.connect("127.0.0.1", configManager.get().getPort());
     }
 
     @Override

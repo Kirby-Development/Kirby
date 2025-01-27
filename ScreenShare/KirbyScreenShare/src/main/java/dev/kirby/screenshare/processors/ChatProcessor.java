@@ -38,7 +38,7 @@ public class ChatProcessor extends ScreenShareProcessor implements ApiService {
         if (data.isEmpty()) return;
         if (player.getPlayerState().equals(PlayerState.NONE)) return;
         if (player.getSsId() == 0) return;
-        int id = player.getSsId();
+        long id = player.getSsId();
         final Player p = player.getPlayer();
         final String message = wrap.getMessage();
 

@@ -21,6 +21,7 @@ import dev.kirby.screenshare.player.Session;
 import dev.kirby.screenshare.utils.VelocityService;
 import dev.kirby.service.ServiceManager;
 import dev.kirby.service.ServiceRegistry;
+import dev.kirby.utils.KirbyLogo;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
@@ -67,7 +68,7 @@ public class KirbyVelocity extends KirbyResource implements VelocityService {
         licenseClient.connect();
 
         //serverSS.getEventRegistry().registerEvents(serverEvents);
-        serverSS.bind(6990);
+        serverSS.bind(configManager.get().getPort());
     }
 
     private final SSManager manager = new SSManager();
@@ -83,6 +84,8 @@ public class KirbyVelocity extends KirbyResource implements VelocityService {
             this.proxy.shutdown();
             return;
         }
+
+        logger.info(KirbyLogo.get(getName()));
 
         proxy.getEventManager().register(this, new PlayerListener(proxy, configManager, manager, sessionManager));
 
