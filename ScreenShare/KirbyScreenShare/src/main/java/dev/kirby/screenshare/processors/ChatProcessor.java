@@ -52,7 +52,7 @@ public class ChatProcessor extends ScreenShareProcessor implements ApiService {
         for (ScreenSharePlayer player : manager.getProfiles().values()) {
             if (!player.isStaff()) {
                 if (player.getSsId() == 0) continue;
-                if (!player.getSsId().equals(id)) continue;
+                if (!(player.getSsId() == id)) continue;
             }
             PacketEvents.getAPI().getPlayerManager().receivePacketSilently(player.getUser(), wrap1);
         }

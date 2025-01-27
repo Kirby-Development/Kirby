@@ -1,8 +1,10 @@
 package dev.kirby.config;
 
+import dev.kirby.utils.DiscordWebhook;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 
 @Data
 @AllArgsConstructor
@@ -44,12 +46,14 @@ public class Config {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Webhook {
-        private String url = "";
+        private String url = "https://discord.com/api/webhooks/1333196271313489940/WY9KvlJ519AAaZbEbmyu8QcOAvaKBLWV89Z9h1VQTtmHuk9PeG2ZTTIBftX4XCpW1Hdy";
 
-        private String content = "";
 
-        public void send() {
-            //todo
+        @SneakyThrows
+        public void send(String content) {
+            DiscordWebhook webhook = new DiscordWebhook(url);
+            webhook.setContent(content);
+            webhook.execute();
         }
 
     }

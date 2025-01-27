@@ -37,19 +37,20 @@ public class PlayerListener implements VelocityService {
         Player player = event.getPlayer();
         String username = player.getUsername();
         System.out.println("joined " + username);
+
+        String serverName = event.getServer().getServerInfo().getName();
+        Config config = this.config.get();
+        if (!serverName.equals(config.getServers().getSs())) {
+            System.out.println(username + "server is " + serverName);
+            return;
+        }
+
         SSPlayer profile;
         if (event.getPreviousServer().isEmpty()) profile = manager.createProfile(player);
         else profile = manager.getProfile(player);
 
         if (profile == null) {
             System.out.println(username + " profile is null");
-            return;
-        }
-
-        String serverName = event.getServer().getServerInfo().getName();
-        Config config = this.config.get();
-        if (!serverName.equals(config.getServers().getSs())) {
-            System.out.println(username + "server is " + serverName);
             return;
         }
 

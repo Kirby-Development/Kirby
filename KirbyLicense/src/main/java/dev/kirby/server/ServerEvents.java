@@ -2,6 +2,7 @@ package dev.kirby.server;
 
 import dev.kirby.ServerLauncher;
 import dev.kirby.checker.LoginChecker;
+import dev.kirby.config.Config;
 import dev.kirby.netty.event.PacketSubscriber;
 import dev.kirby.netty.io.Responder;
 import dev.kirby.packet.empty.ShutdownPacket;
@@ -19,17 +20,18 @@ public class ServerEvents {
     private final ServerLauncher serverLauncher;
     private final ClientManager clientManager;
 
+    private final Config.Webhook webhook;
+
     public ServerEvents(ServerLauncher serverLauncher) {
         this.serverLauncher = serverLauncher;
         clientManager = serverLauncher.getClientManager();
+        webhook = serverLauncher.getConfig().getWebhook();
     }
 
     public void onLogin(LoginPacket packet, ChannelHandlerContext ctx, Responder responder) {
         final String ip = Utils.getIp(ctx);
 
-        //todo webhook
-        serverLauncher.getConfig().getWebhook().send();
-        System.out.println("Received " + packet.getPacketName() + " from " + ip);
+        webhook.send("Received " + packet.getPacketName() + " from " + ip);
 
         final String cleanIp = ip.split(":")[0];
 
@@ -42,12 +44,12 @@ public class ServerEvents {
             responder.respond(new ShutdownPacket());
             connection.setValid(false);
             clientManager.update(connection);
-            System.out.println("Failed to connect: to many attempts");
+            webhook.send(Utils.getIp(ctx) + " Failed to connect: to many attempts");
             return;
         }
 
         Status status = LoginChecker.get(serverLauncher).check(packet, cleanIp);
-        System.out.println(status.name());
+        webhook.send(Utils.getIp(ctx) + " " + status.name());
         responder.respond(new Status.ResponsePacket(status));
 
         if (status.valid()) {
@@ -68,6 +70,6 @@ public class ServerEvents {
 
     @PacketSubscriber
     public void onText(TextPacket packet, ChannelHandlerContext ctx, Responder responder) {
-        System.out.println("Received \"" + packet.getText() + "\" from " + Utils.getIp(ctx));
+        webhook.send("Received \"" + packet.getText() + "\" from " + Utils.getIp(ctx));
     }
 }

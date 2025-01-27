@@ -7,21 +7,7 @@ import dev.kirby.config.License;
 import lombok.Getter;
 
 @Getter
-public class
-
-
-
-
-
-
-
-
-
-
-
-
-
-Kirby extends KirbyPlugin {
+public class Kirby extends KirbyPlugin {
 
     private final ConfigManager<License> configManager;
 

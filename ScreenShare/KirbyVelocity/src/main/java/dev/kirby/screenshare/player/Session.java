@@ -43,12 +43,10 @@ public class Session {
 
         public void delete(int id) {
             sessions.remove(id);
-            this.id--;
         }
 
         public void delete(Session session) {
             sessions.remove(session.getId());
-            this.id--;
         }
 
         public void create(Session session) {
@@ -62,6 +60,7 @@ public class Session {
         }
 
         public boolean contains(int id) {
+            if (id == -1) return false;
             return sessions.containsKey(id);
         }
     }

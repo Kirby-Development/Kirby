@@ -17,6 +17,9 @@ public class Config extends License {
     private String format = "%tag% %name% %message%";
     private Tags tags = new Tags();
 
+    private String remainingTime = "%time%";
+
+
     public String getTag(PlayerState playerState) {
         return switch (playerState){
             case STAFF -> tags.staff;

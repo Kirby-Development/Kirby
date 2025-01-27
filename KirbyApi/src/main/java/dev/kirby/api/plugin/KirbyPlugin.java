@@ -1,12 +1,14 @@
 package dev.kirby.api.plugin;
 
 import dev.kirby.KirbyResource;
+import dev.kirby.api.papi.PapiHook;
 import dev.kirby.api.util.ApiService;
 import dev.kirby.service.ServiceRegistry;
 import dev.kirby.utils.Initializer;
 import dev.kirby.utils.KirbyLogger;
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 @Getter
 @Setter
@@ -14,11 +16,13 @@ public abstract class KirbyPlugin extends KirbyResource implements Initializer, 
 
     protected final KirbyInstance<? extends KirbyPlugin> instance;
     private final KirbyLogger logger;
+    private final @NotNull PapiHook papi;
 
     public KirbyPlugin(KirbyInstance<? extends KirbyPlugin> kirby) {
         super(kirby.getName(), kirby.getPluginMeta().getVersion());
         this.instance = kirby;
         this.logger = new KirbyLogger(this.name);
+        papi = new PapiHook(this.name);
     }
 
     protected void connect() {

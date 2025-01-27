@@ -13,17 +13,13 @@ public class SSPlayer {
 
     private final UUID uuid;
     private final Player player;
-    //private final User user;
 
     private PlayerState playerState = PlayerState.NONE;
     private Integer ssId = -1;
 
-    public SSPlayer(Player player
-            //, User user
-    ) {
+    public SSPlayer(Player player) {
         this.uuid = player.getUniqueId();
         this.player = player;
-        //this.user = user;
     }
 
     public boolean isStaff() {

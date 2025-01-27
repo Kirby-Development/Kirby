@@ -20,7 +20,6 @@ public class ScreenShareCommand extends SSCommand {
 
     private final Session.Manager sessionManager;
 
-
     public ScreenShareCommand(Session.Manager sessionManager, ConfigManager<Config> configManager, SSManager manager, ProxyServer server) {
         super(server, manager, configManager);
         this.sessionManager = sessionManager;

@@ -9,6 +9,8 @@ import dev.kirby.screenshare.listener.ScreenShareEvents;
 import dev.kirby.screenshare.netty.ScreenShareClient;
 import dev.kirby.screenshare.packet.registry.Registry;
 import dev.kirby.screenshare.player.ScreenShareManager;
+import dev.kirby.screenshare.player.ScreenSharePlayer;
+import dev.kirby.utils.Utils;
 import lombok.Getter;
 
 import java.util.Map;
@@ -33,9 +35,19 @@ public class KirbySS extends KirbyPlugin {
         kirbySS.getEventRegistry().registerEvents(new ScreenShareEvents(this, manager, screenShareTime));
         kirbySS.setChannelActiveAction(ctx -> ctx.writeAndFlush(new ConnectPacket()));
 
-        //todo papi time placeholder
-        //todo papi util
 
+        getPapi().add(player -> {
+            ScreenSharePlayer profile = manager.getProfile(player);
+
+            if (profile.getPlayerState() == PlayerState.NONE) return "";
+
+            int id = profile.getSsId();
+            if (id == -1) return "";
+
+            Long l = screenShareTime.get(id);
+
+            return Utils.Time.format(l);
+        }, "time");
     }
 
     @Override

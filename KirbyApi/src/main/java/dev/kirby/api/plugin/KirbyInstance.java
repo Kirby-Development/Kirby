@@ -1,6 +1,7 @@
 package dev.kirby.api.plugin;
 
 import dev.kirby.api.packet.PacketRegistry;
+import dev.kirby.api.papi.PapiHook;
 import dev.kirby.exception.InvalidException;
 import dev.kirby.utils.Destroyable;
 import org.bukkit.Bukkit;
@@ -24,12 +25,18 @@ public abstract class KirbyInstance<T extends KirbyPlugin> extends JavaPlugin im
 
     public AtomicBoolean destroyed = new AtomicBoolean(false);
 
-
     @Override
     public void onLoad() {
         if (destroyed.get()) return;
         if (this instanceof PacketRegistry packetEvent) packetEvent.load();
         plugin().init();
+
+        PapiHook papi = plugin().getPapi();
+
+        if (papi.canRegister()) papi.register();
+        if (papi.isInitialized()) {
+            plugin().getLogger().info("Papi successfully registered.");
+        }
     }
 
     @Override
@@ -45,6 +52,8 @@ public abstract class KirbyInstance<T extends KirbyPlugin> extends JavaPlugin im
         if (this instanceof PacketRegistry packetEvent) packetEvent.terminate();
         HandlerList.unregisterAll(this);
         Bukkit.getScheduler().cancelTasks(this);
+        PapiHook papi = plugin().getPapi();
+        if (papi.isInitialized()) papi.unregister();
         plugin().shutdown();
     }
 

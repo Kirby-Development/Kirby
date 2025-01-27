@@ -35,27 +35,28 @@ public enum Format {
     },
     YAML(".yml") {
 
-        private final DumperOptions yamlDumperOptions = new DumperOptions();
-        private final LoaderOptions yamlLoaderOptions = new LoaderOptions();
-
         private final Map<Class<?>, Yaml> cache = new ConcurrentHashMap<>();
 
         private final Function<Class<?>, Yaml> provider = (clazz -> {
             if (cache.containsKey(clazz)) return cache.get(clazz);
+
+            DumperOptions yamlDumperOptions = new DumperOptions();
+            yamlDumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+            yamlDumperOptions.setIndent(2);
+            yamlDumperOptions.setWidth(80);
+
+
             Representer representer = new Representer(yamlDumperOptions);
             representer.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+
+            LoaderOptions yamlLoaderOptions = new LoaderOptions();
+            yamlLoaderOptions.setMaxAliasesForCollections(Integer.MAX_VALUE);
+            yamlLoaderOptions.setCodePointLimit(Integer.MAX_VALUE);
+
             Yaml yml = new Yaml(new Constructor(clazz, yamlLoaderOptions), representer, yamlDumperOptions, yamlLoaderOptions);
             cache.put(clazz, yml);
             return yml;
         });
-
-        {
-            yamlDumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-            yamlDumperOptions.setIndent(2);
-            yamlDumperOptions.setWidth(80);
-            yamlLoaderOptions.setMaxAliasesForCollections(Integer.MAX_VALUE);
-            yamlLoaderOptions.setCodePointLimit(Integer.MAX_VALUE);
-        }
 
         @SneakyThrows
         @Override

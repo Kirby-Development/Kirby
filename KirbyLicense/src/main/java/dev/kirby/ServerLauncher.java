@@ -74,7 +74,7 @@ public class ServerLauncher implements Runnable, ServiceHelper {
         launcher.run();
     }
 
-    private void genData() throws Exception {
+    private void genData() {
         Datas datas = dataManager.get();
 
         Datas.Client client;
@@ -93,13 +93,12 @@ public class ServerLauncher implements Runnable, ServiceHelper {
 
     }
 
-    private void refreshDb() throws Exception {
+    private void refreshDb() {
         Datas datas = dataManager.get();
 
         for (Datas.Client client : datas.getClients()) {
             databaseManager.getClientService().create(new ClientEntity(HwidCalculator.get(this).calculate(client.getData()), client.getIp()));
         }
-
 
         for (Datas.Resource resource : datas.getResources()) {
             databaseManager.getResourceService().create(getResource(resource.getData()));
@@ -118,10 +117,9 @@ public class ServerLauncher implements Runnable, ServiceHelper {
 
             databaseManager.getLicenseService().create(lic);
         }
-
     }
 
-    public ResourceEntity getResource(String[] data) throws Exception {
+    public ResourceEntity getResource(String[] data) {
         String id = generator.generateSecureID(data);
         return new ResourceEntity(id, data[0]);
     }
@@ -130,7 +128,6 @@ public class ServerLauncher implements Runnable, ServiceHelper {
         final NettyServer server = new NettyServer(PacketRegister.get(), manager(), threadManager);
         server.bind(9900);
         server.getEventRegistry().registerEvents(serverEvents);
-
     }
 
     private void shutdown() {
@@ -145,7 +142,6 @@ public class ServerLauncher implements Runnable, ServiceHelper {
     public ServiceRegistry manager() {
         return MANAGER;
     }
-
 
     //todo command executor or command panel here
 }

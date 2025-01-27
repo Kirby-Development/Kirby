@@ -3,6 +3,10 @@
   "maxAttempts": 3,
   "expiryTime": 0,
   "securityKey": "LUCKY",
+  "webhook": {
+    "url": "",
+    "content": ""
+  },
   "database": {
     "mode": "SQLite",
     "database": "kirby",

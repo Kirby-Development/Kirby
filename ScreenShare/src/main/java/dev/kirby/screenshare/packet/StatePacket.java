@@ -16,7 +16,7 @@ public class StatePacket extends Packet {
 
     UUID player;
     PlayerState state;
-    Integer ssId;
+    int ssId;
 
     @Override
     public void read(PacketBuffer buffer) {

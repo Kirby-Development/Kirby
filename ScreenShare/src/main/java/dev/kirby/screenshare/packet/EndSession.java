@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class EndSession extends Packet {
 
-    Integer session;
+    int session;
 
     @Override
     public void read(PacketBuffer buffer) {
