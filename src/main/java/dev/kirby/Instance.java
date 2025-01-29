@@ -3,14 +3,14 @@ package dev.kirby;
 import dev.kirby.api.packet.PacketRegistry;
 import dev.kirby.api.plugin.KirbyInstance;
 
-public final class Instance extends KirbyInstance<Kirby> implements PacketRegistry {
+public final class Instance extends KirbyInstance<KirbyBounty> implements PacketRegistry {
 
-    private final Kirby kirby = new Kirby(this);
+    private final KirbyBounty kirbyBounty = new KirbyBounty(this);
 
 
     @Override
-    protected Kirby init() {
-        return kirby;
+    protected KirbyBounty init() {
+        return kirbyBounty;
     }
 
 }

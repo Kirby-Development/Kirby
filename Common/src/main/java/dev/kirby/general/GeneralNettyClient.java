@@ -9,6 +9,7 @@ import dev.kirby.netty.handler.PacketEncoder;
 import dev.kirby.netty.registry.IPacketRegistry;
 import dev.kirby.packet.empty.ConnectPacket;
 import dev.kirby.packet.registry.SendPacket;
+import dev.kirby.service.ServiceHelper;
 import dev.kirby.service.ServiceRegistry;
 import dev.kirby.utils.KirbyLogger;
 import io.netty.bootstrap.Bootstrap;
@@ -130,7 +131,7 @@ public class GeneralNettyClient extends ChannelInitializer<Channel> {
 
     @Setter
     @Getter
-    public static class PacketSender {
+    public static class PacketSender implements ServiceHelper {
 
         private final ServiceRegistry service;
 
@@ -150,10 +151,6 @@ public class GeneralNettyClient extends ChannelInitializer<Channel> {
         public void onConnect(final ConnectPacket packet, final ChannelHandlerContext ctx) {
             this.ctx = ctx;
             install(SendPacket.class, this::sendPacket);
-        }
-
-        private <T> void install(Class<T> key, T service) {
-            manager().put(key, service);
         }
 
         public ServiceRegistry manager() {
